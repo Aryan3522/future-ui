@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Button } from "./button";
 import { motion } from "framer-motion";
@@ -58,9 +59,11 @@ const ComponentPageSidebar = ({ open, setOpen }) => {
                             className="w-8 h-8 bg-primary rounded-md overflow-hidden flex items-center justify-center cursor-pointer"
                         >
                             <button onClick={scrollToTop} aria-label="Logo">
-                                <img
+                                <Image
                                     src="/Images/wolf.jpeg"
                                     alt="Logo"
+                                    width={32}
+                                    height={32}
                                     className="w-full h-full object-cover"
                                 />
                             </button>

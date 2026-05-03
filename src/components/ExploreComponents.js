@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Eye, Code2 } from "lucide-react";
+import { Eye } from "lucide-react";
 import { componentsList } from "@/data/component-library-data";
 import Link from "next/link";
+import Image from "next/image";
 
 const gpuStyle = {
   willChange: "transform, opacity",
@@ -18,13 +19,17 @@ const gpuStyle = {
 const ExploreComponents = () => {
   const [selectedType, setSelectedType] = useState("all");
   const [mounted, setMounted] = useState(false);
-  const reduced = useReducedMotion();
+  const reducedMotionHook = useReducedMotion();
+  
+  // Stabilize reduced motion for SSR/Hydration
+  const reduced = mounted ? reducedMotionHook : false;
 
-  React.useEffect(() => {
-    setMounted(true);
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => clearTimeout(timer);
   }, []);
 
-  // ✅ Seed (Daily Rotation)
+  // ✅ Seed (Daily Rotation) - moved inside useMemo or handled after mount
   const getSeed = () => {
     const now = new Date();
     return `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
@@ -51,16 +56,17 @@ const ExploreComponents = () => {
     ...new Set(componentsList.map((c) => c.type.toLowerCase())),
   ];
 
-  // ✅ Apply rotation only for homepage/all view
+  // ✅ Apply rotation only for homepage/all view after mount
   const filteredData = useMemo(() => {
+    // During SSR and the first client-side pass (hydration), we always return the stable list
+    if (selectedType === "all" && !mounted) {
+      return componentsList.slice(0, 3);
+    }
+
     if (selectedType === "all" && mounted) {
       const seed = getSeed();
       const shuffled = seededShuffle(componentsList, seed);
-      return shuffled.slice(0, 3); // 👈 limit to 3
-    }
-
-    if (selectedType === "all" && !mounted) {
-      return componentsList.slice(0, 3);
+      return shuffled.slice(0, 3);
     }
 
     return componentsList.filter(
@@ -105,31 +111,31 @@ const ExploreComponents = () => {
   return (
     <section
       id="exploreComponents"
-      className="py-8 px-4 relative overflow-hidden"
+      className="py-6 md:py-12 px-0 md:px-4 relative overflow-hidden"
     >
-      <div className="container mx-auto max-w-7xl">
+      <div className="w-full max-w-7xl mx-auto px-4">
         {/* Header */}
-        <motion.div className="text-center mb-8" style={gpuStyle}>
-          <Badge className="mb-4 px-3 py-1.5">Explore</Badge>
+        <motion.div className="text-center mb-10 md:mb-16" style={gpuStyle}>
+          <Badge className="mb-4 px-3 py-1.5 rounded-full uppercase tracking-widest text-[10px]">Library</Badge>
 
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Explore Components
+          <h2 className="text-3xl md:text-5xl font-black mb-4 uppercase italic tracking-tight">
+            The Collection
           </h2>
 
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Browse reusable UI components and discover implementation patterns
+          <p className="text-muted-foreground text-sm md:text-lg max-w-2xl mx-auto px-2">
+            Explore our curated selection of high-performance components
           </p>
         </motion.div>
 
         {/* Filter */}
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+        <div className="flex items-center justify-start md:justify-center gap-2 mb-10 overflow-x-auto pb-4 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
           {types.map((type) => (
             <Button
               key={type}
               size="sm"
               variant={selectedType === type ? "default" : "secondary"}
               onClick={() => setSelectedType(type)}
-              className="capitalize"
+              className="capitalize whitespace-nowrap rounded-full px-5 py-2 text-xs font-bold italic border border-border/50"
             >
               {type === "all" ? "All" : type}
             </Button>
@@ -137,24 +143,25 @@ const ExploreComponents = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10">
           {filteredData.map((item, index) => (
             <motion.div
               key={item.id}
-              className="group"
+              className="group h-full"
               style={gpuStyle}
               transition={{ delay: index * 0.05 }}
               {...makeMotionProps(0.0, { once: true })}
               {...hoverProps}
             >
-              <Card className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 backdrop-blur-md bg-white/60 dark:bg-black/60 overflow-hidden">
+              <Card className="h-full border border-border/40 shadow-sm hover:shadow-2xl transition-all duration-500 backdrop-blur-xl bg-card/40 dark:bg-card/20 overflow-hidden rounded-[2rem]">
                 {/* Image */}
-                <div className="relative w-full aspect-[16/10] overflow-hidden">
-                  <img
+                <div className="relative w-full aspect-[16/10] overflow-hidden bg-muted/20">
+                  <Image
                     src={item.previewImage}
                     alt={item.title}
-                    loading="lazy"
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    width={400}
+                    height={250}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                   />
 
                   {/* Overlay */}

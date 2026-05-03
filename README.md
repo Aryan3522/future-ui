@@ -51,6 +51,19 @@ Future UI is an open-source library of high-performance, visually stunning, and 
 4. **Access the library**:
    Open [http://localhost:3000](http://localhost:3000) in your browser to explore the components.
 
+## ⚙️ Configuration
+
+Create a `.env` file in the root directory and add the following variables:
+
+```env
+# Project Configuration
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+FUTURE_UI_API_URL=http://localhost:3000/components
+NEXT_PUBLIC_GITHUB_REPO=https://github.com/Aryan3522/future-ui
+NEXT_PUBLIC_GITHUB_PROFILE=https://github.com/Aryan3522
+NEXT_PUBLIC_LINKEDIN_PROFILE=https://www.linkedin.com/in/aryan-hooda-code/
+```
+
 ## 🤝 Contributing
 
 Future UI is open-source and we love contributions! Whether you're fixing a bug, adding a new component, or improving documentation, your help is welcome.
