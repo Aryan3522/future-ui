@@ -1098,51 +1098,53 @@ const ComponentDetail = ({ type, slug, id }) => {
   const langToShow = activeCodeData?.lang || "javascript";
 
   return (
-    <div className="select-none min-h-screen flex justify-center text-foreground pt-24">
+    <div className="select-none min-h-screen flex justify-center text-foreground pt-16 md:pt-24">
       <PillHeader />
-      {/* <ComponentPageSidebar open={open} setOpen={setOpen} /> */}
-      <div className="relative flex-1 max-w-5xl transition-all duration-300">
-        <div className="mx-auto max-w-5xl px-1 py-4">
-          <div className="mb-1 rounded-md border border-border bg-card/40 backdrop-blur p-2 md:p-6 shadow">
-            <div className="mb-2 pb-4 border-b flex items-center gap-2">
+      <div className="relative flex-1 w-full max-w-5xl transition-all duration-300">
+        <div className="mx-auto max-w-5xl px-4 py-4">
+          <div className="mb-4 rounded-xl border border-border bg-card/40 backdrop-blur p-4 md:p-6 shadow-sm">
+            <div className="mb-4 pb-4 border-b flex items-center gap-3">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => router.back()}
-                className="h-8 w-8"
+                className="h-9 w-9 shrink-0"
               >
                 <ChevronLeft className="h-5 w-5" />
               </Button>
-              <h1 className="text-4xl font-bold tracking-tight">
+              <h1 className="text-2xl md:text-4xl font-bold tracking-tight line-clamp-1">
                 {component.title}
               </h1>
             </div>
-            <p className="text-muted-foreground text-lg px-2">
+            <p className="text-muted-foreground text-base md:text-lg">
               {component.description}
             </p>
           </div>
 
-          <section className="mb-1 md:mb-2">
-            <div className="rounded-md overflow-hidden border border-border bg-card/40 backdrop-blur-md md:p-6 shadow">
-              <div className="flex justify-center items-center rounded-md overflow-hidden bg-card/30 backdrop-blur-lg border border-border/40 w-full min-h-[450px] md:mb-4 relative select-text shadow-lg">
-                <ComponentLivePreview id={id} slug={slug} />
+          <section className="mb-4">
+            <div className="rounded-xl overflow-hidden border border-border bg-card/40 backdrop-blur-md p-2 md:p-6 shadow-sm">
+              <div className="flex justify-center items-center rounded-lg overflow-hidden bg-card/30 backdrop-blur-lg border border-border/40 w-full min-h-[300px] md:min-h-[450px] mb-4 relative select-text shadow-inner">
+                <div className="w-full h-full flex items-center justify-center p-4">
+                  <ComponentLivePreview id={id} slug={slug} />
+                </div>
               </div>
 
               {/* Code Section */}
-              <div className="relative rounded-md md:border border-border bg-card/10 backdrop-blur-md p-2 md:p-6 shadow">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex justify-center items-center text-primary font-semibold mr-2">
-                    <CodeIcon size={32} className="text-green-600" />
+              <div className="relative rounded-lg border border-border/50 bg-card/10 backdrop-blur-md p-3 md:p-6">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-2 text-primary font-semibold">
+                    <CodeIcon size={24} className="text-primary" />
+                    <span className="text-sm uppercase tracking-wider">Source</span>
                   </div>
 
-                  <div className="flex flex-wrap-reverse justify-end items-start gap-4">
+                  <div className="flex items-center justify-between w-full sm:w-auto gap-2">
                     {/* Tabs */}
-                    <div className="flex justify-end flex-wrap gap-1">
+                    <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide pb-1 sm:pb-0">
                       {availableCodes.map((item) => (
                         <button
                           key={item.key}
                           onClick={() => setActiveCode(item.key)}
-                          className={`px-3 py-1.5 rounded-md text-xs font-medium transition ${activeCode === item.key
+                          className={`whitespace-nowrap px-3 py-1.5 rounded-md text-[10px] md:text-xs font-medium transition ${activeCode === item.key
                             ? "bg-primary text-primary-foreground shadow-sm"
                             : "bg-muted text-muted-foreground hover:bg-muted/70"
                             }`}
@@ -1159,9 +1161,9 @@ const ComponentDetail = ({ type, slug, id }) => {
                         setCopied(true);
                         setTimeout(() => setCopied(false), 1500);
                       }}
-                      className="text-xs px-2 py-2 rounded-md bg-muted hover:bg-muted/90 transition"
+                      className="shrink-0 text-xs p-2 rounded-md bg-muted hover:bg-muted/90 transition border border-border/50"
                     >
-                      {copied ? <Check size={16} /> : <Copy size={16} />}
+                      {copied ? <Check size={16} className="text-green-500" /> : <Copy size={16} />}
                     </button>
                   </div>
                 </div>

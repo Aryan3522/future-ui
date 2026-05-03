@@ -1,47 +1,3 @@
-// import React, { createContext, useContext, useEffect, useState } from 'react';
-
-// const ThemeContext = createContext();
-
-// export const useTheme = () => {
-//   const context = useContext(ThemeContext);
-//   if (!context) {
-//     throw new Error('useTheme must be used within ThemeProvider');
-//   }
-//   return context;
-// };
-
-// export const ThemeProvider = ({ children }) => {
-//   const [theme, setTheme] = useState('dark');
-
-//   useEffect(() => {
-//     const savedTheme = localStorage.getItem('theme');
-//     const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-
-//     if (savedTheme) {
-//       setTheme(savedTheme);
-//     } else if (prefersDark) {
-//       setTheme('dark');
-//     } else {
-//       setTheme('light');
-//     }
-//   }, []);
-
-//   useEffect(() => {
-//     localStorage.setItem('theme', theme);
-//     document.documentElement.classList.toggle('dark', theme === 'dark');
-//   }, [theme]);
-
-//   const toggleTheme = () => {
-//     setTheme(prev => prev === 'dark' ? 'light' : 'dark');
-//   };
-
-//   return (
-//     <ThemeContext.Provider value={{ theme, toggleTheme }}>
-//       {children}
-//     </ThemeContext.Provider>
-//   );
-// };
-
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
@@ -61,15 +17,29 @@ export const ThemeProvider = ({ children }) => {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark" || savedTheme === "light") {
-      setTheme(savedTheme);
-    } else {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      setTheme(prefersDark ? "dark" : "light");
-    }
+    const timer = setTimeout(() => setMounted(true), 0);
+    return () => {
+      clearTimeout(timer);
+    };
   }, []);
+
+  useEffect(() => {
+    if (mounted) {
+      const savedTheme = localStorage.getItem("theme");
+      let targetTheme = "dark";
+      if (savedTheme === "dark" || savedTheme === "light") {
+        targetTheme = savedTheme;
+      } else {
+        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        targetTheme = prefersDark ? "dark" : "light";
+      }
+      
+      const timer = setTimeout(() => {
+        setTheme(targetTheme);
+      }, 0);
+      return () => clearTimeout(timer);
+    }
+  }, [mounted]);
 
   useEffect(() => {
     if (mounted) {
@@ -94,9 +64,12 @@ export const ThemeProvider = ({ children }) => {
         theme,
         toggleTheme,
         setThemeMode,
+        mounted, // Export mounted state so consumers can use it to avoid hydration mismatches
       }}
     >
-      {children}
+      <div style={{ visibility: mounted ? "visible" : "hidden" }}>
+        {children}
+      </div>
     </ThemeContext.Provider>
   );
 };
