@@ -18,19 +18,51 @@ import { cn } from "@/lib/utils";
  * - className: additional classes
  */
 export const PrimaryButton = React.forwardRef(
-  ({ className, children, variant = "modern", color = "#2563eb", onClick, ...props }, ref) => {
+  ({ 
+    className, 
+    children, 
+    variant = "primary", // intent: primary, success, warning, danger, info, secondary
+    mode = "modern",    // style: modern, clean, minimal
+    color, 
+    onClick, 
+    disabled,
+    ...props 
+  }, ref) => {
     
+    const intentColors = {
+      primary: "#2563eb",
+      success: "#10b981",
+      warning: "#f59e0b",
+      danger: "#ef4444",
+      info: "#06b6d4",
+      secondary: "#64748b",
+    };
+
+    // If variant is a style (backwards compatibility), swap them
+    let finalIntent = variant;
+    let finalMode = mode;
+    
+    const styles = ["modern", "clean", "minimal"];
+    const intents = Object.keys(intentColors);
+
+    if (styles.includes(variant) && !styles.includes(mode)) {
+      finalMode = variant;
+      finalIntent = intents.includes(mode) ? mode : "primary";
+    }
+
+    const finalColor = color || intentColors[finalIntent] || intentColors.primary;
+
     const getVariantStyles = () => {
-      switch (variant) {
+      switch (finalMode) {
         case "modern":
           return {
-            background: color,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
           };
         case "clean":
           return {
-            background: color,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
             borderRadius: "8px",
@@ -38,20 +70,20 @@ export const PrimaryButton = React.forwardRef(
         case "minimal":
           return {
             background: "transparent",
-            color: color,
-            border: `1px solid ${color}`,
+            color: finalColor,
+            border: `1px solid ${finalColor}`,
             borderRadius: "6px",
           };
         default:
           return {
-            background: color,
+            background: finalColor,
             color: "#ffffff",
             border: "none",
           };
       }
     };
 
-    const variantClasses = {
+    const modeClasses = {
       modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
       clean: "px-5 py-2 rounded-lg font-medium",
       minimal: "px-5 py-2 font-medium hover:bg-opacity-10",
@@ -62,15 +94,17 @@ export const PrimaryButton = React.forwardRef(
     return (
       <motion.button
         ref={ref}
-        whileHover={{ 
+        whileHover={!disabled ? { 
           scale: 1.02,
-          filter: variant === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
-        }}
-        whileTap={{ scale: 0.98 }}
+          filter: finalMode === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
+        } : {}}
+        whileTap={!disabled ? { scale: 0.98 } : {}}
         onClick={onClick}
+        disabled={disabled}
         className={cn(
-          "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed",
-          variantClasses[variant] || variantClasses.modern,
+          "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
+          "disabled:opacity-50 disabled:cursor-not-allowed disabled:filter-none",
+          modeClasses[finalMode] || modeClasses.modern,
           className
         )}
         style={{
@@ -80,7 +114,7 @@ export const PrimaryButton = React.forwardRef(
         {...props}
       >
         <span className="relative z-10">{children}</span>
-        {variant === "modern" && (
+        {finalMode === "modern" && !disabled && (
           <motion.div
             className="absolute inset-0 z-0 bg-white/10"
             initial={{ x: "-100%" }}

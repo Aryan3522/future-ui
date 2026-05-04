@@ -397,41 +397,54 @@ const ExpandingFlexCards = () => {
   );
 };
 
-const PreviewButton = ({ variant, color, children }) => {
+const PreviewButton = ({ variant = "primary", mode = "modern", color, children, disabled }) => {
+  const intentColors = {
+    primary: "#2563eb",
+    success: "#10b981",
+    warning: "#f59e0b",
+    danger: "#ef4444",
+    info: "#06b6d4",
+    secondary: "#64748b",
+  };
+
+  const finalColor = color || intentColors[variant] || intentColors.primary;
+
   const getVariantStyles = () => {
-    switch (variant) {
+    switch (mode) {
       case "modern":
-        return { background: color, color: "#ffffff", border: "none" };
+        return { background: finalColor, color: "#ffffff", border: "none" };
       case "clean":
-        return { background: color, color: "#ffffff", border: "none", borderRadius: "8px" };
+        return { background: finalColor, color: "#ffffff", border: "none", borderRadius: "8px" };
       case "minimal":
-        return { background: "transparent", color: color, border: `1px solid ${color}`, borderRadius: "6px" };
+        return { background: "transparent", color: finalColor, border: `1px solid ${finalColor}`, borderRadius: "6px" };
       default:
-        return { background: color, color: "#ffffff", border: "none" };
+        return { background: finalColor, color: "#ffffff", border: "none" };
     }
   };
 
-  const variantClasses = {
-    modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
-    clean: "px-5 py-2 rounded-lg font-medium",
-    minimal: "px-5 py-2 font-medium hover:bg-opacity-10",
+  const modeClasses = {
+    modern: "relative overflow-hidden px-5 py-2 rounded-xl font-semibold tracking-wide text-xs",
+    clean: "px-4 py-1.5 rounded-lg font-medium text-xs",
+    minimal: "px-4 py-1.5 font-medium hover:bg-opacity-10 text-xs",
   };
 
   return (
     <motion.button
-      whileHover={{ 
+      whileHover={!disabled ? { 
         scale: 1.05,
-        filter: variant === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
-      }}
-      whileTap={{ scale: 0.95 }}
+        filter: mode === "minimal" ? "brightness(0.95)" : "brightness(1.1)",
+      } : {}}
+      whileTap={!disabled ? { scale: 0.95 } : {}}
+      disabled={disabled}
       className={cn(
         "inline-flex items-center justify-center cursor-pointer select-none transition-all duration-200",
-        variantClasses[variant] || variantClasses.modern
+        "disabled:opacity-50 disabled:cursor-not-allowed",
+        modeClasses[mode] || modeClasses.modern
       )}
       style={getVariantStyles()}
     >
       <span className="relative z-10">{children}</span>
-      {variant === "modern" && (
+      {mode === "modern" && !disabled && (
         <motion.div
           className="absolute inset-0 z-0 bg-white/10"
           initial={{ x: "-100%" }}
@@ -534,11 +547,21 @@ const ComponentLivePreview = ({ id, slug }) => {
   switch (Number(id)) {
     case 1: // Primary Button
       return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 p-4 w-full max-w-4xl items-center justify-items-center">
-          <PreviewButton color="#2563eb">Default</PreviewButton>
-          <PreviewButton variant="modern" color="#6366f1">Modern</PreviewButton>
-          <PreviewButton variant="clean" color="#10b981">Clean</PreviewButton>
-          <PreviewButton variant="minimal" color="#f59e0b">Minimal</PreviewButton>
+        <div className="flex flex-col gap-8 w-full max-w-4xl p-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 items-center justify-items-center">
+            <PreviewButton variant="primary">Primary</PreviewButton>
+            <PreviewButton variant="success">Success</PreviewButton>
+            <PreviewButton variant="warning">Warning</PreviewButton>
+            <PreviewButton variant="danger">Danger</PreviewButton>
+            <PreviewButton variant="info">Info</PreviewButton>
+            <PreviewButton variant="secondary">Secondary</PreviewButton>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 items-center justify-items-center border-t border-border/20 pt-8">
+            <PreviewButton variant="primary" mode="modern">Modern</PreviewButton>
+            <PreviewButton variant="success" mode="clean">Clean Success</PreviewButton>
+            <PreviewButton variant="danger" mode="minimal">Minimal Danger</PreviewButton>
+            <PreviewButton variant="primary" disabled>Disabled</PreviewButton>
+          </div>
         </div>
       );
 

@@ -10,17 +10,18 @@ export const componentsList = [
     "heroImage": "/Images/primary-button.webp",
     "previewImage": "/Images/primary-button.webp",
     "previewVideo": "/Videos/Primary-button.webm",
-    "description": "A fully modern and customizable primary button designed for high-end UI. It features multiple variants (modern, clean, minimal), smooth framer-motion animations, and full color profile support. No shadows are used, keeping it clean and professional for any project.",
+    "description": "A fully modern and customizable primary button designed for high-end UI. It features semantic intents (primary, success, warning, danger, info, secondary) and multiple visual styles (modern, clean, minimal). Built with Framer Motion for organic interactions, it supports disabled states and full color customization.",
     "details": [
       "Built with React and Framer Motion for smooth, organic interactions.",
-      "Supports multiple visual variants: Modern, Clean, and Minimal.",
-      "Fully customizable color profile via props.",
+      "Supports semantic intents: Primary, Success, Warning, Danger, Info, and Secondary.",
+      "Supports multiple visual modes: Modern (Glass), Clean (Solid), and Minimal (Outline).",
+      "Built-in support for disabled states with appropriate styling and interaction prevention.",
+      "Fully customizable color profile via props (overrides semantic defaults).",
       "Zero-shadow design for a clean, professional aesthetic.",
-      "Smooth scale and filter animations on hover and tap.",
       "Highly reusable and easy to integrate into any Next.js project."
     ],
     "codes": {
-      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"flex gap-4\">\n      <PrimaryButton variant=\"modern\" color=\"#6366f1\">Modern</PrimaryButton>\n      <PrimaryButton variant=\"clean\" color=\"#10b981\">Clean</PrimaryButton>\n      <PrimaryButton variant=\"minimal\" color=\"#f59e0b\">Minimal</PrimaryButton>\n    </div>\n  );\n}"
+      "next": "import { PrimaryButton } from \"@/components/ui/primary-button\";\n\nexport default function Example() {\n  return (\n    <div className=\"grid grid-cols-2 gap-4\">\n      {/* Semantic Variants */}\n      <PrimaryButton variant=\"primary\">Primary</PrimaryButton>\n      <PrimaryButton variant=\"success\">Success</PrimaryButton>\n      <PrimaryButton variant=\"danger\">Danger</PrimaryButton>\n      <PrimaryButton variant=\"warning\">Warning</PrimaryButton>\n\n      {/* Visual Modes */}\n      <PrimaryButton variant=\"primary\" mode=\"modern\">Modern</PrimaryButton>\n      <PrimaryButton variant=\"success\" mode=\"clean\">Clean</PrimaryButton>\n      <PrimaryButton variant=\"danger\" mode=\"minimal\">Minimal</PrimaryButton>\n      \n      {/* States & Customization */}\n      <PrimaryButton disabled>Disabled</PrimaryButton>\n      <PrimaryButton color=\"#8b5cf6\">Custom Color</PrimaryButton>\n    </div>\n  );\n}"
     },
     "usage": [
       "Add the button HTML markup to your page or component.",
