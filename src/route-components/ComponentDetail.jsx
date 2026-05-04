@@ -397,7 +397,7 @@ const ExpandingFlexCards = () => {
   );
 };
 
-const PreviewButton = ({ variant = "primary", mode = "modern", color, children, disabled }) => {
+const PreviewButton = ({ variant = "primary", mode = "modern", color, children, disabled, ...props }) => {
   const intentColors = {
     primary: "#2563eb",
     success: "#10b981",
@@ -410,22 +410,23 @@ const PreviewButton = ({ variant = "primary", mode = "modern", color, children, 
   const finalColor = color || intentColors[variant] || intentColors.primary;
 
   const getVariantStyles = () => {
+    const baseStyles = { borderRadius: "6px" };
     switch (mode) {
       case "modern":
-        return { background: finalColor, color: "#ffffff", border: "none" };
+        return { ...baseStyles, background: finalColor, color: "#ffffff", border: "none" };
       case "clean":
-        return { background: finalColor, color: "#ffffff", border: "none", borderRadius: "8px" };
+        return { ...baseStyles, background: finalColor, color: "#ffffff", border: "none" };
       case "minimal":
-        return { background: "transparent", color: finalColor, border: `1px solid ${finalColor}`, borderRadius: "6px" };
+        return { ...baseStyles, background: "transparent", color: finalColor, border: `1px solid ${finalColor}` };
       default:
-        return { background: finalColor, color: "#ffffff", border: "none" };
+        return { ...baseStyles, background: finalColor, color: "#ffffff", border: "none" };
     }
   };
 
   const modeClasses = {
-    modern: "relative overflow-hidden px-5 py-2 rounded-xl font-semibold tracking-wide text-xs",
-    clean: "px-4 py-1.5 rounded-lg font-medium text-xs",
-    minimal: "px-4 py-1.5 font-medium hover:bg-opacity-10 text-xs",
+    modern: "relative overflow-hidden px-5 py-2 rounded-md font-semibold tracking-wide text-xs",
+    clean: "px-4 py-1.5 rounded-md font-medium text-xs",
+    minimal: "px-4 py-1.5 rounded-md font-medium hover:bg-opacity-10 text-xs",
   };
 
   return (
@@ -442,6 +443,7 @@ const PreviewButton = ({ variant = "primary", mode = "modern", color, children, 
         modeClasses[mode] || modeClasses.modern
       )}
       style={getVariantStyles()}
+      {...props}
     >
       <span className="relative z-10">{children}</span>
       {mode === "modern" && !disabled && (

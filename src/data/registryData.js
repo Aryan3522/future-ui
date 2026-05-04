@@ -19,6 +19,7 @@ export const PrimaryButton = React.forwardRef(
     mode = "modern", 
     color, 
     disabled,
+    style,
     ...props 
   }, ref) => {
     
@@ -31,43 +32,49 @@ export const PrimaryButton = React.forwardRef(
       secondary: "#64748b",
     };
 
+    const styleOptions = ["modern", "clean", "minimal"];
+    const intents = Object.keys(intentColors);
+    
     let finalIntent = variant;
     let finalMode = mode;
-    
-    const styles = ["modern", "clean", "minimal"];
-    const intents = Object.keys(intentColors);
 
-    if (styles.includes(variant) && !styles.includes(mode)) {
+    if (styleOptions.includes(variant)) {
       finalMode = variant;
       finalIntent = intents.includes(mode) ? mode : "primary";
     }
 
     const finalColor = color || intentColors[finalIntent] || intentColors.primary;
 
-    const getVariantStyles = () => {
+    const getModeStyles = () => {
+      const baseStyles = {
+        borderRadius: "6px",
+      };
+
       switch (finalMode) {
         case "modern":
           return {
+            ...baseStyles,
             background: finalColor,
             color: "#ffffff",
             border: "none",
           };
         case "clean":
           return {
+            ...baseStyles,
             background: finalColor,
             color: "#ffffff",
             border: "none",
-            borderRadius: "8px",
           };
         case "minimal":
           return {
+            ...baseStyles,
             background: "transparent",
             color: finalColor,
             border: \`1px solid \${finalColor}\`,
-            borderRadius: "6px",
           };
         default:
           return {
+            ...baseStyles,
             background: finalColor,
             color: "#ffffff",
             border: "none",
@@ -76,12 +83,10 @@ export const PrimaryButton = React.forwardRef(
     };
 
     const modeClasses = {
-      modern: "relative overflow-hidden px-6 py-2.5 rounded-xl font-semibold tracking-wide",
-      clean: "px-5 py-2 rounded-lg font-medium",
-      minimal: "px-5 py-2 font-medium hover:bg-opacity-10",
+      modern: "relative overflow-hidden px-6 py-2 rounded-md font-semibold tracking-wide",
+      clean: "px-5 py-2 rounded-md font-medium",
+      minimal: "px-5 py-2 rounded-md font-medium hover:bg-opacity-10",
     };
-
-    const buttonStyles = getVariantStyles();
 
     return (
       <motion.button
@@ -99,8 +104,8 @@ export const PrimaryButton = React.forwardRef(
           className
         )}
         style={{
-          ...buttonStyles,
-          ...props.style
+          ...getModeStyles(),
+          ...style
         }}
         {...props}
       >
@@ -350,7 +355,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyRotateLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl1-container {
           --hue: 223;
@@ -450,7 +455,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyBounceLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl2-container {
           --hue: 223;
@@ -527,7 +532,7 @@ import { cn } from "@/lib/utils";
 
 export const BoxyShiftLoader = ({ className, ...props }) => {
   return (
-    <div className={cn("flex flex-col items-center justify-center", className)} {...props}>
+    <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", className)} {...props}>
       <style>{\`
         .pl3-container {
           --hue: 223;
