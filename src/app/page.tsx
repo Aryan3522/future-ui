@@ -123,7 +123,7 @@ export default function Home() {
           <div className="relative overflow-hidden rounded-[2.5rem] border border-primary/20 bg-card/30 backdrop-blur-md p-8 md:p-20 duration-500 hover:border-primary/40 text-center">
             {/* Inner background pattern */}
             <div className="absolute inset-0 opacity-40 mix-blend-overlay pointer-events-none">
-              <DotBackground dotColor="#fff" gap={20} />
+              <DotBackground dotColor="var(--color-primary)" gap={20} />
             </div>
 
             <div className="relative z-10 flex flex-col items-center gap-8 md:gap-12">
