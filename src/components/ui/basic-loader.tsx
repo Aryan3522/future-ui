@@ -15,14 +15,6 @@ export interface BasicLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
   text?: string;
 }
 
-/**
- * BasicLoader Component
- * 
- * Variants:
- * - modern: Sleek, multi-ring animation.
- * - clean: Simple pulsing dot or circle.
- * - minimal: Bare minimum indicator.
- */
 export const BasicLoader: React.FC<BasicLoaderProps> = ({ 
   className, 
   variant = "modern", 

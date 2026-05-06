@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { SearchInput } from "./search-input";
 import { GithubIcon } from "./github-icon";
 import { LinkedinIcon } from "./linkedin-icon";
+import { componentsList } from "@/data/component-library-data";
 
 interface NavItem {
   label: string;
@@ -65,7 +66,7 @@ export const Header: React.FC = () => {
               />
             </div>
           </Link>
-          <SearchInput className="w-full max-w-30 sm:max-w-50 lg:max-w-70" />
+          <SearchInput data={componentsList} className="w-full max-w-30 sm:max-w-50 lg:max-w-70" />
         </div>
 
         {/* Center: Links (Desktop) */}

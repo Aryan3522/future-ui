@@ -30,7 +30,6 @@ export function PerspectiveGrid({
         transformStyle: "preserve-3d",
       }}
     >
-      {/* GRID (single element using gradients) */}
       <div
         className="absolute w-[80rem] aspect-square origin-center"
         style={{
@@ -59,7 +58,6 @@ export function PerspectiveGrid({
         }}
       />
 
-      {/* OVERLAY FADE */}
       {showOverlay && (
         <div
           className="absolute inset-0 pointer-events-none z-10"

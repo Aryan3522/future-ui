@@ -31,11 +31,6 @@ export interface CarouselSliderProps {
   variant?: string;
 }
 
-/**
- * CarouselSlider Component
- * 
- * Optimized for buttery smooth performance and instant image loading.
- */
 export const CarouselSlider: React.FC<CarouselSliderProps> = ({ 
   slides = [], 
   className, 
@@ -99,7 +94,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
       onMouseEnter={() => pauseOnHover && setIsPaused(true)}
       onMouseLeave={() => pauseOnHover && setIsPaused(false)}
     >
-      {/* Background Preloading Layer (Hidden) */}
       <div className="hidden">
         {slides.map((slide) => (
           <Image 
@@ -129,7 +123,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
           }}
           className="absolute inset-0"
         >
-          {/* Main Slide Image */}
           <div className="relative w-full h-full">
             <Image
               src={slides[currentIndex].image}
@@ -139,11 +132,9 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
               className="object-cover"
               sizes="(max-width: 1280px) 100vw, 1200px"
             />
-            {/* Optimized Gradient Overlay */}
             <div className="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent z-10" />
           </div>
 
-          {/* Content Overlay */}
           <div className="absolute inset-0 z-20 flex flex-col justify-end p-8 md:p-12 text-white pointer-events-none">
             <motion.div
               initial={{ y: 30, opacity: 0, filter: "blur(10px)" }}
@@ -176,7 +167,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Arrows */}
       {showArrows && (
         <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 z-30 flex justify-between px-4 pointer-events-none">
           <motion.button
@@ -198,7 +188,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
         </div>
       )}
 
-      {/* Dots Pagination */}
       {showDots && (
         <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
           {slides.map((_, idx) => (
@@ -224,7 +213,6 @@ export const CarouselSlider: React.FC<CarouselSliderProps> = ({
         </div>
       )}
 
-      {/* Progress Bar */}
       <div className="absolute bottom-0 left-0 right-0 h-1 bg-white/10 z-30 overflow-hidden">
          <motion.div 
            key={currentIndex}

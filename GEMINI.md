@@ -64,46 +64,6 @@ Note: The CLI expects certain environment variables like `FUTURE_UI_REGISTRY_URL
 * Test components thoroughly in both light and dark modes.
 * Before submitting a PR, run `npm run lint` and `npm run build` to ensure no regressions.
 
-## Package Versioning Rules
-
-* Follow a strict incremental versioning strategy based on semantic versioning (MAJOR.MINOR.PATCH). Increment the package version only if anything is updated in the entire project that need version update. Else keep the version same as it is.
-
-### Increment Logic
-
-* Always increment the **PATCH** version first.
-
-  * Example: `0.1.0` → `0.1.1`
-* If PATCH reaches `9`, roll over:
-
-  * Example: `0.1.9` → `0.2.0`
-* Continue this pattern consistently for all updates.
-
-### Constraints
-
-* DO NOT skip versions.
-* DO NOT jump versions manually.
-* DO NOT increment MINOR or MAJOR directly unless PATCH rollover requires it.
-
-### Correction Rule
-
-* The correct last valid version is `0.2.2`.
-
-### Reset Instruction
-
-* Treat `0.2.2` as the current base version.
-* The next version MUST be:
-
-  * `0.2.3`
-
-### Enforcement
-
-* Every time the package is updated:
-
-  1. Read the current version.
-  2. Apply increment logic.
-  3. Update `package.json` accordingly.
-  4. Ensure CLI output reflects the updated version.
-
 ## Gemini Execution Protocol (Strict Enforcement Layer)
 
 To ensure deterministic, production-safe outputs, Gemini must adhere to the following operational constraints:
@@ -158,13 +118,37 @@ To ensure deterministic, production-safe outputs, Gemini must adhere to the foll
 
 ### Post-Implementation Testing Requirement
 
-* After completing any implementation, Gemini must ask a full application-level validation. If permitted then it should perform a proper application-level validation.
-* Gemini must simulate running the project (equivalent to `npm run build` and `npm run start`) and verify:
+* Gemini must NEVER automatically run or simulate application-level testing after implementation.
+* After completing implementation, Gemini must ask the user whether they want application-level validation/testing to be performed.
+* Testing must only occur if:
+  * The user explicitly says "yes"
+  * The user explicitly requests testing
+  * The user directly instructs Gemini to validate the application
 
+### If Testing Is Approved
+
+* Gemini should then perform logical application-level validation equivalent to:
+  * `npm run build`
+  * `npm run start`
+  * Relevant linting/type validation
+
+### Validation Scope
+
+* Verify:
   * No build-time errors
   * No runtime exceptions
-  * No missing dependencies or broken imports
-  * No type errors (for TypeScript files)
-* Gemini must also validate critical user flows relevant to the implemented feature.
-* If any issue is detected, Gemini must fix all errors before returning the final output.
-* Code delivery is considered incomplete until the application is logically verified as error-free.
+  * No missing dependencies
+  * No broken imports
+  * No TypeScript type errors
+  * Critical user flows relevant to the implementation
+
+### Error Handling
+
+* If issues are detected during approved testing:
+  * Gemini must fix all detected issues before final delivery.
+
+### Enforcement
+
+* Code delivery does NOT require automatic testing.
+* Testing is conditional and user-controlled.
+* Gemini must always ask before performing validation unless explicitly instructed beforehand.

@@ -28,14 +28,6 @@ export interface BasicCardProps extends HTMLMotionProps<"div"> {
   onSecondaryClick?: () => void;
 }
 
-/**
- * BasicCard Component
- * 
- * Variants:
- * - modern: Glassmorphism effect, subtle border, smooth animations.
- * - clean: Solid background, clear borders, simple layout.
- * - minimal: Border only, very light, focus on content.
- */
 export const BasicCard: React.FC<BasicCardProps> = ({
   className,
   variant = "modern",

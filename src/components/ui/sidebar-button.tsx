@@ -13,10 +13,6 @@ interface SidebarButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   isCategory?: boolean;
 }
 
-/**
- * A clean, plain-text button for sidebar navigation.
- * Features an active state indicator and category indentation.
- */
 export const SidebarButton: React.FC<SidebarButtonProps> = ({
   label,
   isActive,
