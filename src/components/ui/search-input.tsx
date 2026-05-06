@@ -11,8 +11,15 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search as SearchIcon, ChevronRight, Square, MousePointerClick, Type, Loader2, GalleryHorizontal, Navigation, MessageSquare, Compass } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { componentsList } from "@/data/component-library-data";
 import Link from "next/link";
+
+export interface SearchItem {
+  id: string | number;
+  title: string;
+  type: string;
+  slug: string;
+  description: string;
+}
 
 const getComponentIcon = (type: string, slug: string) => {
   const t = type.toLowerCase();
@@ -51,17 +58,21 @@ const getComponentIcon = (type: string, slug: string) => {
 };
 
 export interface SearchInputProps {
+  data?: SearchItem[];
   mobile?: boolean;
   onClose?: () => void;
   className?: string;
   placeholder?: string;
+  onItemSelect?: (item: SearchItem) => void;
 }
 
 export const SearchInput: React.FC<SearchInputProps> = ({
+  data = [],
   mobile = false,
   onClose = () => {},
   className,
   placeholder,
+  onItemSelect,
 }) => {
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
@@ -96,7 +107,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
   const results = useMemo(() => {
     if (!query.trim()) return [];
     const q = query.toLowerCase();
-    return componentsList
+    return data
       .filter(
         (item) =>
           item.title.toLowerCase().includes(q) ||
@@ -105,7 +116,7 @@ export const SearchInput: React.FC<SearchInputProps> = ({
           item.slug.toLowerCase().includes(q),
       )
       .slice(0, 5);
-  }, [query]);
+  }, [query, data]);
 
   const activeMobile = mobile || isMobileViewport;
 
@@ -160,9 +171,13 @@ export const SearchInput: React.FC<SearchInputProps> = ({
                     key={item.id}
                     type="button"
                     onClick={() => {
-                      router.push(
-                        `/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`,
-                      );
+                      if (onItemSelect) {
+                        onItemSelect(item);
+                      } else {
+                        router.push(
+                          `/components/${item.type.toLowerCase()}/${item.slug}/${item.id}`,
+                        );
+                      }
                       setIsOpen(false);
                       setQuery("");
                       onClose();

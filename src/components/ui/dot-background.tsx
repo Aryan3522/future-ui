@@ -16,10 +16,6 @@ interface DotBackgroundProps {
   children?: React.ReactNode;
 }
 
-/**
- * A highly customizable dotted background component.
- * Features a radial mask to blend smoothly with the layout.
- */
 export const DotBackground: React.FC<DotBackgroundProps> = ({
   className,
   dotSize = 1,
@@ -35,7 +31,6 @@ export const DotBackground: React.FC<DotBackgroundProps> = ({
         className
       )}
     >
-      {/* The Dotted Grid */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -47,7 +42,6 @@ export const DotBackground: React.FC<DotBackgroundProps> = ({
         }}
       />
       
-      {/* Content */}
       <div className="relative z-10 w-full">
         {children}
       </div>

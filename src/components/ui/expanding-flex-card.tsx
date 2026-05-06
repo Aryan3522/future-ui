@@ -5,7 +5,7 @@
  */
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export interface ExpandingCardOption {
@@ -41,19 +41,6 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
   // Limit to 8 cards
   const displayOptions = options.slice(0, 8);
 
-  const handleDragEnd = (event: any, info: any) => {
-    if (!carouselRef.current || !containerRef.current) return;
-    
-    // Simple logic to approximate active index based on drag offset
-    const offset = info.point.x;
-    const containerWidth = containerRef.current.offsetWidth;
-    const cardWidth = containerWidth * 0.85; // match .mobile-card flex-basis
-    
-    // This is a very rough approximation, for a real carousel we'd track x position
-    // But since the user wants a simple draggable list, we can just keep the dots for visual flair
-    // or improve it if we had more time. For now, let's just make sure it doesn't break.
-  };
-
   return (
     <div className={cn("w-full max-w-6xl mx-auto px-4 py-8", className)} ref={containerRef}>
       <style>{`
@@ -81,8 +68,7 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
           left: 20px;
           right: 20px;
           display: flex;
-          align-items: center;
-          gap: 12px;
+          align-items: center; gap: 12px;
           background: rgba(0, 0, 0, 0.3);
           backdrop-filter: blur(8px);
           padding: 12px;
@@ -192,7 +178,7 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
             </motion.div>
           </div>
           <div className="mt-6 flex justify-center gap-2">
-            {displayOptions.map((opt, i) => (
+            {displayOptions.map((opt) => (
               <div 
                 key={opt.id} 
                 className={cn(
@@ -204,7 +190,7 @@ export const ExpandingFlexCard: React.FC<ExpandingFlexCardProps> = ({ options = 
           </div>
         </div>
       ) : (
-        <div className="flex gap-3 h-[450px] items-center justify-center">
+        <div className="flex gap-3 h-112.5 items-center justify-center">
           {displayOptions.map((opt) => (
             <div
               key={opt.id}

@@ -66,7 +66,6 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
         }}
         {...props}
       >
-        {/* Content (Text) */}
         <motion.div
           variants={{
             initial: { x: 0 },
@@ -78,7 +77,6 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
           {children}
         </motion.div>
 
-        {/* Shrinking Glass Sheet */}
         <motion.div
           variants={{
             initial: { 
@@ -102,7 +100,6 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
             backgroundColor: finalGlass,
           }}
         >
-          {/* Icon - appears when shrinking */}
           <motion.div
             variants={{
               initial: { opacity: 0, scale: 0, x: 0, rotate: -45 },
@@ -115,7 +112,6 @@ export const GlowyButton = React.forwardRef<HTMLButtonElement, GlowyButtonProps>
           </motion.div>
         </motion.div>
 
-        {/* Shimmer Effect */}
         <motion.div
           className="absolute inset-0 z-0 bg-linear-to-r from-transparent via-white/10 to-transparent"
           variants={{
