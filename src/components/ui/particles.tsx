@@ -238,6 +238,11 @@ export const Particles: React.FC<ParticlesProps> = ({
   }
 
   useEffect(() => {
+    initCanvasRef.current = initCanvas
+    animateRef.current = animate
+  })
+
+  useEffect(() => {
     if (canvasRef.current) {
       context.current = canvasRef.current.getContext("2d")
     }
@@ -300,10 +305,7 @@ export const Particles: React.FC<ParticlesProps> = ({
     initCanvasRef.current()
   }, [refresh])
 
-  useEffect(() => {
-    initCanvasRef.current = initCanvas
-    animateRef.current = animate
-  })
+
 
   return (
     <div
