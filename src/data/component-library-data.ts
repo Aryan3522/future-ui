@@ -829,6 +829,28 @@ export const componentsList: ComponentItem[] = [
       "Usage: Wrap any plain text string inside <ScrollTextReveal>.",
       "Customization: The animation range is based on its container entering the viewport.",
     ],
+  },
+  {
+    id: 101,
+    title: "Cursor Glow Button",
+    type: "Button",
+    slug: "cursor-glow-button",
+    category: "form",
+    description: "A sophisticated button with a smooth radial gradient glow that follows the cursor on hover. Built for high-performance and a premium tactile feel.",
+    details: [
+      "Built with Framer Motion for highly optimized GPU-accelerated glow tracking.",
+      "Reactive spotlight effect tracking user's cursor position.",
+      "Minimalist, modern, and clean design.",
+      "Fully reusable and accepts all standard HTML button props.",
+    ],
+    codes: {
+      next: 'import { CursorGlowButton } from "@/components/ui/cursor-glow-button";\n\nexport default function Example() {\n  return <CursorGlowButton>Hover over me!</CursorGlowButton>;\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add cursor-glow-button'.",
+      "Import: 'import { CursorGlowButton } from \"@/components/ui/cursor-glow-button\";'",
+      "Customization: Adjust the 'glowColor', 'glowSize', and 'glowOpacity' props to match your theme.",
+    ],
   }
 ];
 
