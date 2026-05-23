@@ -38,6 +38,7 @@ import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
 import { Calculator } from "@/components/ui/calculator";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
+import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
@@ -801,4 +802,16 @@ export const PreviewRegistry: Record<string, React.FC> = {
       </div>
     );
   },
+  "cursor-glow-button": () => (
+    <div className="flex items-center justify-center w-full h-full p-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-3xl justify-items-center">
+        <CursorGlowButton variant="default">Primary</CursorGlowButton>
+        <CursorGlowButton variant="secondary">Secondary</CursorGlowButton>
+        <CursorGlowButton variant="outline">Outline</CursorGlowButton>
+        <CursorGlowButton variant="destructive" glowColor="rgba(239, 68, 68, 0.8)">Destructive</CursorGlowButton>
+        <CursorGlowButton variant="ghost">Ghost</CursorGlowButton>
+        <CursorGlowButton variant="link">Link</CursorGlowButton>
+      </div>
+    </div>
+  ),
 };
