@@ -49,6 +49,9 @@ import { Toggle } from "@/components/ui/toggle";
 import { Modal, ModalTrigger, ModalContent, ModalHeader, ModalTitle, ModalDescription, ModalBody, ModalFooter, ModalClose } from "@/components/ui/modal";
 import { CommandPalette, CommandInput, CommandList, CommandEmpty, CommandGroup, CommandItem, CommandSeparator, CommandShortcut } from "@/components/ui/command-palette";
 import { Select, SelectTrigger, SelectContent, SelectSearch, SelectList, SelectGroup, SelectItem, SelectEmpty } from "@/components/ui/select";
+import { FileUpload, UploadDropzone, UploadPreview, UploadProgress, FileState } from "@/components/ui/file-upload";
+import { FormBuilder, SchemaField } from "@/components/ui/form-builder";
+import { KanbanBoard, KanbanColumn, KanbanCard, KanbanColumnData } from "@/components/ui/kanban";
 
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -997,6 +1000,237 @@ const SelectPreview: React.FC = () => {
   );
 };
 
+const FileUploadPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"default" | "compact" | "card" | "glass" | "minimal">("default");
+  const [files, setFiles] = React.useState<FileState[]>([]);
+
+  // Simulate an upload process
+  const handleUpload = (filesToUpload: File[]) => {
+    // In a real app, this would use XMLHttpRequest or fetch.
+    // For the preview, we'll simulate progress per file.
+    filesToUpload.forEach((file) => {
+      // Small delay before starting
+      setTimeout(() => {
+        setFiles(prev => prev.map(f => {
+          if (f.file === file && f.status === 'idle') return { ...f, status: 'uploading', progress: 0 };
+          return f;
+        }));
+
+        let progress = 0;
+        const interval = setInterval(() => {
+          progress += Math.random() * 15 + 5;
+          
+          if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            setFiles(prev => prev.map(f => {
+              if (f.file === file) return { ...f, status: 'success', progress };
+              return f;
+            }));
+          } else {
+            setFiles(prev => prev.map(f => {
+              if (f.file === file) return { ...f, progress };
+              return f;
+            }));
+          }
+        }, 300);
+      }, 500);
+    });
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
+          <div className="flex flex-wrap gap-2">
+            {(["default", "compact", "card", "glass", "minimal"] as const).map((v) => (
+              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-center justify-center w-full max-w-md flex-1 mb-32">
+        <FileUpload
+          variant={variant}
+          maxFiles={5}
+          maxSize={1024 * 1024 * 10} // 10MB
+          accept={{
+            "image/*": [".png", ".jpg", ".jpeg", ".gif"],
+            "video/*": [".mp4", ".webm"],
+            "application/pdf": [".pdf"]
+          }}
+          onUpload={handleUpload}
+          onFilesChange={setFiles}
+        >
+          <UploadDropzone />
+          <UploadPreview />
+          <UploadProgress />
+        </FileUpload>
+      </div>
+    </div>
+  );
+};
+
+const sampleSchema: SchemaField[] = [
+  {
+    name: "personalInfo",
+    type: "group",
+    label: "Personal Information",
+    description: "Please provide your basic details.",
+    colSpan: "full",
+    fields: [
+      { name: "firstName", type: "text", label: "First Name", placeholder: "John", required: true, colSpan: 2 },
+      { name: "lastName", type: "text", label: "Last Name", placeholder: "Doe", required: true, colSpan: 2 },
+      { name: "email", type: "email", label: "Email Address", placeholder: "john@example.com", required: true, colSpan: "full" },
+    ]
+  },
+  {
+    name: "role",
+    type: "select",
+    label: "Role",
+    placeholder: "Select a role",
+    required: true,
+    colSpan: 2,
+    options: [
+      { label: "Developer", value: "developer" },
+      { label: "Designer", value: "designer" },
+      { label: "Manager", value: "manager" },
+    ]
+  },
+  {
+    name: "experience",
+    type: "number",
+    label: "Years of Experience",
+    placeholder: "e.g. 5",
+    required: true,
+    colSpan: 2,
+    validation: { min: 0, max: 50 }
+  },
+  {
+    name: "teamMembers",
+    type: "array",
+    label: "Team Members",
+    description: "Add members who will report to you.",
+    colSpan: "full",
+    showIf: (values) => values.role === "manager",
+    fields: [
+      { name: "name", type: "text", label: "Member Name", placeholder: "Jane Doe", required: true, colSpan: 2 },
+      { name: "title", type: "text", label: "Title", placeholder: "Engineer", required: true, colSpan: 2 },
+    ]
+  },
+  {
+    name: "terms",
+    type: "checkbox",
+    label: "I agree to the terms and conditions",
+    required: true,
+    colSpan: "full"
+  }
+];
+
+const FormBuilderPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"default" | "minimal" | "enterprise" | "compact">("default");
+  const [layout, setLayout] = React.useState<"single" | "two" | "three" | "auto">("auto");
+  const [submittedData, setSubmittedData] = React.useState<any>(null);
+
+  return (
+    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
+            <div className="flex flex-wrap gap-2">
+              {(["default", "minimal", "enterprise", "compact"] as const).map((v) => (
+                <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
+              ))}
+            </div>
+          </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Layout Mode</span>
+            <div className="flex flex-wrap gap-2">
+              {(["auto", "single", "two", "three"] as const).map((l) => (
+                <Button key={l} variant={layout === l ? "default" : "outline"} size="sm" onClick={() => setLayout(l)}>{l}</Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-4xl flex flex-col lg:flex-row gap-8">
+        <div className="flex-1">
+          <FormBuilder
+            schema={sampleSchema}
+            variant={variant}
+            layout={layout}
+            onSubmit={(data) => setSubmittedData(data)}
+          />
+        </div>
+        {submittedData && (
+          <div className="w-full lg:w-80 shrink-0">
+            <div className="p-4 rounded-xl bg-muted/30 border border-border/50">
+              <h4 className="text-sm font-semibold mb-2">Submitted Data</h4>
+              <pre className="text-xs overflow-auto p-3 rounded-lg bg-background border border-border/50">
+                {JSON.stringify(submittedData, null, 2)}
+              </pre>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const initialKanbanData: KanbanColumnData[] = [
+  {
+    id: "col-todo",
+    title: "To Do",
+    cards: [
+      { id: "c1", title: "Research competitors", priority: "medium", dueDate: "Oct 12", labels: [{ text: "Design", color: "#8b5cf6" }] },
+      { id: "c2", title: "Setup monorepo", priority: "high", dueDate: "Oct 14", labels: [{ text: "Engineering", color: "#3b82f6" }], assignees: [{ name: "Alex" }] },
+      { id: "c3", title: "Draft documentation", priority: "low", comments: 2 },
+    ]
+  },
+  {
+    id: "col-prog",
+    title: "In Progress",
+    cards: [
+      { id: "c4", title: "Implement Kanban Board", priority: "urgent", dueDate: "Oct 10", labels: [{ text: "Feature", color: "#10b981" }], assignees: [{ name: "Sam" }, { name: "Jordan" }] },
+      { id: "c5", title: "Fix API routing bug", priority: "high", attachments: 1 },
+    ]
+  },
+  {
+    id: "col-done",
+    title: "Done",
+    cards: [
+      { id: "c6", title: "Design system audit", priority: "medium", labels: [{ text: "Design", color: "#8b5cf6" }] },
+    ]
+  }
+];
+
+const KanbanPreview: React.FC = () => {
+  const [variant, setVariant] = React.useState<"default" | "compact" | "enterprise" | "minimal">("enterprise");
+
+  return (
+    <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
+      <div className="flex flex-col gap-4 mb-4 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-5xl w-full shrink-0">
+        <div className="flex flex-col gap-2">
+          <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
+          <div className="flex flex-wrap gap-2">
+            {(["default", "compact", "enterprise", "minimal"] as const).map((v) => (
+              <Button key={v} variant={variant === v ? "default" : "outline"} size="sm" onClick={() => setVariant(v)}>{v}</Button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-2">
+        <KanbanBoard variant={variant} initialColumns={initialKanbanData} />
+      </div>
+    </div>
+  );
+};
+
 export const PreviewRegistry: Record<string, React.FC> = {
   primary: () => (
     <div className="flex items-center justify-center w-full h-full">
@@ -1485,5 +1719,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   modal: ModalPreview,
   "command-palette": CommandPalettePreview,
   select: SelectPreview,
+  "file-upload": FileUploadPreview,
+  "form-builder": FormBuilderPreview,
+  kanban: KanbanPreview,
 };
 

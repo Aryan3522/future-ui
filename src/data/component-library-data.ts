@@ -1049,6 +1049,87 @@ export const componentsList: ComponentItem[] = [
       "Search: Enabled by default. Pass 'searchable={false}' to <Select> to hide the search input.",
       "Virtualization: For thousands of items, wrap your options in <SelectVirtualizer> and pass the items and renderItem function."
     ]
+  },
+  {
+    id: 109,
+    title: "File Upload",
+    type: "Form",
+    slug: "file-upload",
+    category: "form",
+    description: "A fully reusable, premium file upload component with drag-and-drop, validation, and real-time upload progress previews.",
+    details: [
+      "Built natively using standard HTML5 drag-and-drop events.",
+      "Generates rich thumbnails for images and videos automatically.",
+      "Compound component architecture (FileUpload, Dropzone, Preview, Progress).",
+      "Handles validation rules like max files, size limits, and MIME type restrictions.",
+      "Smooth, physics-based state transitions powered by Framer Motion.",
+    ],
+    codes: {
+      next: 'import { FileUpload, UploadDropzone, UploadPreview, UploadProgress } from "@/components/ui/file-upload";\n\nexport default function Example() {\n  return (\n    <FileUpload\n      variant="default"\n      maxFiles={3}\n      maxSize={5 * 1024 * 1024} // 5MB\n      accept={{\n        "image/*": [".png", ".jpg", ".jpeg"],\n      }}\n      onUpload={(files) => console.log("Uploading:", files)}\n    >\n      <UploadDropzone title="Drag images here" />\n      <UploadPreview />\n      <UploadProgress />\n    </FileUpload>\n  );\n}'
+    },
+    usage: [
+      "Overview: A powerful compound File Upload component allowing users to drag and drop or browse for files.",
+      "Installation: Run 'npx futureuikit add file-upload' to add it to your project.",
+      "Validation: Pass 'maxSize' (in bytes), 'maxFiles', and an 'accept' map to restrict uploads.",
+      "Handling Uploads: Provide an 'onUpload' callback which fires automatically with a list of valid files ready for submission.",
+      "Variants: The <FileUpload> root accepts 'variant' with values: 'default', 'compact', 'card', 'glass', 'minimal'.",
+      "Progress: In a real app, update the internal progress state via the 'onFilesChange' hook to visualize upload metrics.",
+    ]
+  }
+
+  ,
+  {
+    id: 110,
+    title: "Form Builder",
+    type: "Form",
+    slug: "form-builder",
+    category: "form",
+    description: "A highly advanced, fully declarative schema-driven Form Builder with support for conditional fields, arrays, and nested groups.",
+    details: [
+      "Powered by react-hook-form and Zod validation.",
+      "Dynamic field rendering based on strict schema typing.",
+      "Built-in support for nested groups and repeatable array items.",
+      "Includes Auto, Single, Two, and Three column responsive grid layouts.",
+      "Condition evaluation allowing fields to display dynamically based on sibling values.",
+    ],
+    codes: {
+      next: 'import { FormBuilder } from "@/components/ui/form-builder";\n\nexport default function Example() {\n  return (\n    <FormBuilder\n      schema={[\n        { name: "name", type: "text", label: "Name", required: true },\n        { name: "emails", type: "array", label: "Emails", fields: [\n           { name: "address", type: "email", label: "Email Address" }\n        ]}\n      ]}\n      onSubmit={(data) => console.log(data)}\n    />\n  );\n}'
+    },
+    usage: [
+      "Overview: The FormBuilder allows generating complex, validated forms strictly from a JSON-like schema array.",
+      "Installation: Run 'npx futureuikit add form-builder' to add it to your project.",
+      "Schema Configuration: Pass an array of 'SchemaField' objects to the 'schema' prop.",
+      "Validation: Zod schemas are automatically generated. Custom logic can be supplied via the 'validation.custom' callback.",
+      "Conditional Fields: Provide a 'showIf: (values) => boolean' callback on any schema field to handle dynamic visibility.",
+      "Arrays and Groups: Set type='array' or type='group' and supply a nested 'fields' array to deeply nest inputs.",
+    ]
+  }
+
+  ,
+  {
+    id: 111,
+    title: "Kanban Board",
+    type: "Layout",
+    slug: "kanban",
+    category: "layout",
+    description: "A highly performant, zero-dependency Native HTML5 drag-and-drop Kanban Board inspired by modern project management tools like Linear.",
+    details: [
+      "Zero heavy dependencies, utilizes pure native HTML5 drag and drop events.",
+      "Smooth drop-zone animations using framer-motion principles.",
+      "Supports reordering columns horizontally and cards vertically between columns.",
+      "Compound architecture consisting of <KanbanBoard>, <KanbanColumn>, and <KanbanCard>.",
+      "Includes variants: Default, Compact, Enterprise, and Minimal.",
+    ],
+    codes: {
+      next: 'import { KanbanBoard, KanbanColumn, KanbanCard } from "@/components/ui/kanban";\n\nexport default function Example() {\n  return (\n    <KanbanBoard onDragEnd={({ type, activeId, overId }) => console.log(type, activeId, overId)}>\n      <KanbanColumn id="todo" title="To Do">\n        <KanbanCard id="card1" columnId="todo" title="Implement Drag & Drop" />\n      </KanbanColumn>\n      <KanbanColumn id="done" title="Done">\n        <KanbanCard id="card2" columnId="done" title="Setup project" />\n      </KanbanColumn>\n    </KanbanBoard>\n  );\n}'
+    },
+    usage: [
+      "Overview: A powerful layout component for managing workflow states via drag and drop.",
+      "Installation: Run 'npx futureuikit add kanban' to add it to your project.",
+      "Drag and Drop: Listen to the 'onDragEnd' event on the <KanbanBoard> to update your state.",
+      "Cards: The <KanbanCard> supports rich meta like assignees, due dates, labels, and priority indicators.",
+      "Columns: The <KanbanColumn> serves as both a droppable area for cards and a draggable entity itself.",
+    ]
   }
 ];
 

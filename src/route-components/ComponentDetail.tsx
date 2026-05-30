@@ -259,7 +259,14 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
           </motion.div>
 
           <div className="relative border-l border-border/10 pl-8 md:pl-12 space-y-24 py-4 ml-2 md:ml-4">
-            {component.usage.map((step, i) => {
+            {[
+              `Installation: Open your terminal and run \`npx futureuikit add ${slug}\`. The CLI will automatically resolve dependencies, create the necessary files in your \`components/ui\` directory, and configure Tailwind or Framer Motion if required.`,
+              `Importing: Import the component into your application file using the standard alias path. For example: \`import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"\`.`,
+              `Basic Integration: Place the component directly within your JSX layout. By default, it operates completely standalone. Ensure you are using it within a Client Component (\`"use client"\`) if the component utilizes Framer Motion or React Hooks.`,
+              ...component.usage,
+              `Advanced Customization: Because Future UI components are copied directly into your codebase, you have 100% control over the source code. You can easily open \`src/components/ui/${slug}.tsx\` to adjust physics (spring configurations), rewrite logic, add new variants using \`cva\`, or tweak the core aesthetic to match your brand exactly.`,
+              `Accessibility: Our components prioritize a11y. Standard attributes like \`aria-label\`, \`tabIndex\`, and native keyboard navigation (where applicable) are usually preserved. You can pass any standard HTML attributes down to the root element.`,
+            ].map((step, i) => {
               // Parse step assuming format "Action: description"
               const splitIndex = step.indexOf(":");
               const hasColon = splitIndex !== -1;
