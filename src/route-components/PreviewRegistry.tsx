@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { BasicCard } from "@/components/ui/basic-card";
@@ -53,6 +53,7 @@ import { FileUpload, UploadDropzone, UploadPreview, UploadProgress, FileState } 
 import { FormBuilder, SchemaField } from "@/components/ui/form-builder";
 import { KanbanBoard, KanbanColumn, KanbanCard, KanbanColumnData } from "@/components/ui/kanban";
 import { WorkflowBuilder, WorkflowCanvas, WorkflowToolbar, WorkflowMiniMap } from "@/components/ui/workflow-builder";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
@@ -931,7 +932,7 @@ const SelectPreview: React.FC = () => {
   return (
     <div ref={containerRef} className="flex flex-col items-center justify-center w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
       <div className="flex flex-col gap-4 mb-8 bg-background/50 backdrop-blur-md p-4 rounded-xl border border-border/50 max-w-4xl w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="flex flex-col gap-2">
             <span className="text-xs uppercase tracking-widest font-bold opacity-50">Variant</span>
             <div className="flex flex-wrap gap-2">
@@ -955,13 +956,7 @@ const SelectPreview: React.FC = () => {
               <Button variant={isMulti ? "default" : "outline"} size="sm" onClick={() => setIsMulti(true)}>Multi-Select</Button>
             </div>
           </div>
-          <div className="flex flex-col gap-2">
-            <span className="text-xs uppercase tracking-widest font-bold opacity-50">Search</span>
-            <div className="flex flex-wrap gap-2">
-              <Button variant={searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(true)}>Enabled</Button>
-              <Button variant={!searchable ? "default" : "outline"} size="sm" onClick={() => setSearchable(false)}>Disabled</Button>
-            </div>
-          </div>
+
         </div>
       </div>
 
@@ -1737,6 +1732,44 @@ export const PreviewRegistry: Record<string, React.FC> = {
           <div className="h-[60vh] flex items-center justify-center text-muted-foreground w-full">
             <span className="animate-pulse">Scroll up to reverse ↑</span>
           </div>
+        </div>
+      </div>
+    );
+  },
+  "rich-text-editor": function RichTextEditorPreview() {
+    const [variant, setVariant] = useState<"default" | "minimal" | "writing" | "enterprise" | "glass">("default");
+
+    return (
+      <div className="flex flex-col w-full h-full p-4 md:p-8 gap-6 overflow-auto relative z-10 bg-muted/10">
+        <div className="flex flex-wrap gap-2 shrink-0">
+          {(["default", "minimal", "writing", "enterprise", "glass"] as const).map(v => (
+            <button
+              key={v}
+              onClick={() => setVariant(v)}
+              className={cn("px-4 py-2 text-sm font-medium rounded-lg capitalize transition-all", variant === v ? "bg-primary text-primary-foreground shadow-md" : "bg-card text-muted-foreground hover:bg-muted hover:text-foreground border border-border")}
+            >
+              {v} Variant
+            </button>
+          ))}
+        </div>
+        
+        <div className="flex-1 w-full mx-auto min-h-[600px] shrink-0 flex flex-col">
+          <RichTextEditor 
+            variant={variant}
+            content={`
+              <h1>Welcome to the Rich Text Editor ✨</h1>
+              <p>This is a highly customizable, Notion-like editor built with Tiptap. It's fully functional out of the box and supports various modern features.</p>
+              <p><strong>Try these interactions:</strong></p>
+              <ul data-type="taskList">
+                <li data-type="taskItem" data-checked="false">Type <code>/</code> on a new line to open the <strong>Slash Command menu</strong>.</li>
+                <li data-type="taskItem" data-checked="false">Select any text to see the floating <strong>Bubble Menu</strong> for quick formatting.</li>
+                <li data-type="taskItem" data-checked="false">Write markdown shortcuts like <code># </code> for headings or <code>> </code> for blockquotes.</li>
+              </ul>
+              <blockquote>"The best tools get out of your way and let you focus on what matters most."</blockquote>
+              <pre><code>function test() {\n  console.log('It even has code blocks!');\n}</code></pre>
+              <p>You can also insert tables and images seamlessly.</p>
+            `}
+          />
         </div>
       </div>
     );
