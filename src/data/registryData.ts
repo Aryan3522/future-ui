@@ -121,6 +121,18 @@ export const registry: Registry = {
       }
     ]
   },
+  "browser-window": {
+    "name": "Browser Window",
+    "type": "components:ui",
+    "dependencies": [],
+    "files": [
+      {
+        "name": "browser-window.tsx",
+        "content": "\"use client\";\n\n\n\nimport * as React from \"react\";\nimport { cn } from \"@/lib/utils\";\n\nexport interface BrowserWindowProps extends React.HTMLAttributes<HTMLDivElement> {\n  children: React.ReactNode;\n  contentClassName?: string;\n  scrollRef?: React.RefObject<HTMLDivElement | null>;\n}\n\nexport const BrowserWindow = React.forwardRef<HTMLDivElement, BrowserWindowProps>(\n  ({ className, contentClassName, children, scrollRef, ...props }, ref) => {\n    return (\n      <div \n        ref={ref}\n        className={cn(\n          \"w-full h-full relative overflow-hidden rounded-2xl border border-border/40 bg-background flex flex-col items-center justify-center shadow-sm\", \n          className\n        )} \n        {...props}\n      >\n        {/* Mock Window Header */}\n        <div className=\"absolute top-0 left-0 w-full h-8 bg-muted border-b border-border/40 flex items-center px-4 gap-1.5 z-50\">\n          <div className=\"w-2.5 h-2.5 rounded-full bg-red-500/80\" />\n          <div className=\"w-2.5 h-2.5 rounded-full bg-yellow-500/80\" />\n          <div className=\"w-2.5 h-2.5 rounded-full bg-green-500/80\" />\n        </div>\n        \n        {/* Canvas */}\n        <div \n          ref={scrollRef} \n          className={cn(\"relative w-full h-full pt-8 px-0 pb-0 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar\", contentClassName)}\n        >\n          {children}\n        </div>\n      </div>\n    );\n  }\n);\nBrowserWindow.displayName = \"BrowserWindow\";",
+        "targetPath": "components/ui/browser-window.tsx"
+      }
+    ]
+  },
   "button": {
     "name": "Button",
     "type": "components:ui",

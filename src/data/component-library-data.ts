@@ -3,6 +3,29 @@ import { ComponentItem } from "@/types";
 
 export const componentsList: ComponentItem[] = [
   {
+    id: 999,
+    title: "Browser Window",
+    type: "Layout",
+    slug: "browser-window",
+    category: "layout",
+    isNew: true,
+    description: "A clean, responsive mock browser window for displaying UI components or screenshots in a contained environment.",
+    details: [
+      "Perfect for component showcases, documentation, and portfolio sites.",
+      "Automatically handles aspect ratio and responsive scaling.",
+      "Built-in mock window header with macOS style traffic lights.",
+      "Provides an isolated canvas with customized scrollbars.",
+    ],
+    codes: {
+      next: 'import { BrowserWindow } from "@/components/ui/browser-window";\n\nexport default function Example() {\n  return (\n    <BrowserWindow className="max-w-2xl aspect-video">\n      <div className="flex items-center justify-center h-full">\n        Your Content Here\n      </div>\n    </BrowserWindow>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add browser-window'.",
+      "Wrap any content in <BrowserWindow> to mock a browser view.",
+      "Use 'contentClassName' to style the internal canvas.",
+    ],
+  },
+  {
     id: 1,
     title: "Primary Button",
     type: "Button",

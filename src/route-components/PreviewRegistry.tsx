@@ -41,6 +41,7 @@ import { Calculator } from "@/components/ui/calculator";
 import { DynamicForm, FieldConfig } from "@/components/ui/dynamic-form";
 import { Sparkles, Terminal, Mail, Lock, User, Globe, Phone as PhoneIcon, Check as CheckIcon, X as XIcon, AlertCircle as AlertCircleIcon, Home, Search, Settings, Compass, MessageSquare, Plus, Monitor, Filter } from "lucide-react";
 import { ScrollTextReveal } from "@/components/ui/scroll-text-reveal";
+import { BrowserWindow } from "@/components/ui/browser-window";
 import { CursorGlowButton } from "@/components/ui/cursor-glow-button";
 
 import { Dock, DockItem, DockDivider } from "@/components/ui/dock";
@@ -206,19 +207,13 @@ const PreviewContainer: React.FC<PreviewContainerProps> = ({
       {/* Content Area */}
       <div className={cn("flex items-center justify-center flex-1 w-full relative px-2 md:px-4 pb-4 md:pb-8 pt-2 md:pt-4", contentClassName)}>
         {isVirtualScreen ? (
-          <div className="w-full md:w-[80%] aspect-[9/16] md:aspect-video relative overflow-hidden rounded-2xl border border-border/40 bg-background flex flex-col items-center justify-center">
-            {/* Mock Window Header */}
-            <div className="absolute top-0 left-0 w-full h-8 bg-muted border-b border-border/40 flex items-center px-4 gap-1.5 z-50">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/80" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/80" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500/80" />
-            </div>
-            
-            {/* Virtual Screen Canvas */}
-            <div ref={scrollRef} className={cn("relative w-full h-full pt-8 px-0 pb-0 flex flex-col items-center justify-center overflow-y-auto overflow-x-hidden custom-scrollbar", canvasClassName)}>
-              {children}
-            </div>
-          </div>
+          <BrowserWindow 
+            className="md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]"
+            contentClassName={canvasClassName}
+            scrollRef={scrollRef}
+          >
+            {children}
+          </BrowserWindow>
         ) : (
           children
         )}
@@ -2122,6 +2117,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   kanban: KanbanPreview,
   "workflow-builder": WorkflowPreview,
   "ai-chat": AIChatPreview,
+  "browser-window": BrowserWindowPreview,
 };
 
 function AIChatPreview() {
@@ -2671,6 +2667,25 @@ ORDER BY department, salary_rank;`,
             <ChatInput />
           </AIChat>
         </div>
+      </div>
+    </PreviewContainer>
+  );
+}
+
+function BrowserWindowPreview() {
+  return (
+    <PreviewContainer
+      title="Browser Window"
+      description="A clean, responsive mock browser window for displaying UI components or screenshots."
+      isVirtualScreen={false}
+    >
+      <div className="flex flex-col items-center justify-center w-full h-full p-0 relative z-10 overflow-hidden">
+        <BrowserWindow className="w-full md:w-[80%] aspect-[9/16] md:aspect-[3/4] lg:aspect-video max-h-[90vh]">
+          <div className="flex flex-col items-center justify-center w-full h-full bg-muted/10 text-muted-foreground p-8 text-center space-y-4">
+            <h3 className="text-xl font-medium text-foreground">Welcome to Future UI</h3>
+            <p className="max-w-md text-sm">The modern component library for ambitious engineering teams.</p>
+          </div>
+        </BrowserWindow>
       </div>
     </PreviewContainer>
   );
