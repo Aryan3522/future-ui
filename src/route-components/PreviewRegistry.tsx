@@ -967,7 +967,7 @@ const SelectPreview: React.FC = () => {
       }
     >
       <div ref={setContainer} className="flex flex-col items-center justify-start w-full h-full p-4 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="flex items-center justify-center w-full max-w-sm flex-1 mt-12 mb-32">
+        <div className="flex items-start justify-center w-full h-full flex-1 pt-12">
           <Select 
             key={isMulti ? "multi" : "single"}
             variant={variant} 
@@ -1235,8 +1235,8 @@ const WorkflowPreview: React.FC = () => {
       activeVariant={variant}
       onVariantChange={setVariant}
     >
-      <div className="flex flex-col items-center justify-start w-full h-full p-4 md:p-8 relative z-10 overflow-hidden" style={{ transform: 'translateZ(0)' }}>
-        <div className="w-full max-w-5xl flex-1 min-h-[500px] bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative mt-4">
+      <div className="w-full h-full min-h-[600px] p-4 md:p-8 flex items-center justify-center relative z-10">
+        <div className="w-full h-[600px] max-w-5xl bg-background/20 rounded-xl overflow-hidden p-0 border border-border/50 relative shadow-xl">
           <WorkflowBuilder 
             variant={variant}
             initialNodes={[
@@ -1250,6 +1250,7 @@ const WorkflowPreview: React.FC = () => {
               { id: "e2", source: "agent-1", target: "action-1" },
               { id: "e3", source: "agent-1", target: "action-2" }
             ]}
+            className="w-full h-full"
           >
             <WorkflowCanvas />
             <WorkflowToolbar />
@@ -2286,6 +2287,15 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "scroll-text-reveal": function ScrollTextRevealPreview() {
     const scrollContainer = React.useRef<HTMLDivElement>(null);
+    const [screenHeight, setScreenHeight] = React.useState<string | number>("100vh");
+
+    React.useEffect(() => {
+      if (scrollContainer.current) {
+        // Measure the virtual screen height to perfectly center the text
+        setScreenHeight(scrollContainer.current.clientHeight);
+      }
+    }, []);
+
     return (
       <PreviewContainer 
         title="Scroll Text Reveal" 
@@ -2293,18 +2303,18 @@ export const PreviewRegistry: Record<string, React.FC> = {
         scrollRef={scrollContainer}
         canvasClassName="justify-start"
       >
-        <div className="w-full flex flex-col items-center pb-[200px]">
-          <div className="min-h-[500px] md:min-h-[600px] pt-20 md:pt-32 flex items-center justify-center text-muted-foreground w-full shrink-0">
+        <div className="w-full flex flex-col items-center pb-20">
+          <div style={{ height: screenHeight }} className="flex flex-col items-center justify-center text-muted-foreground w-full shrink-0">
             <span className="animate-pulse">Scroll down to reveal text ↓</span>
           </div>
-          <div className="py-20 px-8 max-w-4xl flex items-center justify-center shrink-0">
+          <div className="py-32 px-8 max-w-4xl flex items-center justify-center shrink-0">
             <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-center">
               <ScrollTextReveal container={scrollContainer}>
                 The future of UI design is here. Experience seamless, highly optimized animations that elevate your application&apos;s feel.
               </ScrollTextReveal>
             </h2>
           </div>
-          <div className="min-h-[500px] md:min-h-[600px] flex items-center justify-center text-muted-foreground w-full shrink-0">
+          <div style={{ height: screenHeight }} className="flex flex-col items-center justify-center text-muted-foreground w-full shrink-0">
             <span className="animate-pulse">Scroll up to reverse ↑</span>
           </div>
         </div>

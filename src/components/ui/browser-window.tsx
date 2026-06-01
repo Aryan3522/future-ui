@@ -35,7 +35,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
                 {/* Canvas */}
                 <div 
                   ref={scrollRef} 
-                  className={cn("relative flex-1 w-full overflow-y-auto overflow-x-hidden custom-scrollbar p-1", contentClassName)}
+                  className={cn("relative flex-1 w-full overflow-y-auto overflow-x-hidden custom-scrollbar p-1 @container", contentClassName)}
                 >
                   <div className="w-full min-h-full flex flex-col items-center justify-center">
                     {children}

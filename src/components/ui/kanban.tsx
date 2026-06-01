@@ -205,49 +205,53 @@ export const KanbanBoard = React.memo(function KanbanBoard({
     }
 
     setColumns(prev => {
-      const newCols = [...prev];
-      const col = newCols.find(c => c.id === modalState.columnId);
-      if (!col) return prev;
-
-      if (modalState.type === "add") {
-        col.cards.push({
-          id: `card-${Date.now()}`,
-          title: data.title || "New Task",
-          description: data.description,
-          priority: data.priority,
-          labels: data.labels,
-          dueDate: data.dueDate,
-          assignees: data.assignees
-        } as KanbanCardData);
-      } else if (modalState.type === "edit" && modalState.card) {
-        const index = col.cards.findIndex(c => c.id === modalState.card!.id);
-        if (index !== -1) {
-          col.cards[index] = { ...col.cards[index], ...data };
+      return prev.map(c => {
+        if (c.id === modalState.columnId) {
+          if (modalState.type === "add") {
+            return {
+              ...c,
+              cards: [
+                ...c.cards,
+                {
+                  id: `card-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`,
+                  title: data.title || "New Task",
+                  description: data.description,
+                  priority: data.priority,
+                  labels: data.labels,
+                  dueDate: data.dueDate,
+                  assignees: data.assignees
+                } as KanbanCardData
+              ]
+            };
+          } else if (modalState.type === "edit" && modalState.card) {
+            return {
+              ...c,
+              cards: c.cards.map(card => 
+                card.id === modalState.card!.id ? { ...card, ...data } : card
+              )
+            };
+          }
         }
-      }
-      return newCols;
+        return c;
+      });
     });
     closeModal();
   };
 
   const deleteCard = (columnId: string, cardId: string) => {
-    setColumns(prev => {
-      const newCols = [...prev];
-      const col = newCols.find(c => c.id === columnId);
-      if (col) {
-        col.cards = col.cards.filter(c => c.id !== cardId);
-      }
-      return newCols;
-    });
+    setColumns(prev => prev.map(c => 
+      c.id === columnId 
+        ? { ...c, cards: c.cards.filter(card => card.id !== cardId) } 
+        : c
+    ));
   };
 
   const clearColumn = (columnId: string) => {
-    setColumns(prev => {
-      const newCols = [...prev];
-      const col = newCols.find(c => c.id === columnId);
-      if (col) col.cards = [];
-      return newCols;
-    });
+    setColumns(prev => prev.map(c => 
+      c.id === columnId 
+        ? { ...c, cards: [] } 
+        : c
+    ));
   };
 
   const deleteColumn = (columnId: string) => {
