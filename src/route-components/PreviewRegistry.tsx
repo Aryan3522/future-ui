@@ -17,6 +17,7 @@ import { FilterBuilder, FilterGroup, FilterField, createEmptyGroup, FilterRule }
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
 import { NexusCard } from "@/components/ui/nexus-card";
 import { GlassPanel } from "@/components/ui/glass-panel";
+import { HoverGlareCard } from "@/components/ui/hover-glare-card";
 import { NoirHero3D } from "@/components/ui/noir-hero-3d";
 import { Header } from "@/components/ui/header";
 import { useToast } from "@/hooks/use-toast";
@@ -1508,6 +1509,46 @@ export const PreviewRegistry: Record<string, React.FC> = {
               <p className="text-muted-foreground">This panel uses heavy background blur with subtle border highlights to create a premium frosted glass effect.</p>
             </GlassPanel>
           </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "hover-glare-card": function HoverGlareCardPreview() {
+    const [layout, setLayout] = React.useState<"default" | "media" | "content" | "stats" | "compact" | "feature">("default");
+    const [styleVariant, setStyleVariant] = React.useState<"default" | "glass" | "solid" | "ghost">("glass");
+    const [glow, setGlow] = React.useState<"none" | "primary" | "secondary" | "white">("primary");
+    return (
+      <PreviewContainer 
+        title="Hover Glare Card" 
+        description="A highly composable premium card with a signature diagonal glare sweep. Supports multiple real-world layouts."
+        variants={["default", "media", "content", "stats", "compact", "feature"]}
+        activeVariant={layout}
+        onVariantChange={setLayout as any}
+        extraControls={
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-center gap-2 w-full mt-2">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style & Glow</span>
+            <div className="flex flex-wrap gap-2">
+              <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+                {(["default", "glass", "solid", "ghost"] as const).map(v => (
+                  <button key={v} onClick={() => setStyleVariant(v)} className={cn("px-3 py-1 text-xs font-medium rounded-md capitalize transition-all", styleVariant === v ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{v}</button>
+                ))}
+              </div>
+              <div className="flex items-center gap-1 p-1 bg-muted/30 rounded-lg">
+                <span className="text-[10px] uppercase font-bold text-muted-foreground mx-2">Glow:</span>
+                {(["none", "primary", "secondary", "white"] as const).map(g => (
+                  <button key={g} onClick={() => setGlow(g)} className={cn("px-2 py-1 text-xs font-medium rounded-md capitalize transition-all", glow === g ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted/50")}>{g}</button>
+                ))}
+              </div>
+            </div>
+          </div>
+        }
+      >
+        <div className="flex items-center justify-center w-full h-full p-4 sm:p-8 min-h-[400px]">
+          <HoverGlareCard 
+            layout={layout} 
+            variant={styleVariant} 
+            glow={glow} 
+          />
         </div>
       </PreviewContainer>
     );

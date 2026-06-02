@@ -49,6 +49,30 @@ export const componentsList: ComponentItem[] = [
     ],
   },
   {
+    id: 993,
+    title: "Hover Glare Card",
+    type: "Cards",
+    slug: "hover-glare-card",
+    category: "layout",
+    isNew: true,
+    description: "A premium card component with a sweeping diagonal CSS glare effect on hover. Includes multiple visual variants and luminous glow states.",
+    details: [
+      "Pure CSS-driven diagonal glare effect for maximum performance.",
+      "Supports Default, Glass, Solid, and Ghost variants.",
+      "Built-in luminous glow states for interactive feedback.",
+      "Clean, minimalist aesthetic suitable for modern dashboards.",
+    ],
+    codes: {
+      next: 'import { HoverGlareCard } from "@/components/ui/hover-glare-card";\n\nexport default function Example() {\n  return (\n    <HoverGlareCard variant="glass" glow="primary" className="p-6">\n      <h3 className="text-xl font-bold text-white mb-2">Premium Card</h3>\n      <p className="text-muted-foreground">Hover to see the glare effect.</p>\n    </HoverGlareCard>\n  );\n}',
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add hover-glare-card'.",
+      "Variants: Choose between 'default', 'glass', 'solid', or 'ghost'.",
+      "Glow: Add 'glow=\"primary\"', 'glow=\"secondary\"', or 'glow=\"white\"' for ambient shadows.",
+      "Glare Opacity: Adjust the intensity of the diagonal glare via the 'glareOpacity' prop.",
+    ],
+  },
+  {
     id: 999,
     title: "Browser Window",
     type: "Layout",
