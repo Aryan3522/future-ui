@@ -16,6 +16,9 @@ import { CinematicError } from "@/components/ui/cinematic-error";
 import { FilterBuilder, FilterGroup, FilterField, createEmptyGroup, FilterRule } from "@/components/ui/filter-builder";
 import { ExpandingFlexCard } from "@/components/ui/expanding-flex-card";
 import { NexusCard } from "@/components/ui/nexus-card";
+import { GlassPanel } from "@/components/ui/glass-panel";
+import { NoirHero3D } from "@/components/ui/noir-hero-3d";
+import { Header } from "@/components/ui/header";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 import { Button } from "@/components/ui/button";
@@ -1490,6 +1493,50 @@ export const PreviewRegistry: Record<string, React.FC> = {
             <PrimaryButton variant="info">Info</PrimaryButton>
             <PrimaryButton variant="secondary">Secondary</PrimaryButton>
           </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "glass-panel": function GlassPanelPreview() {
+    return (
+      <PreviewContainer title="Glass Panel" description="A premium glassmorphic panel with heavy blur and luminous shadows.">
+        <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[300px] relative">
+          <DotBackground dotColor="currentColor" maskOpacity={0.1} />
+          <div className="relative z-10 w-full max-w-lg">
+            <GlassPanel variant="heavy" glow="subtle" className="p-8">
+              <h2 className="text-xl font-bold mb-4">Glassmorphism</h2>
+              <p className="text-muted-foreground">This panel uses heavy background blur with subtle border highlights to create a premium frosted glass effect.</p>
+            </GlassPanel>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "noir-hero-3d": function NoirHero3DPreview() {
+    return (
+      <PreviewContainer title="Noir Hero 3D" description="A premium 3D geometric centerpiece built with React Three Fiber.">
+        <div className="w-full h-full min-h-[500px] bg-black rounded-xl overflow-hidden relative">
+          <NoirHero3D className="w-full h-full" />
+        </div>
+      </PreviewContainer>
+    );
+  },
+  header: function HeaderPreview() {
+    return (
+      <PreviewContainer title="Header" description="A premium navigation header with a left-side drawer for mobile.">
+        <div 
+          className="w-full h-full min-h-[500px] relative bg-muted/10 border border-border/20 rounded-xl overflow-hidden shadow-inner"
+          style={{ transform: "translateZ(0)" }}
+        >
+           {/* Background noise/pattern for context */}
+           <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+           <Header />
+           <div className="w-full h-full flex items-center justify-center pt-16">
+             <div className="text-center space-y-2 opacity-50">
+               <p className="font-semibold text-lg">Page Content Area</p>
+               <p className="text-sm">The header is fixed to the top.</p>
+             </div>
+           </div>
         </div>
       </PreviewContainer>
     );

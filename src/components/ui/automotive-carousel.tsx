@@ -8,7 +8,7 @@
  */
 
 import React, { useState, useEffect, useRef, Suspense, useMemo, useCallback } from "react";
-import { motion, AnimatePresence, PanInfo } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { Environment, ContactShadows, useGLTF, Html, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
@@ -20,7 +20,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 // ─────────────────────────────────────────────────────────────────────────────
 if (typeof window !== "undefined") {
   const originalWarn = console.warn;
-  console.warn = (...args: any[]) => {
+  console.warn = (...args: unknown[]) => {
     if (typeof args[0] === "string" && args[0].includes("THREE.Clock")) return;
     originalWarn(...args);
   };
@@ -75,12 +75,11 @@ function AutoFitModel({
     const box = new THREE.Box3();
     cloned.updateMatrixWorld(true);
     cloned.traverse((node) => {
-      const m = node as THREE.Mesh;
-      if (m.isMesh && m.geometry) {
-        m.geometry.computeBoundingBox();
-        if (m.geometry.boundingBox) {
-          const b = m.geometry.boundingBox.clone();
-          b.applyMatrix4(m.matrixWorld);
+      if (node instanceof THREE.Mesh && node.geometry) {
+        node.geometry.computeBoundingBox();
+        if (node.geometry.boundingBox) {
+          const b = node.geometry.boundingBox.clone();
+          b.applyMatrix4(node.matrixWorld);
           box.union(b);
         }
       }
@@ -167,18 +166,20 @@ function AutoFitModel({
 // ─────────────────────────────────────────────────────────────────────────────
 // CameraRig
 // ─────────────────────────────────────────────────────────────────────────────
+import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+
 function CameraRig({ target, layout, isMobile }: { target: SlideTarget; layout: number; isMobile: boolean }) {
-  const { camera } = useThree();
-  const controlsRef = useRef<any>(null);
+  const controlsRef = useRef<OrbitControlsImpl>(null);
   const userInteracted = useRef(false);
 
   useEffect(() => {
     userInteracted.current = false;
   }, [target]);
 
-  useFrame((_state, delta) => {
+  useFrame((state, delta) => {
     if (!controlsRef.current || userInteracted.current) return;
 
+    const camera = state.camera;
     const k = 3.2; // Faster, punchier damping for a more premium feel
 
     // Target FOV: Wide enough for dashboard on desktop (75), ultra-wide for mobile interior
@@ -186,9 +187,11 @@ function CameraRig({ target, layout, isMobile }: { target: SlideTarget; layout: 
       ? (layout === 1 ? 95 : layout === 2 ? 110 : 75) 
       : (layout === 1 ? 75 : 65);
 
-    if (Math.abs(camera.fov - targetFov) > 0.01) {
-      camera.fov = THREE.MathUtils.damp(camera.fov, targetFov, k, delta);
-      camera.updateProjectionMatrix();
+    if (camera instanceof THREE.PerspectiveCamera) {
+      if (Math.abs(camera.fov - targetFov) > 0.01) {
+        camera.fov = THREE.MathUtils.damp(camera.fov, targetFov, k, delta);
+        camera.updateProjectionMatrix();
+      }
     }
 
     const currentRadius = camera.position.length();
@@ -338,11 +341,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
     return () => clearTimeout(t);
   }, [isAnimating]);
 
-  const handleDragEnd = useCallback((_e: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
-    const threshold = 50;
-    if (info.offset.x < -threshold) go(1);
-    else if (info.offset.x > threshold) go(-1);
-  }, [go]);
+
 
   // ── Slide targets: align determines where the object anchors ───────────
   const layout = currentIndex % 4;

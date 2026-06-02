@@ -11,7 +11,9 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
-export interface BrowserWindowProps extends React.HTMLAttributes<HTMLDivElement> {
+import { HTMLMotionProps } from "framer-motion";
+
+export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title"> {
   children: React.ReactNode;
   contentClassName?: string;
   scrollRef?: React.RefObject<HTMLDivElement | null>;
@@ -106,7 +108,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
     // macOS fluid spring animation
     const transition = {
-      type: "spring",
+      type: "spring" as const,
       mass: 0.5,
       stiffness: 350,
       damping: 32,
@@ -198,11 +200,10 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         {/* Content Area */}
         <motion.div 
           layout
-          className={cn("relative flex-1 w-full h-full overflow-hidden @container", contentClassName)}
+          ref={scrollRef as any}
+          className={cn("relative flex-1 w-full min-h-0 overflow-auto @container", contentClassName)}
         >
-          <div className="w-full h-full flex flex-col items-center justify-center">
-            {children}
-          </div>
+          {children}
         </motion.div>
       </motion.div>
     );
