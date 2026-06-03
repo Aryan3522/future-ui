@@ -63,6 +63,8 @@ import { WorkflowBuilder, WorkflowCanvas, WorkflowToolbar, WorkflowMiniMap } fro
 import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { AIChat, ChatMessages, ChatInput, ChatPromptSuggestions } from "@/components/ui/ai-chat";
 import { AutomotiveCarousel } from "@/components/ui/automotive-carousel";
+import { ScifiHelmet } from "@/components/ui/scifi-helmet";
+import { BmwM4 } from "@/components/ui/bmw-m4";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -2708,6 +2710,8 @@ export const PreviewRegistry: Record<string, React.FC> = {
   "ai-chat": AIChatPreview,
   "browser-window": BrowserWindowPreview,
   "automotive-carousel": AutomotiveCarouselPreview,
+  "scifi-helmet": ScifiHelmetPreview,
+  "bmw-m4": BmwM4Preview,
   terminal: TerminalPreview,
 };
 
@@ -3320,6 +3324,32 @@ function BrowserWindowPreview() {
           </div>
         </BrowserWindow>
       </div>
+    </PreviewContainer>
+  );
+}
+
+function ScifiHelmetPreview() {
+  return (
+    <PreviewContainer
+      title="Sci-Fi Helmet"
+      description="A premium 3D Sci-Fi Helmet with interactive orbit controls."
+      canvasClassName="bg-[#050505] p-0 overflow-hidden"
+    >
+      <ScifiHelmet className="w-full h-full" />
+    </PreviewContainer>
+  );
+}
+
+
+
+function BmwM4Preview() {
+  return (
+    <PreviewContainer
+      title="BMW M4"
+      description="A premium 3D M4 Car component with interactive orbit controls."
+      canvasClassName="bg-[#050505] p-0 overflow-hidden"
+    >
+      <BmwM4 className="w-full h-full" />
     </PreviewContainer>
   );
 }
