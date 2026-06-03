@@ -2254,15 +2254,17 @@ export const PreviewRegistry: Record<string, React.FC> = {
       },
     ];
 
-    const premiumIconKeys = Object.keys(PremiumIcons).filter(k => k.startsWith("Abstract") || k.startsWith("Circular"));
+    const staticNames = new Set(_STATIC_ICONS.map(i => i.name));
+    const premiumIconKeys = Object.keys(PremiumIcons).filter(k => !staticNames.has(k) && k.endsWith("Icon"));
     const ICONS = _STATIC_ICONS.concat(
       premiumIconKeys.map(key => {
         const Comp = (PremiumIcons as any)[key];
+        const isCircular = key.includes("Ring") || key.includes("Dial") || key.includes("Orbit") || key.includes("Halo");
         return {
           name: key,
           label: key.replace("Icon", ""),
-          description: `Premium ${key.startsWith("Abstract") ? "Abstract" : "Circular"} animated SVG icon.`,
-          tags: ["premium", "animated", key.startsWith("Abstract") ? "abstract" : "circular"],
+          description: `Premium ${isCircular ? "Circular" : "Abstract"} animated SVG icon.`,
+          tags: ["premium", "animated", isCircular ? "circular" : "abstract"],
           render: (props: any) => <Comp {...props} animate={animate} animated={animate} />
         };
       })
