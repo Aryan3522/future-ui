@@ -39,6 +39,7 @@ import { SearchInput } from "@/components/ui/search-input";
 import { Search as SearchComponent } from "@/components/ui/search";
 import { componentsList } from "@/data/component-library-data";
 import { GithubIcon, LinkedinIcon, TwitterIcon, InstagramIcon, DiscordIcon, YoutubeIcon, XIcon, ChevronUpIcon, ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, SunIcon, MoonIcon, SearchIcon, LoaderIcon, ArrowUpIcon, ArrowDownIcon, ArrowLeftIcon, ArrowRightIcon, ArrowUpRightIcon, ArrowUpLeftIcon, ArrowDownRightIcon, ArrowDownLeftIcon } from "@/icons";
+import * as PremiumIcons from "@/icons";
 import { PointCursor } from "@/components/ui/PointCursor";
 import { Accordion } from "@/components/ui/accordion";
 import { Calendar } from "@/components/ui/calendar";
@@ -2089,7 +2090,7 @@ export const PreviewRegistry: Record<string, React.FC> = {
   },
   "icons": function IconsPreview() {
     const [animate, setAnimate] = useState(true);
-    const ICONS = [
+    const _STATIC_ICONS = [
       {
         name: "GithubIcon",
         label: "GitHub",
@@ -2252,6 +2253,22 @@ export const PreviewRegistry: Record<string, React.FC> = {
         render: (props: any) => <ArrowDownLeftIcon {...props} animate={animate} />,
       },
     ];
+
+    const staticNames = new Set(_STATIC_ICONS.map(i => i.name));
+    const premiumIconKeys = Object.keys(PremiumIcons).filter(k => !staticNames.has(k) && k.endsWith("Icon"));
+    const ICONS = _STATIC_ICONS.concat(
+      premiumIconKeys.map(key => {
+        const Comp = (PremiumIcons as any)[key];
+        const isCircular = key.includes("Ring") || key.includes("Dial") || key.includes("Orbit") || key.includes("Halo");
+        return {
+          name: key,
+          label: key.replace("Icon", ""),
+          description: `Premium ${isCircular ? "Circular" : "Abstract"} animated SVG icon.`,
+          tags: ["premium", "animated", isCircular ? "circular" : "abstract"],
+          render: (props: any) => <Comp {...props} animate={animate} animated={animate} />
+        };
+      })
+    );
 
     const [selected, setSelected] = useState<typeof ICONS[number] | null>(null);
     const [copied, setCopied] = useState<string | null>(null);
