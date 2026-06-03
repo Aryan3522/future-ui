@@ -3,6 +3,32 @@ import { ComponentItem } from "@/types";
 
 export const rawComponentsList: ComponentItem[] = [
   {
+    id: 1001,
+    title: "Sci-Fi Helmet",
+    type: "Components",
+    slug: "scifi-helmet",
+    category: "ui",
+    isNew: true,
+    description: "A premium 3D Sci-Fi Helmet model with auto-rotation, cinematic lighting, contact shadows, and interactive orbit controls powered by React Three Fiber.",
+    details: [
+      "Auto-rotating cinematic presentation.",
+      "Contact shadows for premium grounding.",
+      "Interactive orbit controls.",
+      "Smooth scale-in entrance animation with idle float.",
+      "Responsive scaling on all screen sizes."
+    ],
+    codes: {
+      next: "import { ScifiHelmet } from \"@/components/ui/scifi-helmet\";\n\nexport default function Example() {\n  return (\n    <div className=\"w-full h-[500px]\">\n      <ScifiHelmet autoRotate rotationSpeed={1} />\n    </div>\n  );\n}",
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add scifi-helmet'.",
+      "Import Bike3D from '@/components/ui/scifi-helmet'.",
+      "Drop into any container with a defined width and height.",
+      "Control rotation via autoRotate and rotationSpeed props.",
+      "Toggle controls with enableControls prop."
+    ],
+  },
+  {
     id: 1000,
     title: "Terminal Window",
     type: "Components",
