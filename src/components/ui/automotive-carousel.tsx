@@ -332,10 +332,19 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
+    let timeoutId: NodeJS.Timeout;
+    const checkMobile = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        setIsMobile(window.innerWidth < 768);
+      }, 150);
+    };
+    setIsMobile(window.innerWidth < 768);
     window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
+    return () => {
+      window.removeEventListener("resize", checkMobile);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   const go = useCallback((d: number) => {
@@ -394,7 +403,7 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
   return (
     <div
       className={cn(
-        "relative w-full h-full overflow-hidden bg-[#050505] select-none",
+        "relative w-full h-full overflow-hidden bg-[#050505] select-none @container",
         className
       )}
     >
@@ -418,12 +427,12 @@ export const AutomotiveCarousel = ({ slides, className, objectVariant = "m4" }: 
 
             <div className="relative z-10 max-w-3xl">
               {slides[currentIndex].title && (
-                <h2 className="text-4xl sm:text-6xl md:text-[5.5rem] font-black text-white tracking-tighter leading-[1.05] drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
+                <h2 className="text-[clamp(2.25rem,8cqw,5.5rem)] font-black text-white tracking-tighter leading-[1.05] drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)]">
                   {slides[currentIndex].title}
                 </h2>
               )}
               {slides[currentIndex].description && (
-                <p className="mt-4 sm:mt-6 text-base sm:text-xl md:text-2xl text-zinc-200 font-medium tracking-tight leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+                <p className="mt-[clamp(0.75rem,2.5cqw,1.5rem)] text-[clamp(1rem,3cqw,1.5rem)] text-zinc-200 font-medium tracking-tight leading-relaxed drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
                   {slides[currentIndex].description}
                 </p>
               )}

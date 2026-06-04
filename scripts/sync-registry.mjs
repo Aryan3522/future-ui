@@ -8,6 +8,15 @@ const UI_DIR = path.join(ROOT_DIR, "src", "components", "ui");
 const ICONS_DIR = path.join(ROOT_DIR, "src", "icons");
 const REGISTRY_PATH = path.join(ROOT_DIR, "src", "data", "registryData.ts");
 
+function stripComments(code) {
+  const pattern = /("[^"\\]*(?:\\.[^"\\]*)*")|('[^'\\]*(?:\\.[^'\\]*)*')|(`[^`\\]*(?:\\.[^`\\]*)*`)|(\{\s*\/\*[\s\S]*?\*\/\s*\})|(\/\*[\s\S]*?\*\/)|(\/\/.*)/g;
+  let cleaned = code.replace(pattern, (match, d, s, t, jsxC, blkC, lineC) => {
+    if (jsxC || blkC || lineC) return "";
+    return match;
+  });
+  return cleaned.replace(/(\r?\n\s*){3,}/g, "\n\n");
+}
+
 /**
  * Extracts metadata and files from component source code.
  */
@@ -36,7 +45,7 @@ async function parseComponent(filePath) {
   const files = [
     {
       name: fileName,
-      content: content.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim(),
+      content: stripComments(content.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "")).trim(),
       targetPath: `components/ui/${fileName}`
     }
   ];
@@ -46,7 +55,7 @@ async function parseComponent(filePath) {
     const extraContent = await fs.readFile(fullPath, "utf-8");
     files.push({
       name: path.basename(extraPath),
-      content: extraContent.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "").trim(),
+      content: stripComments(extraContent.replace(/\/\*\*[\s\S]*?@registry-slug[\s\S]*?\*\//, "")).trim(),
       targetPath: extraPath.replace(/^src\//, "")
     });
   }
@@ -75,7 +84,7 @@ async function parseIcons() {
     const content = await fs.readFile(path.join(ICONS_DIR, file), "utf-8");
     registryFiles.push({
       name: file,
-      content: content.trim(),
+      content: stripComments(content).trim(),
       targetPath: `components/ui/icons/${file}`,
     });
   }

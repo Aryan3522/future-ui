@@ -1,266 +1,20 @@
-"use client";
-
-import React, { useEffect } from "react";
+import React from "react";
 import Link from "next/link";
-import { motion, useScroll, useTransform } from "framer-motion";
 import { Header } from "@/components/ui/header";
-import dynamic from "next/dynamic";
-const NoirHero3D = dynamic(
-  () =>
-    import("@/components/ui/noir-hero-3d").then(
-      (mod) => mod.NoirHero3D
-    ),
-  {
-    ssr: false,
-    loading: () => <BasicLoader />,
-  }
-);
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { GlowyButton } from "@/components/ui/glowy-button";
-import { Target, Zap, Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
 import Image from "next/image";
-import { BasicLoader } from "@/components/ui/basic-loader";
-
-// --- Animated Terminal Simulator ---
-const TERMINAL_STEPS = Object.freeze([
-  {
-    type: "command",
-    text: "npx futureuikit init",
-  },
-  {
-    type: "output",
-    text: "✓ Future UI initialized. Global CSS and tailwind.config updated.",
-  },
-  {
-    type: "command",
-    text: "npx futureuikit add browser-window",
-  },
-  {
-    type: "output",
-    text: "✓ Browser Window added to src/components/ui/browser-window.tsx",
-  },
-  {
-    type: "command",
-    text: "npx futureuikit add noir-hero-3d",
-  },
-  {
-    type: "output",
-    text: "✓ Noir Hero 3D added. Installed dependencies: three, @react-three/fiber",
-  },
-  {
-    type: "command",
-    text: "npm run dev",
-  },
-  {
-    type: "output",
-    text: "▲ Next.js 16.2.6 (Turbopack)\n- Local: http://localhost:3000\n- Ready in 143ms",
-  },
-] as const);
-
-const AnimatedTerminal = React.memo(() => {
-  const [lines, setLines] = React.useState<
-    { type: string; text: string }[]
-  >([]);
-  const [currentStep, setCurrentStep] = React.useState(0);
-  const [typedCommand, setTypedCommand] = React.useState("");
-
-  useEffect(() => {
-    if (currentStep >= TERMINAL_STEPS.length) {
-      const timeout = setTimeout(() => {
-        setLines([]);
-        setCurrentStep(0);
-        setTypedCommand("");
-      }, 5000);
-
-      return () => clearTimeout(timeout);
-    }
-
-    const step = TERMINAL_STEPS[currentStep];
-
-    if (step.type === "command") {
-      if (typedCommand.length < step.text.length) {
-        const timeout = setTimeout(() => {
-          setTypedCommand(
-            step.text.slice(0, typedCommand.length + 1)
-          );
-        }, Math.random() * 40 + 30);
-
-        return () => clearTimeout(timeout);
-      }
-
-      const timeout = setTimeout(() => {
-        setLines((prev) => [
-          ...prev,
-          {
-            type: "command",
-            text: step.text,
-          },
-        ]);
-
-        setTypedCommand("");
-        setCurrentStep((prev) => prev + 1);
-      }, 400);
-
-      return () => clearTimeout(timeout);
-    }
-
-    const timeout = setTimeout(() => {
-      setLines((prev) => [
-        ...prev,
-        {
-          type: "output",
-          text: step.text,
-        },
-      ]);
-
-      setCurrentStep((prev) => prev + 1);
-    }, 500);
-
-    return () => clearTimeout(timeout);
-  }, [currentStep, typedCommand]);
-
-  const containerRef = React.useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop =
-        containerRef.current.scrollHeight;
-    }
-  }, [lines, typedCommand]);
-
-  const renderOutputLine = (text: string) => {
-    if (text.startsWith("✓")) {
-      return (
-        <>
-          <span className="text-[#00ffcc] mr-2">✓</span>
-          <span className="text-[#a1a1aa]">
-            {text.substring(1)}
-          </span>
-        </>
-      );
-    }
-
-    if (text.startsWith("▲")) {
-      return (
-        <>
-          <span className="text-white font-bold mr-2">▲</span>
-          <span className="text-[#a1a1aa]">
-            {text.substring(1)}
-          </span>
-        </>
-      );
-    }
-
-    return (
-      <span className="text-[#a1a1aa]">
-        {text}
-      </span>
-    );
-  };
-
-  return (
-    <div
-      ref={containerRef}
-      className="w-full h-full bg-[#0a0a0a] rounded-xl overflow-y-auto overflow-x-hidden flex flex-col font-mono text-xs md:text-sm p-6 gap-3 text-left items-start scrollbar-hide shadow-inner"
-    >
-      {lines.map((line, i) => (
-        <div key={i} className="flex gap-4 w-full">
-          {line.type === "command" && (
-            <span className="text-[#8b5cf6] font-bold shrink-0">
-              $
-            </span>
-          )}
-
-          <div
-            className={cn(
-              "whitespace-pre-wrap leading-relaxed",
-              line.type === "command" && "text-white"
-            )}
-          >
-            {line.type === "command"
-              ? line.text
-              : renderOutputLine(line.text)}
-          </div>
-        </div>
-      ))}
-
-      {currentStep < TERMINAL_STEPS.length &&
-        TERMINAL_STEPS[currentStep].type ===
-        "command" && (
-          <div className="flex gap-4 w-full">
-            <span className="text-[#8b5cf6] font-bold shrink-0">
-              $
-            </span>
-
-            <span className="text-white">
-              {typedCommand}
-              <span className="inline-block w-2 h-4 bg-[#8b5cf6] animate-pulse ml-1 align-middle" />
-            </span>
-          </div>
-        )}
-    </div>
-  );
-});
-
-AnimatedTerminal.displayName = "AnimatedTerminal";
+import { AnimatedTerminal } from "@/components/home/animated-terminal";
+import { HeroSection } from "@/components/home/hero-section";
 
 export default function Home() {
-  const { scrollYProgress } = useScroll();
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
-  const heroY = useTransform(scrollYProgress, [0, 0.2], [0, -100]);
-
   return (
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-x-hidden selection:bg-secondary/30 relative">
       <Header />
 
       <main className="relative z-10">
-        {/* HERO SECTION */}
-        <section className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 pb-16 px-6">
-          <motion.div
-            style={{ opacity: heroOpacity, y: heroY }}
-            className="absolute inset-0 z-0 overflow-hidden opacity-60 flex items-center justify-center pointer-events-none"
-          >
-            <div className="w-[80vw] h-[80vw] max-w-200 max-h-200 bg-secondary/20 rounded-full blur-[150px] opacity-30 mix-blend-screen" />
-          </motion.div>
-
-          {/* 3D Centerpiece */}
-          <div id="hero-3d-container" className="relative z-10 w-full max-w-125 mx-auto aspect-square mb-8 transition-transform duration-100 ease-out hidden md:block">
-            <NoirHero3D className="w-full h-full drop-shadow-[0_0_50px_rgba(139,92,246,0.3)]" />
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="relative z-10 text-center space-y-6 max-w-2xl"
-          >
-            <div className="inline-block px-4 py-1 rounded-full border border-white/10 bg-white/5 font-mono-label text-xs text-foreground/70 mb-4 animate-pulse uppercase tracking-[0.2em]">
-              Core Architecture v4.0
-            </div>
-
-            <h1 className="font-display text-5xl md:text-7xl font-light tracking-tight leading-[1.05] luminous-text">
-              BUILDING <br /> <span className="text-primary">THE FUTURE.</span>
-            </h1>
-
-            <p className="font-display text-lg md:text-xl text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              A modern, high-performance UI component library built for Next.js and React 19. Engineered with Framer Motion and Tailwind CSS for the next era of web design.
-            </p>
-
-            <div className="flex flex-col md:flex-row gap-4 justify-center pt-8 w-full md:w-auto px-4 md:px-0">
-              <Link href="/components" className="w-full md:w-auto">
-                <GlowyButton variant="primary" className="h-14 px-10 text-sm font-label-caps tracking-widest stellar-violet-glow w-full">
-                  BROWSE COMPONENTS
-                </GlowyButton>
-              </Link>
-              <Link href="/docs" className="w-full md:w-auto">
-                <button className="h-14 w-full bg-white/5 border border-white/10 backdrop-blur-md text-foreground font-label-caps text-sm tracking-widest px-10 rounded-full hover:bg-white/10 transition-all duration-300">
-                  DOCUMENTATION
-                </button>
-              </Link>
-            </div>
-          </motion.div>
-        </section>
+        <HeroSection />
 
         {/* TECHNICAL STRATUM (Bento Grid) */}
         <section className="py-32 px-6 max-w-7xl mx-auto">
@@ -365,8 +119,8 @@ export default function Home() {
               Stop building boring websites. Start using Future UI to create stunning, interactive, and highly performant web applications today.
             </p>
             <div className="pt-8">
-              <Link href="/components">
-                <GlowyButton variant="primary" className="h-16 px-12 text-sm font-label-caps tracking-[0.2em] luminous-glow">
+              <Link href="/components" className="w-full sm:w-auto">
+                <GlowyButton asDiv variant="primary" className="h-16 px-12 text-sm font-label-caps tracking-[0.2em] luminous-glow">
                   GET STARTED
                 </GlowyButton>
               </Link>
@@ -398,12 +152,14 @@ export default function Home() {
           <div className="flex gap-4">
             <Link
               href="/docs"
+              aria-label="Documentation"
               className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors border border-white/5"
             >
               <Terminal className="w-4 h-4" />
             </Link>
             <Link
               href="/components"
+              aria-label="Components"
               className="w-10 h-10 rounded-full glass-mantle flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors border border-white/5"
             >
               <Globe className="w-4 h-4" />

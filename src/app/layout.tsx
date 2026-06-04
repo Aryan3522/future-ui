@@ -1,4 +1,4 @@
-import { Inter, Poppins, JetBrains_Mono } from "next/font/google";
+import { JetBrains_Mono } from "next/font/google";
 import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import AppProviders from "@/next/AppProviders";
@@ -9,19 +9,6 @@ import { Metadata, Viewport } from "next";
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-jetbrains-mono",
-  display: "swap",
-});
-
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  weight: ["400", "500", "600", "700"],
-  subsets: ["latin"],
-  variable: "--font-poppins",
   display: "swap",
 });
 
@@ -190,7 +177,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${inter.variable} ${poppins.variable} ${jetbrainsMono.variable}`}
+      className={`${GeistSans.variable} ${jetbrainsMono.variable}`}
     >
       <head>
         <script
@@ -201,12 +188,6 @@ export default function RootLayout({
           id="dark-mode"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{document.documentElement.classList.add('dark');}catch(_){}})();`,
-          }}
-        />
-        <script
-          id="disable-zoom"
-          dangerouslySetInnerHTML={{
-            __html: `(function(){document.addEventListener('wheel',function(e){if(e.ctrlKey||e.metaKey){e.preventDefault();}},{passive:false});})();`,
           }}
         />
       </head>
