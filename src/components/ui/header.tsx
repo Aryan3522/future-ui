@@ -53,7 +53,7 @@ export const Header: React.FC = React.memo(() => {
       <header
         className={cn(
           "fixed top-4 left-1/2 -translate-x-1/2 w-[90%] max-w-7xl z-50 transition-all duration-300",
-          "bg-[#131313]/10 backdrop-blur-[60px] rounded-full border border-white/10 flex justify-between items-center px-6 py-3 shadow-[0_0_30px_rgba(139,92,246,0.15)]",
+          "bg-[#131313]/10 backdrop-blur-[60px] rounded-full border border-white/10 flex justify-between items-center px-6 py-3",
         )}
       >
         {/* Left: Logo */}
@@ -65,6 +65,7 @@ export const Header: React.FC = React.memo(() => {
                 alt="Future UI Logo"
                 width={32}
                 height={32}
+                priority
                 className="w-full h-full object-cover"
               />
             </div>
@@ -146,7 +147,7 @@ export const Header: React.FC = React.memo(() => {
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 left-0 w-72 bg-background/95 backdrop-blur-[60px] border-r border-border/10 z-[60] lg:hidden flex flex-col p-6 shadow-[30px_0_60px_rgba(0,0,0,0.5)]"
+              className="fixed inset-y-0 left-0 w-72 bg-background/95 backdrop-blur-[60px] border-r border-border/10 z-[60] lg:hidden flex flex-col p-6"
             >
               <div className="flex justify-between items-center mb-8">
                 <Link href="/" className="flex items-center shrink-0 group gap-2" onClick={() => setIsOpen(false)}>

@@ -33,7 +33,7 @@ export const AccordionItem: React.FC<AccordionItemProps> = React.memo(({
               <motion.button
                 whileTap={{ scale: 0.99 }}
                 onClick={onClick}
-                className="flex w-full items-center justify-between py-4 text-left transition-all hover:text-primary rounded-lg px-2 -mx-2 hover:bg-muted/50"
+                className="flex w-full items-center justify-between py-4 text-left transition-all hover:text-primary hover:bg-muted/50 rounded-lg"
               >
                 <span className="text-sm font-medium tracking-tight">{title}</span>
                 <motion.div
@@ -89,7 +89,7 @@ export const Accordion: React.FC<AccordionProps> = React.memo(({
           };
 
           return (
-            <div className={cn("w-full max-w-2xl mx-auto", className)}>
+            <div className={cn("w-full", className)}>
               {items.map((item, index) => (
                 <AccordionItem
                   key={index}

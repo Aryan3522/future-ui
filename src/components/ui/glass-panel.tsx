@@ -4,6 +4,8 @@
  * @registry-description A Future UI Glass Panel component.
  * @registry-category ui
  */
+"use client";
+
 import * as React from "react"
 import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"

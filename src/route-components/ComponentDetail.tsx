@@ -1,17 +1,15 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { notFound, useRouter } from "next/navigation";
+import { notFound } from "next/navigation";
 import { componentsList, registry } from "@/data/component-library-data";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus, vs } from "react-syntax-highlighter/dist/esm/styles/prism";
-import { Check, Copy, Code, ArrowDown } from "lucide-react";
-import { ChevronLeftIcon, SunIcon, MoonIcon } from "@/icons";
-import { ScrollProgress } from "@/components/ui/ScrollProgress";
+import { Check, Copy, ChevronRight, Sparkles, Box, Menu, X, Terminal } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
-import { DotBackground } from "@/components/ui/dot-background";
 import { ComponentRenderer } from "@/registry/ComponentRenderer";
+import Link from "next/link";
+import { Header } from "@/components/ui/header";
 
 const ComponentLivePreview: React.FC<{ id: string | number; slug: string }> = ({ slug }) => {
   return <ComponentRenderer slug={slug} />;
@@ -24,7 +22,7 @@ const HighlightText: React.FC<{ text: string }> = ({ text }) => {
       {parts.map((part, index) => {
         if (part.startsWith('`') && part.endsWith('`')) {
           return (
-            <code key={index} className="font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-md text-sm mx-0.5">
+            <code key={index} className="font-mono bg-primary/10 text-primary px-1.5 py-0.5 rounded-md text-[13px] font-medium mx-0.5 whitespace-nowrap">
               {part.slice(1, -1)}
             </code>
           );
@@ -38,16 +36,15 @@ const HighlightText: React.FC<{ text: string }> = ({ text }) => {
 export default function ComponentDetail({ type, slug, id }: { type: string; slug: string; id: string }) {
   const [copiedCode, setCopiedCode] = useState(false);
   const [copiedCli, setCopiedCli] = useState(false);
-  const [showCode, setShowCode] = useState(false);
+  const [copiedImport, setCopiedImport] = useState(false);
+  const [copiedManual, setCopiedManual] = useState(false);
   const [isDark, setIsDark] = useState(true);
-  const router = useRouter();
+  const [activeSection, setActiveSection] = useState("overview");
+  const [previewTab, setPreviewTab] = useState<"preview" | "code">("preview");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeSyntaxStyle = React.useMemo(() => {
     const theme = JSON.parse(JSON.stringify(isDark ? vscDarkPlus : vs));
-    
-    // Remove background properties from pre and code blocks to avoid React 
-    // shorthand/non-shorthand conflict errors during theme switching.
-    // The background will be consistently handled by customStyle instead.
     const keysToClean = ['pre[class*="language-"]', 'code[class*="language-"]'];
     keysToClean.forEach(key => {
       if (theme[key]) {
@@ -55,25 +52,39 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
         delete theme[key].backgroundColor;
       }
     });
-
     return theme;
   }, [isDark]);
 
   useEffect(() => {
-    // Check initial theme
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsDark(document.documentElement.classList.contains("dark"));
-  }, []);
 
-  const toggleTheme = () => {
-    if (document.documentElement.classList.contains("dark")) {
-      document.documentElement.classList.remove("dark");
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add("dark");
-      setIsDark(true);
-    }
-  };
+    const handleScroll = () => {
+      const sections = document.querySelectorAll("section[id], div[id]");
+      let currentSection = "overview";
+      
+      sections.forEach((section) => {
+        const sectionTop = section.getBoundingClientRect().top;
+        if (sectionTop <= 150) {
+          currentSection = section.getAttribute("id") || currentSection;
+        }
+      });
+      
+      setActiveSection(currentSection);
+    };
+
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
 
   const component = componentsList.find(
     (item) => item.id === Number(id) && item.type.toLowerCase() === type && item.slug === slug
@@ -84,259 +95,361 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
   const registryComponent = (registry as any)[slug];
   const reusableCode = registryComponent?.files[0]?.content || "";
   const cliCommand = `npx futureuikit add ${slug}`;
+  const importCommand = `import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"`;
+
+  const sections = [
+    { id: "overview", label: "Overview" },
+    { id: "installation", label: "Installation" },
+    { id: "import", label: "Import" },
+    { id: "usage", label: "Usage" },
+    ...(component.details?.length ? [{ id: "features", label: "Features" }] : []),
+    ...(component.usage?.length ? [{ id: "notes", label: "Notes" }] : []),
+  ];
+
+  const scrollToSection = (sectionId: string) => {
+    const el = document.getElementById(sectionId);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 100;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+      setSidebarOpen(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen w-full bg-background text-foreground selection:bg-primary/30 font-sans overflow-x-hidden">
-      {slug === "scroll-progress" && <ScrollProgress />}
+    <div className="min-h-screen bg-background text-foreground font-sans relative selection:bg-primary/30 pt-32 md:pt-40 lg:pt-48 pb-32">
+      <Header />
 
-      {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 w-full h-16 bg-background/80 backdrop-blur-md border-b border-border/10 flex items-center justify-between px-4">
-        <button
-          onClick={() => router.back()}
-          className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors flex items-center justify-center"
-          title="Go Back"
+      <div className="max-w-[1440px] mx-auto flex items-start gap-8 lg:gap-12 px-4 md:px-8 lg:px-12 relative z-10 min-w-0">
+        
+        {/* Mobile/Tablet Sidebar Toggle */}
+        <button 
+          className="lg:hidden fixed bottom-6 right-6 z-[60] p-4 bg-primary text-primary-foreground rounded-full shadow-2xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          aria-label="Toggle Table of Contents"
         >
-          <ChevronLeftIcon animate size={20} />
+          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
-        
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => setShowCode(!showCode)}
-            className={cn(
-              "p-2 rounded-full border transition-all duration-300",
-              showCode 
-                ? "bg-foreground text-background border-foreground" 
-                : "border-border/20 hover:bg-muted/50"
-            )}
-            title="Toggle Code"
-          >
-            <Code size={20} />
-          </button>
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full border border-border/20 hover:bg-muted/50 transition-colors"
-            title="Toggle Theme"
-          >
-            {isDark ? <SunIcon animate size={20} /> : <MoonIcon animate size={20} />}
-          </button>
-        </div>
-      </header>
 
-      {/* Hero Section */}
-      <div className="min-h-dvh pt-16 w-full flex border-b border-border/10">
-        
-        {/* Code Panel (Slides from left) */}
-        <AnimatePresence initial={false}>
-          {showCode && (
-            <motion.div
-              initial={{ width: 0, opacity: 0 }}
-              animate={{ width: "100%", opacity: 1 }}
-              exit={{ width: 0, opacity: 0 }}
-              transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-              className="border-r border-border/10 bg-background flex flex-col md:max-w-[45vw] shrink-0 min-h-[calc(100dvh-4rem)] self-stretch sticky top-16"
-            >
-              <div className="flex-1 overflow-y-auto p-6 md:p-10 pt-8 custom-scrollbar flex flex-col gap-6 max-h-[calc(100dvh-4rem)]">
-                <h2 className="text-2xl font-light tracking-tight text-foreground/90">Manual Source</h2>
+        {/* Overlay for mobile sidebar */}
+        {sidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-background/80 backdrop-blur-sm z-[50] lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+            aria-hidden="true"
+          />
+        )}
+
+        {/* Sticky Sidebar - TOC */}
+        <aside className={cn(
+          "shrink-0 overflow-y-auto overflow-x-hidden scrollbar-hide z-[55] transition-transform duration-300 ease-in-out",
+          "fixed lg:sticky lg:top-48 left-0 top-0 h-[100dvh] lg:h-[calc(100vh-220px)] w-[280px] lg:w-[220px] bg-background lg:bg-transparent border-r border-border/40 lg:border-none p-6 pt-24 lg:p-0 lg:pt-0 shadow-2xl lg:shadow-none",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"
+        )}>
+          <div className="space-y-6 pr-4">
+            <div>
+              <h4 className="font-mono text-xs font-semibold tracking-wider text-foreground mb-4 uppercase">On This Page</h4>
+              <ul className="space-y-2.5 relative border-l border-border/40 ml-2 pl-4">
+                {sections.map((sec, idx) => (
+                  <li key={idx}>
+                    <button 
+                      onClick={() => scrollToSection(sec.id)}
+                      className={cn(
+                        "transition-all py-0.5 block text-[13px] text-left w-full relative",
+                        activeSection === sec.id 
+                          ? "text-foreground font-semibold" 
+                          : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      {activeSection === sec.id && (
+                        <span className="absolute -left-[17px] top-1/2 -translate-y-1/2 w-[2px] h-4 bg-foreground rounded-full" />
+                      )}
+                      {sec.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </aside>
+
+        {/* Main Content Area */}
+        <main className="flex-1 min-w-0 max-w-5xl animate-in fade-in slide-in-from-bottom-4 duration-500 overflow-hidden">
+          
+          <div className="space-y-20 min-w-0">
+            
+            {/* Component Hero & Preview (Side by Side) */}
+            <section id="overview" className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] xl:grid-cols-[400px_1fr] gap-10 xl:gap-14 min-w-0">
+              
+              {/* Left Column (Metadata) */}
+              <div className="space-y-10 min-w-0 pt-2">
+                <div className="space-y-6">
+                  <div className="flex items-center gap-2">
+                    <Link href="/components" className="text-muted-foreground hover:text-foreground transition-colors text-sm font-medium flex items-center gap-1">
+                      Components
+                    </Link>
+                    <ChevronRight size={14} className="text-muted-foreground/50" />
+                    <span className="text-sm font-medium text-foreground">{component.type}</span>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
+                      {component.title}
+                    </h1>
+                    
+                    <p className="text-lg text-muted-foreground leading-relaxed">
+                      {component.description}
+                    </p>
+                  </div>
+                  
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="px-2.5 py-1 bg-muted border border-border/50 rounded-md font-mono text-[11px] font-semibold tracking-wide text-foreground uppercase">
+                      {component.category}
+                    </span>
+                    {component.isNew && (
+                      <span className="px-2.5 py-1 bg-primary/10 border border-primary/20 text-primary rounded-md font-mono text-[11px] font-semibold tracking-wide uppercase">
+                        New Release
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-6 pt-4 border-t border-border/40">
+                  <div id="installation" className="space-y-3 min-w-0">
+                    <h3 className="text-sm font-semibold tracking-tight text-foreground">Installation</h3>
+                    <div className="relative group rounded-lg border border-border/50 bg-muted/30 overflow-hidden flex flex-col transition-colors hover:bg-muted/40">
+                      <div className="px-4 py-3 flex items-center justify-between gap-4 font-mono text-sm">
+                        <div className="flex items-center gap-3 text-muted-foreground overflow-x-auto scrollbar-hide">
+                          <span className="select-none">$</span>
+                          <span className="text-foreground whitespace-nowrap">{cliCommand}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(cliCommand);
+                            setCopiedCli(true);
+                            setTimeout(() => setCopiedCli(false), 1500);
+                          }}
+                          className="p-2 rounded-md bg-background/50 hover:bg-background border border-border/50 transition-all flex items-center justify-center shrink-0 text-foreground"
+                        >
+                          {copiedCli ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div id="import" className="space-y-3 min-w-0">
+                    <h3 className="text-sm font-semibold tracking-tight text-foreground">Import</h3>
+                    <div className="relative group rounded-lg border border-border/50 bg-muted/30 overflow-hidden flex flex-col transition-colors hover:bg-muted/40">
+                      <div className="px-4 py-3 flex items-center justify-between gap-4 font-mono text-sm">
+                        <div className="flex items-center gap-3 text-foreground overflow-x-auto scrollbar-hide">
+                          <span className="whitespace-nowrap">{importCommand}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(importCommand);
+                            setCopiedImport(true);
+                            setTimeout(() => setCopiedImport(false), 1500);
+                          }}
+                          className="p-2 rounded-md bg-background/50 hover:bg-background border border-border/50 transition-all flex items-center justify-center shrink-0 text-foreground"
+                        >
+                          {copiedImport ? <Check size={14} className="text-emerald-500" /> : <Copy size={14} />}
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Column (Live Component Preview & Code Tab) */}
+              <div className="lg:sticky lg:top-48 h-[500px] lg:h-[calc(100vh-220px)] lg:max-h-[700px] flex flex-col min-w-0">
                 
-                <div className="relative group rounded-2xl border border-border/20 bg-muted/30 overflow-hidden flex-1 flex flex-col">
+                {/* Tabs Header */}
+                <div className="flex items-center gap-6 border-b border-border/40 mb-4 px-2">
+                  <button
+                    onClick={() => setPreviewTab("preview")}
+                    className={cn(
+                      "text-sm font-semibold transition-colors relative pb-3 -mb-[1px]",
+                      previewTab === "preview" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    Preview
+                    {previewTab === "preview" && (
+                      <span className="absolute left-0 right-0 bottom-0 h-[2px] bg-foreground rounded-t-full" />
+                    )}
+                  </button>
+                  <button
+                    onClick={() => setPreviewTab("code")}
+                    className={cn(
+                      "text-sm font-semibold transition-colors relative pb-3 -mb-[1px]",
+                      previewTab === "code" ? "text-foreground" : "text-muted-foreground hover:text-foreground"
+                    )}
+                  >
+                    Code
+                    {previewTab === "code" && (
+                      <span className="absolute left-0 right-0 bottom-0 h-[2px] bg-foreground rounded-t-full" />
+                    )}
+                  </button>
+                </div>
+
+                {/* Tab Content */}
+                <div className="w-full flex-1 flex flex-col overflow-hidden">
+                  {previewTab === "preview" ? (
+                    <div className="w-full h-full max-w-full relative flex virtual-screen-wrapper">
+                      <style dangerouslySetInnerHTML={{ __html: `
+                        .virtual-screen-wrapper > div {
+                          background: transparent !important;
+                        }
+                        .virtual-screen-wrapper > div > div.flex-1 {
+                          padding: 0 !important;
+                          display: flex !important;
+                          align-items: stretch !important;
+                          justify-content: stretch !important;
+                        }
+                        .virtual-screen-wrapper > div > div.flex-1 > div {
+                          width: 100% !important;
+                          max-width: 100% !important;
+                          height: 100% !important;
+                          max-height: 100% !important;
+                          aspect-ratio: auto !important;
+                          margin: 0 !important;
+                        }
+                      `}} />
+                      <ComponentLivePreview id={id} slug={slug} />
+                    </div>
+                  ) : (
+                    <div className="relative group rounded-xl border border-border/50 bg-zinc-950 overflow-hidden flex flex-col h-full shadow-sm w-full">
+                      <div className="flex items-center gap-2 px-4 py-3 bg-zinc-900 border-b border-white/5">
+                        <Terminal size={14} className="text-zinc-400" />
+                        <div className="flex-1 text-xs text-zinc-400 font-medium font-sans select-none truncate">
+                          {slug}.tsx
+                        </div>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(reusableCode);
+                            setCopiedManual(true);
+                            setTimeout(() => setCopiedManual(false), 1500);
+                          }}
+                          className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white transition-all shadow-sm border border-white/10 flex items-center gap-1.5 text-xs font-medium"
+                        >
+                          {copiedManual ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                          {copiedManual ? "Copied" : "Copy"}
+                        </button>
+                      </div>
+                      
+                      <div className="overflow-auto flex-1 scrollbar-hide w-full bg-zinc-950">
+                        <SyntaxHighlighter
+                          language="tsx"
+                          style={activeSyntaxStyle}
+                          customStyle={{
+                            margin: 0,
+                            padding: "1.5rem",
+                            backgroundColor: "transparent",
+                            fontSize: "0.85rem",
+                            lineHeight: "1.6",
+                          }}
+                        >
+                          {reusableCode}
+                        </SyntaxHighlighter>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </section>
+
+            {/* Usage Section */}
+            <section id="usage" className="space-y-6 min-w-0 pt-8 border-t border-border/40">
+              <div className="space-y-1">
+                <h2 className="text-2xl font-bold tracking-tight text-foreground">Usage</h2>
+                <p className="text-muted-foreground">Implement the component in your project.</p>
+              </div>
+              <div className="relative group rounded-xl border border-border/50 bg-zinc-950 overflow-hidden flex flex-col w-full min-w-0 shadow-sm">
+                <div className="flex items-center gap-2 px-4 py-3 bg-zinc-900 border-b border-white/5 justify-between">
+                  <div className="flex items-center gap-2">
+                    <Terminal size={14} className="text-zinc-400" />
+                    <span className="text-xs text-zinc-400 font-medium font-sans select-none">Example Implementation</span>
+                  </div>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(reusableCode);
+                      navigator.clipboard.writeText(component.codes?.next || reusableCode);
                       setCopiedCode(true);
                       setTimeout(() => setCopiedCode(false), 1500);
                     }}
-                    className="absolute top-4 right-4 z-10 p-2 rounded-lg bg-foreground/5 hover:bg-foreground/10 text-foreground backdrop-blur-md transition-all opacity-0 group-hover:opacity-100"
+                    className="p-1.5 rounded-md bg-white/5 hover:bg-white/10 text-white transition-all shadow-sm border border-white/10 flex items-center gap-1.5 text-xs font-medium opacity-0 group-hover:opacity-100 focus:opacity-100"
                   >
-                    {copiedCode ? <Check size={16} className="text-emerald-600 dark:text-emerald-400" /> : <Copy size={16} />}
+                    {copiedCode ? <Check size={12} className="text-emerald-400" /> : <Copy size={12} />}
+                    {copiedCode ? "Copied" : "Copy"}
                   </button>
+                </div>
+                <div className="overflow-x-auto w-full bg-zinc-950">
                   <SyntaxHighlighter
-                    language="javascript"
+                    language="tsx"
                     style={activeSyntaxStyle}
                     customStyle={{
                       margin: 0,
-                      padding: "2rem",
+                      padding: "1.5rem",
                       backgroundColor: "transparent",
                       fontSize: "0.85rem",
-                      lineHeight: "1.7",
-                      flex: 1,
+                      lineHeight: "1.6",
                     }}
                   >
-                    {reusableCode}
+                    {component.codes?.next || reusableCode || "No example provided."}
                   </SyntaxHighlighter>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+            </section>
 
-        {/* Preview Container */}
-        <motion.div 
-          layout
-          transition={{ type: "spring", bounce: 0, duration: 0.8 }}
-          className="flex-1 min-h-[calc(100dvh-4rem)] relative bg-background flex items-center justify-center mt-8"
-        >
-          {!component.type.toLowerCase().includes("background") && (
-            <div className="absolute inset-0 opacity-30 pointer-events-none">
-              <DotBackground dotColor="currentColor" maskOpacity={0.05} />
-            </div>
-          )}
-
-          {/* <div className="absolute bottom-8 left-8 md:bottom-12 md:left-12 z-20 pointer-events-none">
-            <motion.h1 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-6xl md:text-9xl font-black tracking-tighter uppercase opacity-5"
-            >
-              {component.title}
-            </motion.h1>
-          </div> */}
-
-
-          <div className="relative z-10 w-full h-full flex items-center justify-center">
-             <ComponentLivePreview id={id} slug={slug} />
-          </div>
-
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.2, duration: 1 }}
-            className="absolute bottom-8 right-8 flex flex-col items-center gap-2 opacity-40 mix-blend-difference"
-          >
-            <span className="text-[10px] uppercase tracking-widest font-bold rotate-90 mb-4 select-none">Scroll</span>
-            <ArrowDown size={16} className="animate-bounce" />
-          </motion.div>
-        </motion.div>
-      </div>
-
-      {/* Cinematic Detailed Guide Section */}
-      <div className="w-full px-6 md:px-16 py-16 md:py-24 flex flex-col gap-16 md:gap-24 overflow-hidden">
-        
-        {/* Component Intro */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6"
-        >
-          <div className="flex items-center gap-4 text-primary">
-            <div className="h-px w-12 bg-primary/50" />
-            <span className="text-sm uppercase tracking-widest font-medium">Overview</span>
-          </div>
-          <h2 className="text-4xl md:text-6xl font-light tracking-tight">
-            Meet <span className="font-semibold">{component.title}</span>
-          </h2>
-          <p className="text-lg md:text-2xl text-muted-foreground/80 leading-relaxed font-light">
-            {component.description}
-          </p>
-        </motion.section>
-
-        {/* CLI Quick Install */}
-        <motion.section 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-100px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="space-y-6"
-        >
-          <div className="flex items-center gap-4 text-primary">
-            <div className="h-px w-12 bg-primary/50" />
-            <span className="text-sm uppercase tracking-widest font-medium">Quick Install via CLI</span>
-          </div>
-          <div className="relative group rounded-xl border border-border/20 bg-[#1e1e1e] overflow-hidden shadow-2xl flex flex-col">
-            {/* macOS Window Controls */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-[#2d2d2d] border-b border-white/5">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-                <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-                <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
-              </div>
-              <div className="flex-1 text-center text-xs text-white/40 font-medium font-sans select-none pr-12">
-                Terminal
-              </div>
-            </div>
-            {/* Terminal Body */}
-            <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-[#1e1e1e]">
-              <div className="flex items-center gap-4 font-mono text-base md:text-lg text-white/90">
-                <span className="text-emerald-500 font-bold select-none">~</span>
-                <span className="text-white/40 select-none">$</span>
-                <span className="selection:bg-white/20">{cliCommand}</span>
-              </div>
-              <button
-                onClick={() => {
-                  navigator.clipboard.writeText(cliCommand);
-                  setCopiedCli(true);
-                  setTimeout(() => setCopiedCli(false), 1500);
-                }}
-                className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 transition-all flex items-center justify-center gap-2 shrink-0 text-white/80"
-              >
-                {copiedCli ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-                <span className="text-sm font-medium">{copiedCli ? "Copied" : "Copy"}</span>
-              </button>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* Step-by-Step Guide */}
-        <section className="space-y-16">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-4 text-primary"
-          >
-            <div className="h-px w-12 bg-primary/50" />
-            <span className="text-sm uppercase tracking-widest font-medium">Implementation Steps</span>
-          </motion.div>
-
-          <div className="relative border-l border-border/10 pl-8 md:pl-12 space-y-24 py-4 ml-2 md:ml-4">
-            {[
-              `Installation: Open your terminal and run \`npx futureuikit add ${slug}\`. The CLI will automatically resolve dependencies, create the necessary files in your \`components/ui\` directory, and configure Tailwind or Framer Motion if required.`,
-              `Importing: Import the component into your application file using the standard alias path. For example: \`import { ${component.title.replace(/[^a-zA-Z]/g, '')} } from "@/components/ui/${slug}"\`.`,
-              `Basic Integration: Place the component directly within your JSX layout. By default, it operates completely standalone. Ensure you are using it within a Client Component (\`"use client"\`) if the component utilizes Framer Motion or React Hooks.`,
-              ...component.usage,
-              `Advanced Customization: Because Future UI components are copied directly into your codebase, you have 100% control over the source code. You can easily open \`src/components/ui/${slug}.tsx\` to adjust physics (spring configurations), rewrite logic, add new variants using \`cva\`, or tweak the core aesthetic to match your brand exactly.`,
-              `Accessibility: Our components prioritize a11y. Standard attributes like \`aria-label\`, \`tabIndex\`, and native keyboard navigation (where applicable) are usually preserved. You can pass any standard HTML attributes down to the root element.`,
-            ].map((step, i) => {
-              // Parse step assuming format "Action: description"
-              const splitIndex = step.indexOf(":");
-              const hasColon = splitIndex !== -1;
-              const action = hasColon ? step.slice(0, splitIndex).trim() : `Step ${(i + 1).toString().padStart(2, '0')}`;
-              const description = hasColon ? step.slice(splitIndex + 1).trim() : step;
-
-              return (
-                <motion.div 
-                  key={i}
-                  initial={{ opacity: 0, x: -30 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, margin: "-150px" }}
-                  transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-                  className="relative group"
-                >
-                  {/* Glowing Timeline Node */}
-                  <div className="absolute -left-9.25 md:-left-13.25 top-3 w-3 h-3 rounded-full bg-background border-2 border-primary/40 group-hover:border-primary group-hover:scale-150 transition-all duration-500 z-10" />
-                  
-                  {/* Step Number Watermark */}
-                  <div className="absolute -top-12 -left-8 md:-left-12 text-7xl md:text-9xl font-black text-foreground opacity-10 dark:opacity-5 pointer-events-none select-none transition-opacity duration-500 group-hover:opacity-20 dark:group-hover:opacity-10">
-                    {(i + 1).toString().padStart(2, '0')}
+            {/* Features & Notes */}
+            {(component.details?.length > 0 || component.usage?.length > 0) && (
+              <section className="space-y-10 min-w-0 pt-8 border-t border-border/40">
+                
+                {component.details?.length > 0 && (
+                  <div id="features" className="space-y-6 min-w-0">
+                    <div className="space-y-1">
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Features</h2>
+                      <p className="text-muted-foreground">Key capabilities and highlights.</p>
+                    </div>
+                    <div className="bg-card border border-border/50 p-6 md:p-8 rounded-xl shadow-sm w-full">
+                      <div className="flex items-center gap-3 text-foreground font-semibold mb-6">
+                        <Sparkles size={18} className="text-primary" /> Key Capabilities
+                      </div>
+                      <ul className="space-y-4">
+                        {component.details.map((detail: string, i: number) => (
+                          <li key={i} className="text-muted-foreground flex items-start gap-3">
+                            <span className="text-primary/60 mt-1 text-xs">◆</span>
+                            <span className="leading-relaxed text-sm"><HighlightText text={detail} /></span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
+                )}
 
-                  <div className="space-y-3 relative z-10 pt-1">
-                    <h4 className="text-xl md:text-2xl font-medium tracking-tight">
-                      {action}
-                    </h4>
-                    <p className="text-base md:text-lg text-muted-foreground/80 leading-relaxed font-light">
-                      <HighlightText text={description} />
-                    </p>
+                {component.usage?.length > 0 && (
+                  <div id="notes" className="space-y-6 min-w-0 pt-4">
+                    <div className="space-y-1">
+                      <h2 className="text-2xl font-bold tracking-tight text-foreground">Notes</h2>
+                      <p className="text-muted-foreground">Important implementation details to consider.</p>
+                    </div>
+                    <div className="bg-card border border-border/50 p-6 md:p-8 rounded-xl shadow-sm w-full">
+                      <div className="flex items-center gap-3 text-foreground font-semibold mb-6">
+                        <Box size={18} className="text-primary" /> Implementation Details
+                      </div>
+                      <ul className="space-y-4">
+                        {component.usage.map((useCase: string, i: number) => (
+                          <li key={i} className="text-muted-foreground flex items-start gap-3">
+                            <span className="text-primary/60 mt-1 text-xs">◆</span>
+                            <span className="leading-relaxed text-sm"><HighlightText text={useCase} /></span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </section>
+                )}
+              </section>
+            )}
 
+          </div>
+        </main>
       </div>
     </div>
   );

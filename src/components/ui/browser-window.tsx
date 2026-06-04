@@ -36,12 +36,20 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
     const [windowState, setWindowState] = React.useState<WindowState>("default");
     const [mounted, setMounted] = React.useState(false);
     const [rect, setRect] = React.useState<{ top: number; left: number; width: number; height: number } | null>(null);
+    const [customRect, setCustomRect] = React.useState<{ top: number; left: number; width: number; height: number } | null>(null);
     const [maximizedScroll, setMaximizedScroll] = React.useState({ x: 0, y: 0 });
+    const [isInteracting, setIsInteracting] = React.useState(false);
     
     const placeholderRef = React.useRef<HTMLDivElement>(null);
-    const uniqueId = React.useId();
+    const interactionRef = React.useRef({
+      startX: 0,
+      startY: 0,
+      startRect: { top: 0, left: 0, width: 0, height: 0 },
+      type: "" as "drag" | "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw" | ""
+    });
 
     const isMaximized = windowState === "maximized";
+    const activeRect = customRect || rect;
 
     React.useEffect(() => {
       setMounted(true);
@@ -95,7 +103,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
     // RESIZE SYNC for 3D content
     React.useLayoutEffect(() => {
-      if (!isMaximized) return;
+      if (!isMaximized && !isInteracting) return;
       let animationFrame: number;
       const startTime = Date.now();
       const syncResize = () => {
@@ -104,7 +112,111 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
       };
       animationFrame = requestAnimationFrame(syncResize);
       return () => cancelAnimationFrame(animationFrame);
-    }, [isMaximized]);
+    }, [isMaximized, isInteracting]);
+
+    // DRAG AND RESIZE LOGIC
+    const startInteraction = React.useCallback((
+      e: React.PointerEvent, 
+      type: "drag" | "n" | "s" | "e" | "w" | "ne" | "nw" | "se" | "sw"
+    ) => {
+      if (!activeRect || isMaximized || windowState === "minimized") return;
+      
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const currentRect = customRect ? { ...customRect } : { ...activeRect };
+      
+      if (!customRect) {
+        setCustomRect(currentRect);
+      }
+
+      interactionRef.current = {
+        startX: e.clientX,
+        startY: e.clientY,
+        startRect: currentRect,
+        type
+      };
+      
+      setIsInteracting(true);
+      document.body.style.userSelect = "none";
+      if (type === "drag") {
+        document.body.style.cursor = "grabbing";
+      } else {
+        document.body.style.cursor = e.currentTarget.getAttribute('style')?.includes('cursor') 
+          ? (e.currentTarget as HTMLElement).style.cursor 
+          : "auto";
+      }
+    }, [activeRect, customRect, isMaximized, windowState]);
+
+    React.useEffect(() => {
+      if (!isInteracting) return;
+      
+      let animationFrameId: number;
+
+      const handlePointerMove = (e: PointerEvent) => {
+        animationFrameId = requestAnimationFrame(() => {
+          const { startX, startY, startRect, type } = interactionRef.current;
+          const dx = e.clientX - startX;
+          const dy = e.clientY - startY;
+
+          let newTop = startRect.top;
+          let newLeft = startRect.left;
+          let newWidth = startRect.width;
+          let newHeight = startRect.height;
+
+          const MIN_WIDTH = 320;
+          const MIN_HEIGHT = 200;
+
+          if (type === "drag") {
+            newTop = Math.max(0, startRect.top + dy);
+            newLeft = startRect.left + dx;
+            // Ensure title bar is always grabbable
+            const maxLeft = window.innerWidth - 50;
+            if (newLeft > maxLeft) newLeft = maxLeft;
+            if (newLeft + newWidth < 50) newLeft = 50 - newWidth;
+          } else {
+            if (type.includes("n")) {
+              const maxDy = startRect.height - MIN_HEIGHT;
+              const clampedDy = Math.min(dy, maxDy);
+              newTop = startRect.top + clampedDy;
+              newHeight = startRect.height - clampedDy;
+            }
+            if (type.includes("s")) {
+              newHeight = Math.max(MIN_HEIGHT, startRect.height + dy);
+            }
+            if (type.includes("w")) {
+              const maxDx = startRect.width - MIN_WIDTH;
+              const clampedDx = Math.min(dx, maxDx);
+              newLeft = startRect.left + clampedDx;
+              newWidth = startRect.width - clampedDx;
+            }
+            if (type.includes("e")) {
+              newWidth = Math.max(MIN_WIDTH, startRect.width + dx);
+            }
+          }
+
+          setCustomRect({ top: newTop, left: newLeft, width: newWidth, height: newHeight });
+        });
+      };
+
+      const handlePointerUp = () => {
+        setIsInteracting(false);
+        document.body.style.userSelect = "";
+        document.body.style.cursor = "";
+        cancelAnimationFrame(animationFrameId);
+      };
+
+      window.addEventListener("pointermove", handlePointerMove);
+      window.addEventListener("pointerup", handlePointerUp);
+      window.addEventListener("pointercancel", handlePointerUp);
+
+      return () => {
+        window.removeEventListener("pointermove", handlePointerMove);
+        window.removeEventListener("pointerup", handlePointerUp);
+        window.removeEventListener("pointercancel", handlePointerUp);
+        cancelAnimationFrame(animationFrameId);
+      };
+    }, [isInteracting]);
 
     if (!mounted) return null;
 
@@ -120,6 +232,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
     const handleClose = (e: React.MouseEvent) => {
       e.stopPropagation();
       setWindowState("default");
+      setCustomRect(null); // Snap back to layout placeholder
     };
 
     const handleMinimize = (e: React.MouseEvent) => {
@@ -148,17 +261,20 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           borderRadius: 0,
           margin: 0,
         } : {
-          top: rect?.top ?? 0,
-          left: rect?.left ?? 0,
-          width: rect?.width ?? 0,
-          height: rect?.height ?? 0,
+          top: activeRect?.top ?? 0,
+          left: activeRect?.left ?? 0,
+          width: activeRect?.width ?? 0,
+          height: activeRect?.height ?? 0,
           borderRadius: 16,
           margin: 0,
         }}
-        transition={transition}
+        transition={isInteracting ? { type: "tween", duration: 0 } : transition}
         className={cn(
-          "flex flex-col bg-background border border-border/40 overflow-hidden transform-gpu",
-          "shadow-none" 
+          "flex flex-col bg-background overflow-hidden transform-gpu transition-shadow duration-300",
+          "border border-black/10 dark:border-white/10",
+          customRect 
+            ? "shadow-2xl shadow-black/20 dark:shadow-black/60 ring-1 ring-black/5 dark:ring-white/5" 
+            : "shadow-xl shadow-black/5 dark:shadow-black/40"
         )}
         style={{
           position: "absolute",
@@ -166,8 +282,33 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         }}
         {...props}
       >
+        {/* Resize Handles */}
+        {!isMaximized && windowState !== "minimized" && (
+          <>
+            <div className="absolute top-0 left-0 w-full h-1.5 cursor-ns-resize z-[60] bg-transparent" onPointerDown={(e) => startInteraction(e, "n")} />
+            <div className="absolute bottom-0 left-0 w-full h-1.5 cursor-ns-resize z-[60] bg-transparent" onPointerDown={(e) => startInteraction(e, "s")} />
+            <div className="absolute top-0 left-0 w-1.5 h-full cursor-ew-resize z-[60] bg-transparent" onPointerDown={(e) => startInteraction(e, "w")} />
+            <div className="absolute top-0 right-0 w-1.5 h-full cursor-ew-resize z-[60] bg-transparent" onPointerDown={(e) => startInteraction(e, "e")} />
+            <div className="absolute top-0 left-0 w-3 h-3 cursor-nwse-resize z-[70] bg-transparent" onPointerDown={(e) => startInteraction(e, "nw")} />
+            <div className="absolute top-0 right-0 w-3 h-3 cursor-nesw-resize z-[70] bg-transparent" onPointerDown={(e) => startInteraction(e, "ne")} />
+            <div className="absolute bottom-0 left-0 w-3 h-3 cursor-nesw-resize z-[70] bg-transparent" onPointerDown={(e) => startInteraction(e, "sw")} />
+            <div className="absolute bottom-0 right-0 w-3 h-3 cursor-nwse-resize z-[70] bg-transparent" onPointerDown={(e) => startInteraction(e, "se")} />
+          </>
+        )}
+
         {/* Header */}
-        <div className="w-full h-10 shrink-0 bg-muted/80 backdrop-blur-md border-b border-border/40 flex items-center px-4 gap-2 z-50 select-none">
+        <div 
+          className="w-full h-10 shrink-0 bg-[#f3f4f6]/80 dark:bg-muted/80 backdrop-blur-md border-b border-black/5 dark:border-white/10 flex items-center px-4 gap-2 z-50 select-none"
+          onPointerDown={(e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            startInteraction(e, "drag");
+          }}
+          onDoubleClick={(e) => {
+            if ((e.target as HTMLElement).closest("button")) return;
+            handleMaximize(e as any);
+          }}
+          style={{ cursor: isMaximized ? "default" : (isInteracting && interactionRef.current.type === "drag" ? "grabbing" : "grab") }}
+        >
           <div className="flex items-center gap-1.5">
             <button 
               onClick={handleClose}
@@ -192,7 +333,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           </div>
           {title ? (
             <div className="flex-1 text-center pr-12">
-              <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-[0.3em]">{title}</span>
+              <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-[0.3em] pointer-events-none">{title}</span>
             </div>
           ) : (
             <div className="flex-1" />
@@ -204,6 +345,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           layout
           ref={scrollRef as any}
           className={cn("relative flex-1 w-full min-h-0 overflow-auto @container", contentClassName)}
+          style={{ pointerEvents: isInteracting ? "none" : "auto" }}
         >
           {children}
         </motion.div>
@@ -215,11 +357,19 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         {/* Placeholder: Occupies the actual space in the layout */}
         <div 
           ref={placeholderRef}
-          className={cn("w-full h-full rounded-2xl", className)}
-        />
+          className={cn("w-full h-full rounded-2xl relative", className)}
+        >
+          {customRect && windowState === "default" && (
+            <div className="absolute inset-0 border-2 border-dashed border-border/40 rounded-2xl flex items-center justify-center bg-muted/5">
+              <span className="text-[10px] text-muted-foreground font-bold uppercase tracking-widest opacity-50 select-none">
+                Window Detached
+              </span>
+            </div>
+          )}
+        </div>
 
         {/* Portal: The window is ALWAYS rendered at the body root to stay on top of everything */}
-        {mounted && rect && createPortal(
+        {mounted && activeRect && createPortal(
           <div 
             className="pointer-events-none"
             style={{
@@ -227,8 +377,7 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
               top: 0,
               left: 0,
               width: "100%",
-              // Escapes all local stacking contexts effectively 
-              zIndex: isMaximized ? 2147483647 : 10,
+              zIndex: isMaximized || isInteracting || customRect ? 2147483647 : 10,
               isolation: "isolate"
             }}
           >
