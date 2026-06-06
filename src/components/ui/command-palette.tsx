@@ -221,20 +221,20 @@ export const CommandGroup = React.memo(React.forwardRef<
       className={cn(
         "overflow-hidden text-foreground",
 
-        "[& [cmdk-group-heading]]:px-5",
-        "[& [cmdk-group-heading]]:py-3",
-        "[& [cmdk-group-heading]]:text-[11px]",
-        "[& [cmdk-group-heading]]:font-bold",
-        "[& [cmdk-group-heading]]:uppercase",
-        "[& [cmdk-group-heading]]:tracking-[0.2em]",
-        "[& [cmdk-group-heading]]:text-muted-foreground/60",
+        "[&_[cmdk-group-heading]]:px-5",
+        "[&_[cmdk-group-heading]]:py-3",
+        "[&_[cmdk-group-heading]]:text-[11px]",
+        "[&_[cmdk-group-heading]]:font-bold",
+        "[&_[cmdk-group-heading]]:uppercase",
+        "[&_[cmdk-group-heading]]:tracking-[0.2em]",
+        "[&_[cmdk-group-heading]]:text-muted-foreground/60",
 
         variant === "compact" && (
-          "[& [cmdk-group-heading]]:px-4 [& [cmdk-group-heading]]:py-2"
+          "[&_[cmdk-group-heading]]:px-4 [&_[cmdk-group-heading]]:py-2"
         ),
 
         variant === "floating" && (
-          "[& [cmdk-group-heading]]:px-6"
+          "[&_[cmdk-group-heading]]:px-6"
         ),
 
         className
