@@ -70,6 +70,8 @@ import { PremiumUploadButton } from "@/components/ui/premium-upload-button";
 import { cva } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { Footer } from "@/components/ui/footer";
+import { ScrollProgress } from "@/components/ui/ScrollProgress";
 
 // Typography helper components for the preview
 const headingVariants = cva("font-bold tracking-tight text-foreground", {
