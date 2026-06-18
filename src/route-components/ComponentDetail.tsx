@@ -163,14 +163,13 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                                         </div>
                                     </div>
 
-
                                 </div>
                             </div>
 
                             {/* Right Column Wrapper */}
-                            <div className="lg:sticky lg:top-40 flex flex-col gap-6 min-w-0">
+                            <div className="flex flex-col gap-6 min-w-0 h-full">
                                 {/* Live Component Preview & Code Tab */}
-                                <div className="h-125 lg:h-[calc(100vh-240px)] lg:max-h-[800px] flex flex-col min-w-0">
+                                <div className="min-h-[500px] flex-1 flex flex-col min-w-0">
 
                                     {/* Tabs Header */}
                                     <div className="flex items-center gap-8 border-b border-border/40 mb-6 px-2">
@@ -247,7 +246,7 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                                                     showHeader={false}
                                                     language="tsx"
                                                     code={reusableCode}
-                                                    className="border-none rounded-none bg-transparent dark:bg-transparent shadow-none"
+                                                    className="w-full h-full border-none rounded-none bg-transparent dark:bg-transparent shadow-none"
                                                 />
                                             </BrowserWindow>
                                         )}
@@ -259,16 +258,22 @@ export default function ComponentDetail({ type, slug, id }: { type: string; slug
                         {/* Portaled Variant Controls Container (Full Width) */}
                         <div id="preview-controls-container" className="w-full shrink-0 empty:hidden rounded-xl border border-border/50 bg-muted/10 shadow-sm relative z-20"></div>
 
-                        {/* Usage Section */}
-                        <CodeBlock
-                            language="tsx"
-                            filename="Example Implementation"
-                            code={
-                                component.codes?.next ||
-                                reusableCode ||
-                                "No example provided."
-                            }
-                        />
+                        {/* Usage Example Section */}
+                        <section id="usage-example" className="flex flex-col gap-8 min-w-0 pt-12 border-t border-border/40">
+                            <div className="flex flex-col gap-2">
+                                <h2 className="text-2xl font-bold tracking-tight text-foreground">Usage Example</h2>
+                                <p className="text-muted-foreground">A basic implementation example to get you started.</p>
+                            </div>
+                            <CodeBlock
+                                language="tsx"
+                                filename="Example Implementation"
+                                code={
+                                    component.codes?.next ||
+                                    reusableCode ||
+                                    "No example provided."
+                                }
+                            />
+                        </section>
 
                         {/* Features & Notes */}
                         {(component.details?.length > 0 || component.usage?.length > 0) && (

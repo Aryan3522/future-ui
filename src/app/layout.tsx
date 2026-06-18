@@ -6,6 +6,7 @@ import { Footer } from "@/components/ui/footer";
 import Script from "next/script";
 import React from "react";
 import { Metadata, Viewport } from "next";
+import { Agentation } from "agentation";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -202,6 +203,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </div>
+          {process.env.NODE_ENV === "development" && <Agentation />}
         </AppProviders>
       </body>
     </html>

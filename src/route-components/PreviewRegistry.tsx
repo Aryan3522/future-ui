@@ -46,6 +46,9 @@ import {
   NoirHero3DPreview,
   PrimaryButtonPreview,
   GlowyButtonPreview,
+  SkeuomorphicButtonPreview,
+  ClayMorphButtonPreview,
+  MinimalButtonPreview,
   TextSystemPreview,
   DotBackgroundPreview,
   ParticlesPreview,
@@ -128,6 +131,9 @@ export const PreviewRegistry: PreviewRegistryMap = {
   "noir-hero-3d": NoirHero3DPreview,
   primary: PrimaryButtonPreview,
   glowy: GlowyButtonPreview,
+  "skeuomorphic-button": SkeuomorphicButtonPreview,
+  "clay-morph-button": ClayMorphButtonPreview,
+  "minimal-button": MinimalButtonPreview,
 
   // Typography
   "text-system": TextSystemPreview,

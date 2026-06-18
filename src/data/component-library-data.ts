@@ -1614,6 +1614,128 @@ export default function Example() {
 "Props: Configure 'length' (4-10) and 'onVerify' (async function returning boolean).",
 "States: The component handles Loading, Success, and Error animations automatically based on the 'onVerify' result."
  ]
+ },
+ {
+ id: 60,
+ title:"Skeuomorphic Button",
+ type:"UI",
+ slug:"skeuomorphic-button",
+ category:"ui",
+ isNew: true,
+ description:"A premium, production-ready skeuomorphic button with realistic depth, tactile interactions, and modern aesthetics. Features multi-layered shadows, highlights, and physical press animations.",
+ details: [
+"Realistic 3D depth with multi-layered shadows.",
+"Tactile interaction: physically sinks when pressed.",
+"Multiple variants: Primary, Glass, Gradient, Elevated, etc.",
+"Built-in color presets with automatic state generation.",
+"Premium Framer Motion animations (spring-based).",
+"Full accessibility and keyboard support."
+ ],
+ codes: {
+ next: `import { SkeuomorphicButton } from "@/components/ui/skeuomorphic-button";
+import { Play } from "lucide-react";
+
+export default function Example() {
+ return (
+ <SkeuomorphicButton 
+ variant="primary" 
+ color="blue" 
+ size="lg" 
+ icon={<Play className="w-4 h-4" />}
+ >
+ Launch Experience
+ </SkeuomorphicButton>
+ );
+}`
+ },
+ usage: [
+"Install: Run 'npx futureuikit add skeuomorphic-button'.",
+"Import: 'import { SkeuomorphicButton } from \"@/components/ui/skeuomorphic-button\";'",
+"Props: Supports variant, color, size, shape, loading, icon, elevation, glow, and pressedEffect.",
+"Interaction: Full motion support via Framer Motion for tactile feedback."
+ ]
+ },
+ {
+ id: 61,
+ title:"Clay Morphism Button",
+ type:"UI",
+ slug:"clay-morph-button",
+ category:"ui",
+ isNew: true,
+ description:"A premium, modern Claymorphism button with soft 3D extrusion, inner highlights, and bubbly tactile interactions.",
+ details: [
+"Soft extruded 3D appearance with layered highlights.",
+"Tactile interaction: physical press compression.",
+"Modern Neumorphism 2.0 aesthetics.",
+"Multiple variants: Glass, Gradient, Soft, Elevated.",
+"Built-in color presets with automatic state generation.",
+"Premium Framer Motion animations (spring-based)."
+ ],
+ codes: {
+ next: `import { ClayMorphButton } from "@/components/ui/clay-morph-button";
+import { Sparkles } from "lucide-react";
+
+export default function Example() {
+ return (
+ <ClayMorphButton 
+ variant="soft" 
+ color="purple" 
+ size="lg" 
+ icon={<Sparkles className="w-4 h-4" />}
+ >
+ Modern Clay
+ </ClayMorphButton>
+ );
+}`
+ },
+ usage: [
+"Install: Run 'npx futureuikit add clay-morph-button'.",
+"Import: 'import { ClayMorphButton } from \"@/components/ui/clay-morph-button\";'",
+"Props: Supports variant, color, size, shape, loading, icon, elevation, and glow.",
+"Interaction: Framer Motion provides the soft 3D compression effect."
+ ]
+ },
+ {
+ id: 62,
+ title:"Minimal Button",
+ type:"UI",
+ slug:"minimal-button",
+ category:"ui",
+ isNew: true,
+ description:"An ultra-clean, premium, modern button inspired by Vercel and Linear. Focuses on typography, precise spacing, and subtle interactions.",
+ details: [
+"Ultra-clean minimalist aesthetic without heavy shadows.",
+"Extensive shape support including squircles, cut-corners, and stadiums.",
+"Multiple aesthetic variants: Solid, Soft, Outline, Ghost, Text, Elevated.",
+"Premium, buttery-smooth interactions powered by Framer Motion.",
+"Comprehensive size scaling including adaptive padding and typography.",
+"Fully responsive and accessible."
+ ],
+ codes: {
+ next: `import { MinimalButton } from "@/components/ui/minimal-button";
+import { ArrowRight } from "lucide-react";
+
+export default function Example() {
+ return (
+ <MinimalButton 
+ variant="solid" 
+ color="zinc" 
+ size="md" 
+ shape="squircle"
+ icon={<ArrowRight />}
+ iconPosition="right"
+ >
+ Continue
+ </MinimalButton>
+ );
+}`
+ },
+ usage: [
+"Install: Run 'npx futureuikit add minimal-button'.",
+"Import: 'import { MinimalButton } from \"@/components/ui/minimal-button\";'",
+"Props: Supports variant, color, size, shape, loading, icon, and fullWidth.",
+"Interaction: Framer Motion provides precise tap scaling and transitions."
+ ]
  }
 ];
 
