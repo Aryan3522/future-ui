@@ -95,7 +95,6 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
       <div
         className={cn(
           "flex justify-center flex-1 w-full relative px-2 sm:px-4 pb-4 sm:pb-8 pt-2 sm:pt-4 overflow-y-auto",
-          align === "center" ? "items-center" : "items-start",
           contentClassName
         )}
       >
@@ -106,27 +105,27 @@ export const PreviewContainer: React.FC<PreviewContainerProps> = ({
             contentClassName={cn("flex flex-col", canvasClassName)}
             scrollRef={scrollRef}
           >
+            <div className="w-full min-h-full flex flex-col relative">
+              <div
+                className={cn(
+                  "w-full flex flex-col",
+                  align === "center" ? "my-auto items-center justify-center" : "items-start justify-start"
+                )}
+              >
+                {children}
+              </div>
+            </div>
+          </BrowserWindow>
+        ) : (
+          <div className="w-full min-h-full flex flex-col relative">
             <div
               className={cn(
-                "w-full h-full flex flex-col relative",
-                align === "center"
-                  ? "items-center justify-center"
-                  : "items-start justify-start"
+                "w-full flex flex-col",
+                align === "center" ? "my-auto items-center justify-center" : "items-start justify-start"
               )}
             >
               {children}
             </div>
-          </BrowserWindow>
-        ) : (
-          <div
-            className={cn(
-              "w-full h-full flex flex-col relative",
-              align === "center"
-                ? "items-center justify-center"
-                : "items-start justify-start"
-            )}
-          >
-            {children}
           </div>
         )}
       </div>

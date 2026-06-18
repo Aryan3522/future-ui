@@ -7,7 +7,11 @@ import { CarouselSlider } from "@/components/ui/carousel-slider";
 import { NoirHero3D } from "@/components/ui/noir-hero-3d";
 import { PrimaryButton } from "@/components/ui/primary-button";
 import { GlowyButton } from "@/components/ui/glowy-button";
+import { ClayMorphButton } from "@/components/ui/clay-morph-button";
+import { MinimalButton } from "@/components/ui/minimal-button";
+import { SkeuomorphicButton } from "@/components/ui/SkeuomorphicButton";
 import { PreviewContainer } from "../preview-engine/PreviewContainer";
+import { Play, Rocket, Settings, Check, Download, Send, Bell, Star } from "lucide-react";
 
 export const FooterPreview: React.FC = () => {
   return (
@@ -115,6 +119,173 @@ export const GlowyButtonPreview: React.FC = () => {
           <GlowyButton variant="primary">Primary</GlowyButton>
           <GlowyButton variant="success">Success</GlowyButton>
           <GlowyButton variant="danger">Danger</GlowyButton>
+        </div>
+      </div>
+    </PreviewContainer>
+  );
+};
+
+export const SkeuomorphicButtonPreview: React.FC = () => {
+  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+
+  return (
+    <PreviewContainer
+      title="Skeuomorphic Button"
+      description="A premium skeuomorphic button with realistic depth and tactile interactions."
+      variants={["primary", "glass", "gradient", "elevated", "soft", "outline", "ghost"]}
+      activeVariant={activeVariant}
+      onVariantChange={setActiveVariant}
+      isVirtualScreen={true}
+    >
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
+        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
+          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
+            <SkeuomorphicButton variant={activeVariant as any} size="xs" color="indigo">Extra Small</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} size="sm" color="indigo">Small Size</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} size="md" color="indigo">Medium Default</SkeuomorphicButton>
+          </div>
+          
+          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
+            <SkeuomorphicButton variant={activeVariant as any} size="lg" color="indigo">Large Size</SkeuomorphicButton>
+            <SkeuomorphicButton variant={activeVariant as any} size="xl" color="indigo">Extra Large</SkeuomorphicButton>
+          </div>
+
+          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
+
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+             <SkeuomorphicButton variant={activeVariant as any} shape="rounded" color="indigo">Rounded (Default)</SkeuomorphicButton>
+             <SkeuomorphicButton variant={activeVariant as any} shape="pill" color="indigo">Pill Shape</SkeuomorphicButton>
+             <SkeuomorphicButton variant={activeVariant as any} shape="soft-rounded" color="indigo">Soft Rounded</SkeuomorphicButton>
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
+             <SkeuomorphicButton variant={activeVariant as any} shape="square" color="indigo">Square</SkeuomorphicButton>
+             <SkeuomorphicButton variant={activeVariant as any} shape="circle" size="xs" color="indigo" icon={<Star />} aria-label="Star XS" />
+             <SkeuomorphicButton variant={activeVariant as any} shape="circle" size="sm" color="indigo" icon={<Star />} aria-label="Star SM" />
+             <SkeuomorphicButton variant={activeVariant as any} shape="circle" size="md" color="indigo" icon={<Star />} aria-label="Star MD" />
+             <SkeuomorphicButton variant={activeVariant as any} shape="circle" size="lg" color="indigo" icon={<Star />} aria-label="Star LG" />
+             <SkeuomorphicButton variant={activeVariant as any} shape="circle" size="xl" color="indigo" icon={<Star />} aria-label="Star XL" />
+          </div>
+        </div>
+      </div>
+    </PreviewContainer>
+  );
+};
+
+
+export const ClayMorphButtonPreview: React.FC = () => {
+  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+
+  return (
+    <PreviewContainer
+      title="Clay Morphism Button"
+      description="A premium, modern Claymorphism button with soft 3D extrusion, layered highlights, and bubbly tactile interactions."
+      variants={["primary", "secondary", "success", "danger", "warning", "info", "neutral", "ghost", "outline", "soft", "elevated", "gradient", "glass"]}
+      activeVariant={activeVariant}
+      onVariantChange={setActiveVariant}
+      isVirtualScreen={true}
+    >
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
+        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
+          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
+            <ClayMorphButton variant={activeVariant as any} size="xs" color="blue">Extra Small</ClayMorphButton>
+            <ClayMorphButton variant={activeVariant as any} size="sm" color="blue">Small Size</ClayMorphButton>
+            <ClayMorphButton variant={activeVariant as any} size="md" color="blue">Medium Default</ClayMorphButton>
+          </div>
+          
+          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
+            <ClayMorphButton variant={activeVariant as any} size="lg" color="blue">Large Size</ClayMorphButton>
+            <ClayMorphButton variant={activeVariant as any} size="xl" color="blue">Extra Large</ClayMorphButton>
+          </div>
+
+          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
+
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue">Rounded</ClayMorphButton>
+             <ClayMorphButton variant={activeVariant as any} shape="soft-rounded" color="blue">Soft Rounded</ClayMorphButton>
+             <ClayMorphButton variant={activeVariant as any} shape="pill" color="blue">Pill Shape</ClayMorphButton>
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
+             <ClayMorphButton variant={activeVariant as any} shape="square" color="blue">Square</ClayMorphButton>
+             <ClayMorphButton variant={activeVariant as any} shape="circle" size="xs" color="blue" icon={<Star />} aria-label="Star XS" />
+             <ClayMorphButton variant={activeVariant as any} shape="circle" size="sm" color="blue" icon={<Star />} aria-label="Star SM" />
+             <ClayMorphButton variant={activeVariant as any} shape="circle" size="md" color="blue" icon={<Star />} aria-label="Star MD" />
+             <ClayMorphButton variant={activeVariant as any} shape="circle" size="lg" color="blue" icon={<Star />} aria-label="Star LG" />
+             <ClayMorphButton variant={activeVariant as any} shape="circle" size="xl" color="blue" icon={<Star />} aria-label="Star XL" />
+          </div>
+        </div>
+      </div>
+    </PreviewContainer>
+  );
+};
+
+
+export const MinimalButtonPreview: React.FC = () => {
+  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+
+  return (
+    <PreviewContainer
+      title="Minimal Button"
+      description="An ultra-clean, premium button inspired by Vercel and Linear. Focuses on typography, precise spacing, and subtle interactions."
+      variants={["primary", "secondary", "ghost", "outline", "soft", "text", "elevated", "success", "danger", "warning"]}
+      activeVariant={activeVariant}
+      onVariantChange={setActiveVariant}
+      isVirtualScreen={true}
+    >
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
+        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
+          
+          <div className="text-center space-y-2 mb-2 w-full">
+            <h3 className="text-xl font-bold capitalize text-zinc-900 dark:text-white">{activeVariant} Variant</h3>
+            <p className="text-zinc-500 dark:text-zinc-400 text-sm">Responsive Sizes & Shapes</p>
+          </div>
+
+          {/* Sizes Showcase */}
+          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
+            <MinimalButton variant={activeVariant as any} size="xs" color="zinc">Extra Small</MinimalButton>
+            <MinimalButton variant={activeVariant as any} size="sm" color="zinc">Small Size</MinimalButton>
+            <MinimalButton variant={activeVariant as any} size="md" color="zinc">Medium Default</MinimalButton>
+          </div>
+          
+          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
+            <MinimalButton variant={activeVariant as any} size="lg" color="zinc">Large Size</MinimalButton>
+            <MinimalButton variant={activeVariant as any} size="xl" color="zinc">Extra Large</MinimalButton>
+          </div>
+
+          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
+
+          {/* Shapes Showcase */}
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+             <MinimalButton variant={activeVariant as any} shape="rounded" color="zinc">Rounded</MinimalButton>
+             <MinimalButton variant={activeVariant as any} shape="soft-rounded" color="zinc">Soft Rounded</MinimalButton>
+             <MinimalButton variant={activeVariant as any} shape="pill" color="zinc">Pill Shape</MinimalButton>
+             <MinimalButton variant={activeVariant as any} shape="squircle" color="zinc">Squircle</MinimalButton>
+          </div>
+          
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
+             <MinimalButton variant={activeVariant as any} shape="square" color="zinc">Square</MinimalButton>
+             <MinimalButton variant={activeVariant as any} shape="stadium" color="zinc">Stadium</MinimalButton>
+             <MinimalButton variant={activeVariant as any} shape="cut-corners" color="zinc">Cut Corners</MinimalButton>
+          </div>
+
+          {/* Icons & Circles Showcase */}
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full mt-2">
+             <MinimalButton variant={activeVariant as any} shape="circle" size="xs" color="zinc" icon={<Star />} aria-label="Star XS" />
+             <MinimalButton variant={activeVariant as any} shape="circle" size="sm" color="zinc" icon={<Star />} aria-label="Star SM" />
+             <MinimalButton variant={activeVariant as any} shape="circle" size="md" color="zinc" icon={<Star />} aria-label="Star MD" />
+             <MinimalButton variant={activeVariant as any} shape="circle" size="lg" color="zinc" icon={<Star />} aria-label="Star LG" />
+             <MinimalButton variant={activeVariant as any} shape="circle" size="xl" color="zinc" icon={<Star />} aria-label="Star XL" />
+          </div>
+
+          {/* Loading & Disabled */}
+          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
+          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
+            <MinimalButton variant={activeVariant as any} loading color="zinc">Loading State</MinimalButton>
+            <MinimalButton variant={activeVariant as any} disabled color="zinc">Disabled State</MinimalButton>
+            <MinimalButton variant={activeVariant as any} icon={<Star />} iconPosition="right" color="zinc">Icon Right</MinimalButton>
+          </div>
+
         </div>
       </div>
     </PreviewContainer>

@@ -40,7 +40,7 @@ export function CodeBlock({
  };
 
  return (
- <div className={cn("relative overflow-hidden rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-black/40 shadow-sm", className)}>
+ <div className={cn("relative overflow-auto rounded-xl border border-black/10 dark:border-white/10 bg-white dark:bg-black/40 shadow-sm", className)}>
  {showHeader && (
  // <div className="flex items-center justify-between px-4 py-3 bg-zinc-100 dark:bg-white/5 border-b border-black/10 dark:border-white/10">
  <div className="flex justify-between items-center px-4 py-3 bg-card border-b border-border">
@@ -67,6 +67,8 @@ export function CodeBlock({
  <SyntaxHighlighter
  language={language}
  style={activeSyntaxStyle}
+ wrapLines={true}
+ wrapLongLines={true}
  customStyle={{
  margin: 0,
  padding:"1.5rem",
