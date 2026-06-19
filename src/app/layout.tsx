@@ -3,6 +3,7 @@ import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import AppProviders from "@/next/AppProviders";
 import { Footer } from "@/components/ui/footer";
+import { Header } from "@/components/ui/header";
 import Script from "next/script";
 import React from "react";
 import { Metadata, Viewport } from "next";
@@ -200,6 +201,7 @@ export default function RootLayout({
         <div className="fixed inset-0 noise-overlay z-100" aria-hidden="true" />
         <AppProviders>
           <div className="flex flex-col min-h-screen @container">
+            <Header />
             {children}
             <Footer />
           </div>

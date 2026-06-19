@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { Header } from "@/components/ui/header";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { GlowyButton } from "@/components/ui/glowy-button";
 import { Sparkles, Cpu, Shield, Activity, Terminal, Globe } from "lucide-react";
@@ -13,7 +12,6 @@ import { Agentation } from "agentation"
 export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body-md overflow-clip selection:bg-secondary/30 relative">
-      <Header />
       {process.env.NODE_ENV === "development" && <Agentation />}
       <main className="relative z-10">
         <HeroSection />

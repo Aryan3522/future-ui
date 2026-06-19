@@ -1763,7 +1763,7 @@ export default function Example() {
     type: "Components",
     slug: "velocity-marquee",
     category: "ui",
-    description: "An interactive marquee grid of open source projects with glowing hover cards.",
+    description: "An interactive marquee grid of glowing open source project cards.",
     details: [
       "Uses Marquee Track internally for physics based scrolling.",
       "Features dynamic mouse-following glow effects.",
@@ -1775,6 +1775,489 @@ export default function Example() {
     usage: [
       "Install: Run 'npx futureuikit add velocity-marquee'.",
       "Import: 'import VelocityMarquee from \"@/components/ui/velocity-marquee\";'"
+    ]
+  },
+  {
+    id: 67,
+    title: "Alert Dialog",
+    type: "Overlay",
+    slug: "alert-dialog",
+    category: "ui",
+    description: "A modal dialog that interrupts the user with important content and expects a response before it can be dismissed.",
+    details: [
+      "Accessible modal built on Radix UI primitives.",
+      "Includes header, description, footer, and action/cancel buttons.",
+      "Traps focus and blocks interaction with the rest of the page."
+    ],
+    codes: {
+      next: 'import {\n  AlertDialog,\n  AlertDialogAction,\n  AlertDialogCancel,\n  AlertDialogContent,\n  AlertDialogDescription,\n  AlertDialogFooter,\n  AlertDialogHeader,\n  AlertDialogTitle,\n  AlertDialogTrigger,\n} from "@/components/ui/alert-dialog";\n\nexport default function Example() {\n  return (\n    <AlertDialog>\n      <AlertDialogTrigger>Open</AlertDialogTrigger>\n      <AlertDialogContent>\n        <AlertDialogHeader>\n          <AlertDialogTitle>Are you sure?</AlertDialogTitle>\n          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>\n        </AlertDialogHeader>\n        <AlertDialogFooter>\n          <AlertDialogCancel>Cancel</AlertDialogCancel>\n          <AlertDialogAction>Continue</AlertDialogAction>\n        </AlertDialogFooter>\n      </AlertDialogContent>\n    </AlertDialog>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add alert-dialog'.",
+      "Import: 'import { AlertDialog, AlertDialogTrigger, AlertDialogContent, AlertDialogAction, AlertDialogCancel } from \"@/components/ui/alert-dialog\";'",
+      "Usage: Wrap a trigger and content to present a confirmation or alert modal."
+    ]
+  },
+  {
+    id: 68,
+    title: "Aspect Ratio",
+    type: "Layout",
+    slug: "aspect-ratio",
+    category: "ui",
+    description: "Displays content within a desired aspect ratio constraint, ensuring consistent sizing across viewports.",
+    details: [
+      "Maintains a fixed aspect ratio for its children.",
+      "Ideal for images, videos, and embedded media.",
+      "Built on Radix UI AspectRatio primitive."
+    ],
+    codes: {
+      next: 'import { AspectRatio } from "@/components/ui/aspect-ratio";\n\nexport default function Example() {\n  return (\n    <AspectRatio ratio={16 / 9}>\n      <img src="/placeholder.jpg" alt="Placeholder" className="object-cover w-full h-full rounded-md" />\n    </AspectRatio>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add aspect-ratio'.",
+      "Import: 'import { AspectRatio } from \"@/components/ui/aspect-ratio\";'",
+      "Usage: Wrap any content and set the ratio prop to enforce a consistent aspect ratio."
+    ]
+  },
+  {
+    id: 69,
+    title: "Breadcrumb",
+    type: "Navigation",
+    slug: "breadcrumb",
+    category: "ui",
+    description: "Displays the path to the current resource using a hierarchy of links for easy navigation.",
+    details: [
+      "Composable API with BreadcrumbList, BreadcrumbItem, and BreadcrumbLink.",
+      "Supports a current-page indicator via BreadcrumbPage.",
+      "Includes customizable separators between items."
+    ],
+    codes: {
+      next: 'import {\n  Breadcrumb,\n  BreadcrumbItem,\n  BreadcrumbLink,\n  BreadcrumbList,\n  BreadcrumbPage,\n  BreadcrumbSeparator,\n} from "@/components/ui/breadcrumb";\n\nexport default function Example() {\n  return (\n    <Breadcrumb>\n      <BreadcrumbList>\n        <BreadcrumbItem>\n          <BreadcrumbLink href="/">Home</BreadcrumbLink>\n        </BreadcrumbItem>\n        <BreadcrumbSeparator />\n        <BreadcrumbItem>\n          <BreadcrumbPage>Current</BreadcrumbPage>\n        </BreadcrumbItem>\n      </BreadcrumbList>\n    </Breadcrumb>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add breadcrumb'.",
+      "Import: 'import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbPage, BreadcrumbSeparator } from \"@/components/ui/breadcrumb\";'",
+      "Usage: Compose a breadcrumb trail by nesting BreadcrumbItems inside a BreadcrumbList."
+    ]
+  },
+  {
+    id: 70,
+    title: "Collapsible",
+    type: "UI",
+    slug: "collapsible",
+    category: "ui",
+    description: "An interactive component that toggles the visibility of content with a trigger element.",
+    details: [
+      "Simple open/close toggle for sections of content.",
+      "Accessible keyboard and screen-reader support.",
+      "Controlled or uncontrolled usage via open prop."
+    ],
+    codes: {
+      next: 'import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";\n\nexport default function Example() {\n  return (\n    <Collapsible>\n      <CollapsibleTrigger>Toggle</CollapsibleTrigger>\n      <CollapsibleContent>\n        <p>This content can be shown or hidden.</p>\n      </CollapsibleContent>\n    </Collapsible>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add collapsible'.",
+      "Import: 'import { Collapsible, CollapsibleContent, CollapsibleTrigger } from \"@/components/ui/collapsible\";'",
+      "Usage: Wrap collapsible content and provide a trigger to toggle visibility."
+    ]
+  },
+  {
+    id: 71,
+    title: "Context Menu",
+    type: "Overlay",
+    slug: "context-menu",
+    category: "ui",
+    description: "Displays a menu at the pointer's position, triggered by a right-click on the target element.",
+    details: [
+      "Right-click activated contextual menu overlay.",
+      "Supports nested items, labels, and separators.",
+      "Built on Radix UI for full accessibility."
+    ],
+    codes: {
+      next: 'import {\n  ContextMenu,\n  ContextMenuContent,\n  ContextMenuItem,\n  ContextMenuTrigger,\n} from "@/components/ui/context-menu";\n\nexport default function Example() {\n  return (\n    <ContextMenu>\n      <ContextMenuTrigger className="flex h-40 w-72 items-center justify-center rounded-md border border-dashed">\n        Right click here\n      </ContextMenuTrigger>\n      <ContextMenuContent>\n        <ContextMenuItem>Profile</ContextMenuItem>\n        <ContextMenuItem>Settings</ContextMenuItem>\n      </ContextMenuContent>\n    </ContextMenu>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add context-menu'.",
+      "Import: 'import { ContextMenu, ContextMenuContent, ContextMenuItem, ContextMenuTrigger } from \"@/components/ui/context-menu\";'",
+      "Usage: Wrap a trigger area and define menu items inside ContextMenuContent."
+    ]
+  },
+  {
+    id: 72,
+    title: "Dropdown Menu",
+    type: "Overlay",
+    slug: "dropdown-menu",
+    category: "ui",
+    description: "A menu triggered by a button, displaying a list of actions or options in a floating panel.",
+    details: [
+      "Click-activated dropdown with smooth open/close transitions.",
+      "Supports items, labels, separators, and sub-menus.",
+      "Full keyboard navigation and focus management."
+    ],
+    codes: {
+      next: 'import {\n  DropdownMenu,\n  DropdownMenuContent,\n  DropdownMenuItem,\n  DropdownMenuTrigger,\n} from "@/components/ui/dropdown-menu";\n\nexport default function Example() {\n  return (\n    <DropdownMenu>\n      <DropdownMenuTrigger>Open</DropdownMenuTrigger>\n      <DropdownMenuContent>\n        <DropdownMenuItem>Profile</DropdownMenuItem>\n        <DropdownMenuItem>Settings</DropdownMenuItem>\n        <DropdownMenuItem>Logout</DropdownMenuItem>\n      </DropdownMenuContent>\n    </DropdownMenu>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add dropdown-menu'.",
+      "Import: 'import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from \"@/components/ui/dropdown-menu\";'",
+      "Usage: Attach a trigger button and list actions inside DropdownMenuContent."
+    ]
+  },
+  {
+    id: 73,
+    title: "Highlighter",
+    type: "Typography",
+    slug: "highlighter",
+    category: "ui",
+    description: "Adds hand-drawn-style annotations like highlights, underlines, and circles to text using Rough Notation.",
+    details: [
+      "Supports multiple annotation types including highlight, underline, circle, and box.",
+      "Configurable colors, durations, and animation settings.",
+      "Leverages the Rough Notation library for a natural, sketched feel."
+    ],
+    codes: {
+      next: 'import { Highlighter } from "@/components/ui/highlighter";\n\nexport default function Example() {\n  return (\n    <p>\n      This is a <Highlighter type="highlight" color="#f9a825">highlighted</Highlighter> word.\n    </p>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add highlighter'.",
+      "Import: 'import { Highlighter } from \"@/components/ui/highlighter\";'",
+      "Usage: Wrap any inline text and set the type and color props for the desired annotation."
+    ]
+  },
+  {
+    id: 74,
+    title: "Hover Card",
+    type: "Overlay",
+    slug: "hover-card",
+    category: "ui",
+    description: "A card that appears on hover to show supplementary information about the hovered element.",
+    details: [
+      "Displays a floating card with additional context on hover.",
+      "Smooth open and close animations with configurable delays.",
+      "Built on Radix UI for robust accessibility and positioning."
+    ],
+    codes: {
+      next: 'import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";\n\nexport default function Example() {\n  return (\n    <HoverCard>\n      <HoverCardTrigger>Hover me</HoverCardTrigger>\n      <HoverCardContent>\n        <p>Additional information displayed on hover.</p>\n      </HoverCardContent>\n    </HoverCard>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add hover-card'.",
+      "Import: 'import { HoverCard, HoverCardContent, HoverCardTrigger } from \"@/components/ui/hover-card\";'",
+      "Usage: Wrap a trigger element and place supplementary content inside HoverCardContent."
+    ]
+  },
+  {
+    id: 75,
+    title: "Icon Cloud",
+    type: "UI",
+    slug: "icon-cloud",
+    category: "ui",
+    description: "An interactive 3D globe of icons or images rendered on canvas with mouse-driven rotation.",
+    details: [
+      "Renders icons in a rotating 3D sphere on an HTML canvas.",
+      "Responds to mouse movement for interactive exploration.",
+      "Customizable icon set and globe size."
+    ],
+    codes: {
+      next: 'import IconCloud from "@/components/ui/icon-cloud";\n\nexport default function Example() {\n  return <IconCloud images={["/icon1.svg", "/icon2.svg", "/icon3.svg"]} />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add icon-cloud'.",
+      "Import: 'import IconCloud from \"@/components/ui/icon-cloud\";'",
+      "Usage: Pass an array of image URLs to the images prop to render a 3D icon globe."
+    ]
+  },
+  {
+    id: 76,
+    title: "Input OTP",
+    type: "Form",
+    slug: "input-otp",
+    category: "ui",
+    description: "A one-time password input component with individual character slots for verification codes.",
+    details: [
+      "Renders individual slots for each OTP digit.",
+      "Supports grouping and separators for visual clarity.",
+      "Handles paste, backspace, and auto-advance between slots."
+    ],
+    codes: {
+      next: 'import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "@/components/ui/input-otp";\n\nexport default function Example() {\n  return (\n    <InputOTP maxLength={6}>\n      <InputOTPGroup>\n        <InputOTPSlot index={0} />\n        <InputOTPSlot index={1} />\n        <InputOTPSlot index={2} />\n      </InputOTPGroup>\n      <InputOTPSeparator />\n      <InputOTPGroup>\n        <InputOTPSlot index={3} />\n        <InputOTPSlot index={4} />\n        <InputOTPSlot index={5} />\n      </InputOTPGroup>\n    </InputOTP>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add input-otp'.",
+      "Import: 'import { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from \"@/components/ui/input-otp\";'",
+      "Usage: Compose groups of OTP slots with optional separators for verification forms."
+    ]
+  },
+  {
+    id: 77,
+    title: "Menubar",
+    type: "Navigation",
+    slug: "menubar",
+    category: "ui",
+    description: "A visually persistent horizontal menu bar for quick access to a consistent set of commands.",
+    details: [
+      "Horizontal bar with multiple dropdown menus.",
+      "Supports keyboard navigation across menu items.",
+      "Ideal for application-style navigation patterns."
+    ],
+    codes: {
+      next: 'import {\n  Menubar,\n  MenubarContent,\n  MenubarItem,\n  MenubarMenu,\n  MenubarTrigger,\n} from "@/components/ui/menubar";\n\nexport default function Example() {\n  return (\n    <Menubar>\n      <MenubarMenu>\n        <MenubarTrigger>File</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>New</MenubarItem>\n          <MenubarItem>Open</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add menubar'.",
+      "Import: 'import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from \"@/components/ui/menubar\";'",
+      "Usage: Nest MenubarMenu entries inside a Menubar to create an application-style menu bar."
+    ]
+  },
+  {
+    id: 78,
+    title: "Pagination",
+    type: "Navigation",
+    slug: "pagination",
+    category: "ui",
+    description: "A navigation component for paginated content with previous, next, and page number links.",
+    details: [
+      "Composable API with PaginationItem, PaginationLink, and ellipsis support.",
+      "Includes previous and next navigation buttons.",
+      "Fully accessible with proper ARIA attributes."
+    ],
+    codes: {
+      next: 'import {\n  Pagination,\n  PaginationContent,\n  PaginationItem,\n  PaginationLink,\n  PaginationNext,\n  PaginationPrevious,\n} from "@/components/ui/pagination";\n\nexport default function Example() {\n  return (\n    <Pagination>\n      <PaginationContent>\n        <PaginationItem>\n          <PaginationPrevious href="#" />\n        </PaginationItem>\n        <PaginationItem>\n          <PaginationLink href="#">1</PaginationLink>\n        </PaginationItem>\n        <PaginationItem>\n          <PaginationNext href="#" />\n        </PaginationItem>\n      </PaginationContent>\n    </Pagination>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add pagination'.",
+      "Import: 'import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationPrevious, PaginationNext } from \"@/components/ui/pagination\";'",
+      "Usage: Compose page links and navigation buttons inside PaginationContent."
+    ]
+  },
+  {
+    id: 79,
+    title: "Radio Group",
+    type: "Form",
+    slug: "radio-group",
+    category: "ui",
+    description: "A set of checkable buttons where only one can be checked at a time, forming a radio selection.",
+    details: [
+      "Ensures single-selection behavior across all items in the group.",
+      "Built on Radix UI for full accessibility and keyboard support.",
+      "Easily styled and integrated with form libraries."
+    ],
+    codes: {
+      next: 'import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";\n\nexport default function Example() {\n  return (\n    <RadioGroup defaultValue="option-1">\n      <div className="flex items-center space-x-2">\n        <RadioGroupItem value="option-1" id="option-1" />\n        <label htmlFor="option-1">Option 1</label>\n      </div>\n      <div className="flex items-center space-x-2">\n        <RadioGroupItem value="option-2" id="option-2" />\n        <label htmlFor="option-2">Option 2</label>\n      </div>\n    </RadioGroup>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add radio-group'.",
+      "Import: 'import { RadioGroup, RadioGroupItem } from \"@/components/ui/radio-group\";'",
+      "Usage: Wrap RadioGroupItem elements inside a RadioGroup with a defaultValue."
+    ]
+  },
+  {
+    id: 80,
+    title: "Resizable",
+    type: "Layout",
+    slug: "resizable",
+    category: "ui",
+    description: "A group of panels that can be resized by dragging handles between them.",
+    details: [
+      "Supports horizontal and vertical panel layouts.",
+      "Drag handles provide intuitive resize interaction.",
+      "Panels can have minimum and maximum size constraints."
+    ],
+    codes: {
+      next: 'import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";\n\nexport default function Example() {\n  return (\n    <ResizablePanelGroup direction="horizontal">\n      <ResizablePanel>Panel A</ResizablePanel>\n      <ResizableHandle />\n      <ResizablePanel>Panel B</ResizablePanel>\n    </ResizablePanelGroup>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add resizable'.",
+      "Import: 'import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from \"@/components/ui/resizable\";'",
+      "Usage: Place ResizablePanel elements inside a ResizablePanelGroup separated by ResizableHandle."
+    ]
+  },
+  {
+    id: 81,
+    title: "Scroll Area",
+    type: "Layout",
+    slug: "scroll-area",
+    category: "ui",
+    description: "Augments native scroll functionality with custom, cross-browser styled scrollbars.",
+    details: [
+      "Provides consistent scrollbar styling across all browsers.",
+      "Supports both vertical and horizontal scrolling.",
+      "Built on Radix UI ScrollArea primitive."
+    ],
+    codes: {
+      next: 'import { ScrollArea } from "@/components/ui/scroll-area";\n\nexport default function Example() {\n  return (\n    <ScrollArea className="h-72 w-48 rounded-md border p-4">\n      <p>Scrollable content goes here...</p>\n    </ScrollArea>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add scroll-area'.",
+      "Import: 'import { ScrollArea } from \"@/components/ui/scroll-area\";'",
+      "Usage: Wrap overflowing content inside ScrollArea with a fixed height or width."
+    ]
+  },
+  {
+    id: 82,
+    title: "Skeleton",
+    type: "Feedback",
+    slug: "skeleton",
+    category: "ui",
+    description: "A placeholder animation component shown while content is loading to indicate upcoming layout.",
+    details: [
+      "Pulsing animation to indicate loading state.",
+      "Composable shape that matches the dimensions of the content it replaces.",
+      "Lightweight with no external dependencies."
+    ],
+    codes: {
+      next: 'import { Skeleton } from "@/components/ui/skeleton";\n\nexport default function Example() {\n  return (\n    <div className="flex items-center space-x-4">\n      <Skeleton className="h-12 w-12 rounded-full" />\n      <div className="space-y-2">\n        <Skeleton className="h-4 w-[250px]" />\n        <Skeleton className="h-4 w-[200px]" />\n      </div>\n    </div>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add skeleton'.",
+      "Import: 'import { Skeleton } from \"@/components/ui/skeleton\";'",
+      "Usage: Use Skeleton elements sized to match your content layout as loading placeholders."
+    ]
+  },
+  {
+    id: 83,
+    title: "Slider",
+    type: "Form",
+    slug: "slider",
+    category: "ui",
+    description: "An input control for selecting a numeric value from a range by dragging a thumb along a track.",
+    details: [
+      "Supports min, max, step, and default value configuration.",
+      "Accessible with full keyboard and screen-reader support.",
+      "Built on Radix UI Slider primitive."
+    ],
+    codes: {
+      next: 'import { Slider } from "@/components/ui/slider";\n\nexport default function Example() {\n  return <Slider defaultValue={[50]} max={100} step={1} />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add slider'.",
+      "Import: 'import { Slider } from \"@/components/ui/slider\";'",
+      "Usage: Set defaultValue, max, and step props to configure the slider range."
+    ]
+  },
+  {
+    id: 84,
+    title: "Sonner",
+    type: "Feedback",
+    slug: "sonner",
+    category: "ui",
+    description: "A toast notification system powered by the Sonner library for elegant, non-intrusive alerts.",
+    details: [
+      "Displays stacked toast notifications with smooth animations.",
+      "Supports success, error, info, and custom toast types.",
+      "Place the Toaster component once in your layout to enable toasts globally."
+    ],
+    codes: {
+      next: 'import { Toaster } from "@/components/ui/sonner";\nimport { toast } from "sonner";\n\nexport default function Example() {\n  return (\n    <div>\n      <Toaster />\n      <button onClick={() => toast("Hello from Sonner!")}>Show Toast</button>\n    </div>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add sonner'.",
+      "Import: 'import { Toaster } from \"@/components/ui/sonner\";'",
+      "Usage: Add <Toaster /> to your root layout and call toast() anywhere to trigger notifications."
+    ]
+  },
+  {
+    id: 85,
+    title: "Text 3D Flip",
+    type: "Typography",
+    slug: "text-3d-flip",
+    category: "ui",
+    description: "A text animation that creates a 3D flip effect on hover, rotating characters one by one.",
+    details: [
+      "Character-by-character 3D flip on hover.",
+      "Smooth perspective-based CSS transform animations.",
+      "Lightweight with no external animation library required."
+    ],
+    codes: {
+      next: 'import Text3DFlip from "@/components/ui/text-3d-flip";\n\nexport default function Example() {\n  return <Text3DFlip text="Hover Me" />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add text-3d-flip'.",
+      "Import: 'import Text3DFlip from \"@/components/ui/text-3d-flip\";'",
+      "Usage: Pass a text prop to render animated 3D-flipping characters on hover."
+    ]
+  },
+  {
+    id: 86,
+    title: "Toggle Group",
+    type: "Form",
+    slug: "toggle-group",
+    category: "ui",
+    description: "A set of toggle buttons that work together, supporting single or multiple selection modes.",
+    details: [
+      "Supports single and multiple selection via the type prop.",
+      "Built on Radix UI for consistent accessibility.",
+      "Easily styled toggle items with active/inactive states."
+    ],
+    codes: {
+      next: 'import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";\n\nexport default function Example() {\n  return (\n    <ToggleGroup type="single">\n      <ToggleGroupItem value="a">A</ToggleGroupItem>\n      <ToggleGroupItem value="b">B</ToggleGroupItem>\n      <ToggleGroupItem value="c">C</ToggleGroupItem>\n    </ToggleGroup>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add toggle-group'.",
+      "Import: 'import { ToggleGroup, ToggleGroupItem } from \"@/components/ui/toggle-group\";'",
+      "Usage: Set type to 'single' or 'multiple' and nest ToggleGroupItem elements."
+    ]
+  },
+  {
+    id: 87,
+    title: "Tooltip",
+    type: "Overlay",
+    slug: "tooltip",
+    category: "ui",
+    description: "A popup that displays informative text when hovering over or focusing on an element.",
+    details: [
+      "Lightweight tooltip with configurable placement.",
+      "Requires a TooltipProvider wrapper for shared delay settings.",
+      "Accessible with keyboard focus support."
+    ],
+    codes: {
+      next: 'import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";\n\nexport default function Example() {\n  return (\n    <TooltipProvider>\n      <Tooltip>\n        <TooltipTrigger>Hover me</TooltipTrigger>\n        <TooltipContent>\n          <p>Tooltip text</p>\n        </TooltipContent>\n      </Tooltip>\n    </TooltipProvider>\n  );\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add tooltip'.",
+      "Import: 'import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from \"@/components/ui/tooltip\";'",
+      "Usage: Wrap your app or section in TooltipProvider, then use Tooltip with a trigger and content."
+    ]
+  },
+  {
+    id: 88,
+    title: "Typing Animation",
+    type: "Typography",
+    slug: "typing-animation",
+    category: "ui",
+    description: "A typewriter animation effect with configurable speed, looping, and cursor styles.",
+    details: [
+      "Character-by-character typing reveal animation.",
+      "Supports configurable typing speed and optional looping.",
+      "Customizable cursor style and blinking behavior."
+    ],
+    codes: {
+      next: 'import TypingAnimation from "@/components/ui/typing-animation";\n\nexport default function Example() {\n  return <TypingAnimation text="Hello, Future UI!" speed={80} />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add typing-animation'.",
+      "Import: 'import TypingAnimation from \"@/components/ui/typing-animation\";'",
+      "Usage: Pass a text prop and optionally configure speed and loop behavior."
+    ]
+  },
+  {
+    id: 89,
+    title: "Gutter Lines",
+    type: "UI",
+    slug: "GutterLines",
+    category: "ui",
+    description: "Decorative animated SVG gutter lines, useful as code-editor style visual elements.",
+    details: [
+      "Renders animated vertical SVG lines reminiscent of a code editor gutter.",
+      "Lightweight decorative component for visual interest.",
+      "Configurable line count and animation timing."
+    ],
+    codes: {
+      next: 'import { GutterLines } from "@/components/ui/GutterLines";\n\nexport default function Example() {\n  return <GutterLines />;\n}'
+    },
+    usage: [
+      "Install: Run 'npx futureuikit add GutterLines'.",
+      "Import: 'import { GutterLines } from \"@/components/ui/GutterLines\";'",
+      "Usage: Place the component as a decorative element alongside content sections."
     ]
   }
 ];
