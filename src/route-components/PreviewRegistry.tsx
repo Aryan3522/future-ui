@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import VelocityMarquee from "@/components/ui/velocity-marquee";
 import { PreviewContainer } from "./preview-engine/PreviewContainer";
+import { MigratedPreviews } from "./previews/migrated-previews";
 import type { PreviewRegistryMap } from "./preview-engine/preview-types";
 import {
   ToastPreview,
@@ -77,6 +78,7 @@ import {
  * Previews are extracted into category-based files in ./previews/
  */
 export const PreviewRegistry: PreviewRegistryMap = {
+  ...MigratedPreviews,
   // Feedback
   toast: function ToastWrapper() {
     return (

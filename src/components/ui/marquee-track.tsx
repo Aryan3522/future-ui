@@ -1,10 +1,3 @@
-/**
- * @registry-slug marquee-track
- * @registry-name Marquee Track
- * @registry-description A highly reusable physics-based infinite marquee track component.
- * @registry-category ui
- * @registry-type components:ui
- */
 "use client";
 
 import React, { useRef } from "react";
