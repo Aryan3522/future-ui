@@ -2,7 +2,7 @@
 
 import React, { useState } from"react";
 import { motion, SVGMotionProps } from"framer-motion";
-import { cn } from"@/lib/utils";
+import { cn } from"./utils";
 
 type IconProps = React.SVGAttributes<SVGSVGElement> & {
  className?: string;

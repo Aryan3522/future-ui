@@ -8,6 +8,9 @@
     "declarationDir": "dist/icons",
     "emitDeclarationOnly": true,
     "rootDir": "src/icons",
+    "paths": {
+      "@/*": ["./src/*"]
+    },
     "strict": true,
     "skipLibCheck": true,
     "esModuleInterop": true
