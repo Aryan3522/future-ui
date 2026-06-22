@@ -222,14 +222,11 @@ export const CardTitle = React.memo(React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, children, ...props }, ref) => {
-  const { color } = useCard();
-  const isDefault = color === "default";
   return (
     <h3
       ref={ref}
       className={cn(
-        "text-base font-semibold leading-snug tracking-tight",
-        isDefault ? "text-foreground" : colorThemeMap[color].text,
+        "text-base font-semibold leading-snug tracking-tight text-foreground",
         className
       )}
       {...props}
@@ -248,14 +245,11 @@ export const CardDescription = React.memo(React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-  const { color } = useCard();
-  const isDefault = color === "default";
   return (
     <p
       ref={ref}
       className={cn(
-        "text-sm leading-relaxed",
-        isDefault ? "text-muted-foreground" : colorThemeMap[color].textSoft,
+        "text-sm leading-relaxed text-muted-foreground",
         className
       )}
       {...props}
@@ -381,20 +375,19 @@ export interface CardStatProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const CardStat = React.memo(React.forwardRef<HTMLDivElement, CardStatProps>(
   ({ className, value, label, trend, trendValue, ...props }, ref) => {
-    const { color, spacing } = useCard();
-    const activeTheme = colorThemeMap[color];
+    const { spacing } = useCard();
     
     const trendColor =
       trend === "up"
         ? "text-emerald-500"
         : trend === "down"
         ? "text-red-500"
-        : color === "default" ? "text-muted-foreground" : activeTheme.textSoft;
+        : "text-muted-foreground";
 
     return (
       <div ref={ref} className={cn("flex flex-col gap-1", className)} {...props}>
         <div className="flex items-baseline gap-2">
-          <span className={cn("text-2xl font-semibold tracking-tight tabular-nums", color === "default" ? "text-foreground" : activeTheme.text)}>
+          <span className="text-2xl font-semibold tracking-tight tabular-nums text-foreground">
             {value}
           </span>
           {trendValue && (
@@ -403,7 +396,7 @@ export const CardStat = React.memo(React.forwardRef<HTMLDivElement, CardStatProp
             </span>
           )}
         </div>
-        <span className={cn("text-xs font-medium uppercase tracking-wider", color === "default" ? "text-muted-foreground" : activeTheme.textSoft)}>
+        <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
           {label}
         </span>
       </div>

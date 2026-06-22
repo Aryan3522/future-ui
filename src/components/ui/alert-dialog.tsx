@@ -17,28 +17,32 @@ import { buttonVariants } from "@/components/ui/button"
 export type AlertDialogColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type AlertDialogShape = "default" | "square" | "rounded" | "sharp";
 export type AlertDialogSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type AlertDialogVariant = "solid" | "outline" | "ghost" | "link";
 
 interface AlertDialogContextValue {
+  variant: AlertDialogVariant;
   color: AlertDialogColor;
   shape: AlertDialogShape;
   spacing: AlertDialogSpacing;
 }
 
 const AlertDialogContext = React.createContext<AlertDialogContextValue>({
+  variant: "solid",
   color: "default",
   shape: "default",
   spacing: "default",
 });
 
 export interface AlertDialogProps extends React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Root> {
+  variant?: AlertDialogVariant;
   color?: AlertDialogColor;
   shape?: AlertDialogShape;
   spacing?: AlertDialogSpacing;
 }
 
-const AlertDialog: React.FC<AlertDialogProps> = ({ color = "default", shape = "default", spacing = "default", children, ...props }) => {
+const AlertDialog: React.FC<AlertDialogProps> = ({ variant = "solid", color = "default", shape = "default", spacing = "default", children, ...props }) => {
   return (
-    <AlertDialogContext.Provider value={{ color, shape, spacing }}>
+    <AlertDialogContext.Provider value={{ variant, color, shape, spacing }}>
       <AlertDialogPrimitive.Root {...props}>{children}</AlertDialogPrimitive.Root>
     </AlertDialogContext.Provider>
   );
@@ -67,14 +71,26 @@ const AlertDialogContent = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Content>
 >(({ className, ...props }, ref) => {
-  const { shape } = React.useContext(AlertDialogContext);
+  const { shape, spacing } = React.useContext(AlertDialogContext);
+
+  const getSpacingClass = (s: AlertDialogSpacing) => {
+    switch (s) {
+      case "2x": return "gap-2 p-4";
+      case "4x": return "gap-4 p-6";
+      case "6x": return "gap-6 p-8";
+      case "8x": return "gap-8 p-10";
+      default: return "gap-4 p-6";
+    }
+  };
+
   return (
     <AlertDialogPortal>
       <AlertDialogOverlay />
       <AlertDialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 border border-border bg-background p-6 shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+          "fixed left-[50%] top-[50%] z-50 grid w-full max-w-lg translate-x-[-50%] translate-y-[-50%] border border-border bg-background shadow-lg duration-200 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]",
+          getSpacingClass(spacing),
           shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : shape === "rounded" ? "rounded-3xl" : "rounded-xl",
           className
         )}
@@ -142,11 +158,11 @@ const AlertDialogAction = React.forwardRef<
   React.ElementRef<typeof AlertDialogPrimitive.Action>,
   React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
 >(({ className, ...props }, ref) => {
-  const { color, shape, spacing } = React.useContext(AlertDialogContext);
+  const { variant, color, shape, spacing } = React.useContext(AlertDialogContext);
   return (
     <AlertDialogPrimitive.Action
       ref={ref}
-      className={cn(buttonVariants({ variant: "solid", color, shape, spacing }), className)}
+      className={cn(buttonVariants({ variant, color, shape, spacing }), className)}
       {...props}
     />
   )

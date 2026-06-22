@@ -5,9 +5,10 @@ import dynamic from "next/dynamic";
 import { GithubIcon, LinkedinIcon } from "@/icons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuItem, ContextMenuCheckboxItem, ContextMenuRadioGroup, ContextMenuRadioItem, ContextMenuLabel, ContextMenuSeparator, ContextMenuShortcut, ContextMenuSub, ContextMenuSubContent, ContextMenuSubTrigger, type ContextMenuShape, type ContextMenuSpacing } from "@/components/ui/context-menu";
 import { cn } from "@/lib/utils";
 import VelocityMarquee from "@/components/ui/velocity-marquee";
-import { PreviewContainer } from "./preview-engine/PreviewContainer";
+import { PreviewContainer, DEFAULT_COLORS } from "./preview-engine/PreviewContainer";
 import { MigratedPreviews } from "./previews/migrated-previews";
 import type { PreviewRegistryMap } from "./preview-engine/preview-types";
 import {
@@ -170,6 +171,193 @@ export const PreviewRegistry: PreviewRegistryMap = {
 
   icons: IconsPreview,
 
+  "components-grid": function ComponentsGridPreview() {
+    const [previewVariant, setPreviewVariant] = React.useState<any>("default");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<string>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<string>("default");
+    const [rx, setRx] = React.useState(0);
+    const [ry, setRy] = React.useState(0);
+    const [gx, setGx] = React.useState(50);
+    const [gy, setGy] = React.useState(50);
+    const cardRef = React.useRef<HTMLDivElement>(null);
+
+    const handleMouseMove = (e: React.MouseEvent) => {
+      if (previewVariant !== "interactive" || !cardRef.current) return;
+      const rect = cardRef.current.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+      setRx((y - 0.5) * -8);
+      setRy((x - 0.5) * 8);
+      setGx(x * 100);
+      setGy(y * 100);
+    };
+
+    const handleMouseLeave = () => {
+      if (previewVariant !== "interactive") return;
+      setRx(0); setRy(0); setGx(50); setGy(50);
+    };
+
+    const colorMap: Record<string, string> = {
+      default: "bg-primary text-primary-foreground hover:bg-primary/90",
+      blue: "bg-blue-600 text-white hover:bg-blue-700",
+      emerald: "bg-emerald-600 text-white hover:bg-emerald-700",
+      rose: "bg-rose-600 text-white hover:bg-rose-700",
+      amber: "bg-amber-600 text-white hover:bg-amber-700",
+      violet: "bg-violet-600 text-white hover:bg-violet-700",
+      indigo: "bg-indigo-600 text-white hover:bg-indigo-700",
+      sky: "bg-sky-600 text-white hover:bg-sky-700",
+      slate: "bg-slate-600 text-white hover:bg-slate-700",
+      orange: "bg-orange-600 text-white hover:bg-orange-700",
+    };
+
+    const bgMap: Record<string, string> = {
+      default: "from-primary/5 to-primary/10",
+      blue: "from-blue-500/5 to-blue-500/10",
+      emerald: "from-emerald-500/5 to-emerald-500/10",
+      rose: "from-rose-500/5 to-rose-500/10",
+      amber: "from-amber-500/5 to-amber-500/10",
+      violet: "from-violet-500/5 to-violet-500/10",
+      indigo: "from-indigo-500/5 to-indigo-500/10",
+      sky: "from-sky-500/5 to-sky-500/10",
+      slate: "from-slate-500/5 to-slate-500/10",
+      orange: "from-orange-500/5 to-orange-500/10",
+    };
+
+    const borderMap: Record<string, string> = {
+      default: "border-border/60 hover:border-foreground/20",
+      blue: "border-blue-500/30 hover:border-blue-500/50",
+      emerald: "border-emerald-500/30 hover:border-emerald-500/50",
+      rose: "border-rose-500/30 hover:border-rose-500/50",
+      amber: "border-amber-500/30 hover:border-amber-500/50",
+      violet: "border-violet-500/30 hover:border-violet-500/50",
+      indigo: "border-indigo-500/30 hover:border-indigo-500/50",
+      sky: "border-sky-500/30 hover:border-sky-500/50",
+      slate: "border-slate-500/30 hover:border-slate-500/50",
+      orange: "border-orange-500/30 hover:border-orange-500/50",
+    };
+
+    const variantCardMap: Record<string, string> = {
+      default: "border shadow-sm hover:shadow-2xl backdrop-blur-xl bg-card/40 dark:bg-card/20",
+      elevated: "border shadow-lg hover:shadow-3xl bg-card",
+      bordered: "border-2 shadow-none bg-transparent",
+      minimal: "border-0 shadow-none bg-transparent hover:bg-muted/10",
+      interactive: "border shadow-sm hover:shadow-xl bg-card",
+    };
+
+    const variantBgMap: Record<string, string> = {
+      default: "bg-linear-to-br transition-all duration-500",
+      elevated: "bg-linear-to-br transition-all duration-500",
+      bordered: "bg-muted/5",
+      minimal: "bg-muted/5",
+      interactive: "bg-linear-to-br transition-all duration-500",
+    };
+
+    const badgeColorMap: Record<string, string> = {
+      default: "border-primary/40 text-primary",
+      blue: "border-blue-500/40 text-blue-600 dark:text-blue-500",
+      emerald: "border-emerald-500/40 text-emerald-600 dark:text-emerald-500",
+      rose: "border-rose-500/40 text-rose-600 dark:text-rose-500",
+      amber: "border-amber-500/40 text-amber-600 dark:text-amber-500",
+      violet: "border-violet-500/40 text-violet-600 dark:text-violet-500",
+      indigo: "border-indigo-500/40 text-indigo-600 dark:text-indigo-500",
+      sky: "border-sky-500/40 text-sky-600 dark:text-sky-500",
+      slate: "border-slate-500/40 text-slate-600 dark:text-slate-400",
+      orange: "border-orange-500/40 text-orange-600 dark:text-orange-500",
+    };
+
+    const colorBorderVariants = ["default", "elevated", "bordered", "interactive"];
+    const colorPreviewVariants = ["default", "elevated", "interactive"];
+
+    const shapeMap: Record<string, string> = {
+      default: "rounded-2xl sm:rounded-3xl",
+      square: "rounded-none",
+      rounded: "rounded-xl sm:rounded-2xl",
+      sharp: "rounded-lg",
+    };
+
+    const spacingPadMap: Record<string, string> = {
+      "2x": "p-3",
+      "4x": "p-4",
+      "6x": "p-6",
+      "8x": "p-7",
+      default: "p-5",
+    };
+
+    const variants = ["default", "elevated", "bordered", "minimal", "interactive"] as const;
+
+    return (
+      <PreviewContainer
+        title="Components Grid"
+        description="A responsive grid layout for displaying component cards with preview thumbnails, color themes, shape, and spacing variants."
+        variants={variants}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        extraControls={
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+                  {s}
+                </button>
+              ))}
+            </div>
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+                  {s === "2x" ? "2X" : s === "4x" ? "4X" : s === "6x" ? "6X" : s === "8x" ? "8X" : s}
+                </button>
+              ))}
+            </div>
+          </div>
+        }
+      >
+        <div className="w-full flex justify-center px-2 sm:px-4 md:px-6 py-6 md:py-10">
+          <div className="w-full max-w-md">
+            <div
+              ref={cardRef}
+              onMouseMove={handleMouseMove}
+              onMouseLeave={handleMouseLeave}
+              style={previewVariant === "interactive" ? { transform: `perspective(1000px) rotateX(${rx}deg) rotateY(${ry}deg)`, transition: 'transform 0.1s ease-out' } : undefined}
+              className={cn("flex flex-col overflow-hidden transition-all duration-500 group", variantCardMap[previewVariant], shapeMap[previewShape], colorBorderVariants.includes(previewVariant) && borderMap[previewColor])}
+            >
+              <div className="relative w-full min-h-[200px] sm:min-h-[220px] flex-1 overflow-hidden bg-muted/10 flex items-center justify-center">
+                <div className={cn("absolute inset-0 z-0 transition-all duration-500", variantBgMap[previewVariant], colorPreviewVariants.includes(previewVariant) && bgMap[previewColor])} />
+                <div className="relative z-10">
+                  <button className={cn("px-6 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 shadow-lg shadow-black/10", colorMap[previewColor])}>
+                    Click me
+                  </button>
+                </div>
+                {previewVariant === "interactive" && (
+                  <div
+                    className="absolute inset-0 z-30 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style={{ background: `radial-gradient(circle at ${gx}% ${gy}%, rgba(255,255,255,0.12) 0%, transparent 60%)` }}
+                  />
+                )}
+              </div>
+              <div className={cn(spacingPadMap[previewSpacing], "pb-2")}>
+                <div className="flex justify-between items-center mb-1.5">
+                  <span className={cn("inline-flex items-center rounded-md border px-2 py-0.5 text-[9px] uppercase tracking-widest font-bold h-4", badgeColorMap[previewColor])}>UI</span>
+                </div>
+                <h3 className="text-lg font-bold italic transition-colors truncate">Button</h3>
+              </div>
+              <div className={cn(spacingPadMap[previewSpacing], "pt-0 mt-auto")}>
+                <p className="text-muted-foreground text-xs line-clamp-2 leading-relaxed mb-4">
+                  A versatile button component with color themes, variants, and shape/spacing options for any interaction.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </PreviewContainer>
+    );
+  },
+
   "velocity-marquee": function VelocityMarqueePreview() {
     const scrollRef = React.useRef<HTMLDivElement>(null);
     const [color, setColor] = React.useState<string>("default");
@@ -265,36 +453,67 @@ export const PreviewRegistry: PreviewRegistryMap = {
   },
 
   // Previews not yet moved (as per specific list)
-  badge: function BadgePreview() {
-    return (
-      <PreviewContainer title="Badge" description="A small status descriptor for UI elements.">
-        <div className="flex flex-wrap gap-8 items-center justify-center w-full">
-          <Badge variant="solid">Default</Badge>
-          <Badge variant="ghost">Secondary</Badge>
-          <Badge variant="outline">Destructive</Badge>
-          <Badge variant="outline">Outline</Badge>
-        </div>
-      </PreviewContainer>
-    );
-  },
   button: function StandardButtonPreview() {
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewSize, setPreviewSize] = React.useState<any>("md");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
     return (
-      <PreviewContainer title="Standard Button" description="The base button component matching Radix / shadcn spec.">
+      <PreviewContainer 
+        title="Standard Button" 
+        description="The base button component matching Radix / shadcn spec with Future UI standard styling."
+        colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} 
+        variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["sm", "md", "lg", "icon"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSize(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
         <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
           <div className="flex flex-wrap gap-8 items-center justify-center w-full">
-            <Button variant="solid">Default</Button>
-            <Button variant="ghost">Secondary</Button>
-            <Button variant="outline">
-              <GithubIcon className="w-4 h-4 mr-2" />
-              GitHub
+            <Button variant={previewVariant} color={previewColor} size={previewSize} shape={previewShape} spacing={previewSpacing}>
+              {previewSize === "icon" ? <GithubIcon className="w-4 h-4" /> : (
+                <>
+                  <GithubIcon className="w-4 h-4" />
+                  GitHub
+                </>
+              )}
             </Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="solid" className="bg-[#0077b5] text-white hover:bg-[#0077b5]/90">
-              <LinkedinIcon className="w-4 h-4 mr-2" />
-              LinkedIn
+            <Button variant={previewVariant} color={previewColor} size={previewSize} shape={previewShape} spacing={previewSpacing}>
+              {previewSize === "icon" ? <LinkedinIcon className="w-4 h-4" /> : "LinkedIn"}
             </Button>
-            <Button variant="solid">Destructive</Button>
-            <Button variant="link">Link</Button>
+            <Button variant={previewVariant} color={previewColor} size={previewSize} shape={previewShape} spacing={previewSpacing}>
+              {previewSize === "icon" ? "A" : "Primary Action"}
+            </Button>
           </div>
         </div>
       </PreviewContainer>
@@ -363,6 +582,99 @@ export const PreviewRegistry: PreviewRegistryMap = {
       </PreviewContainer>
     );
   },
+  "context-menu": function ContextMenuPreview() {
+    const [previewVariant, setPreviewVariant] = React.useState<any>("default");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<ContextMenuShape>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<ContextMenuSpacing>("default");
+    const [bookmarksChecked, setBookmarksChecked] = React.useState(true);
+    const [urlsChecked, setUrlsChecked] = React.useState(false);
+    const [person, setPerson] = React.useState("pedro");
+
+    const variants = ["default", "elevated", "bordered", "minimal", "premium"] as const;
+    const shapes = ["default", "square", "rounded", "sharp"] as const;
+    const spacings = ["default", "2x", "4x", "6x", "8x"] as const;
+
+    return (
+      <PreviewContainer
+        title="Context Menu"
+        description="A right-click context menu with layout variants, color themes, shape, and spacing controls."
+        variants={variants}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        extraControls={
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {shapes.map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+                  {s}
+                </button>
+              ))}
+            </div>
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {spacings.map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>
+                  {s === "2x" ? "2X" : s === "4x" ? "4X" : s === "6x" ? "6X" : s === "8x" ? "8X" : s}
+                </button>
+              ))}
+            </div>
+          </div>
+        }
+      >
+        <div className="w-full flex items-center justify-center p-8 md:p-16">
+          <ContextMenu variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
+            <ContextMenuTrigger>
+              <div className="w-80 h-48 border-2 border-dashed border-muted-foreground/30 rounded-2xl flex items-center justify-center text-muted-foreground text-sm font-medium select-none bg-muted/5 hover:bg-muted/10 transition-colors cursor-context-menu">
+                Right-click here
+              </div>
+            </ContextMenuTrigger>
+            <ContextMenuContent className="w-56">
+              <ContextMenuItem inset={false}>
+                Back
+                <ContextMenuShortcut>⌘[</ContextMenuShortcut>
+              </ContextMenuItem>
+              <ContextMenuItem inset={false} disabled>
+                Forward
+                <ContextMenuShortcut>⌘]</ContextMenuShortcut>
+              </ContextMenuItem>
+              <ContextMenuItem inset={false}>
+                Reload
+                <ContextMenuShortcut>⌘R</ContextMenuShortcut>
+              </ContextMenuItem>
+              <ContextMenuSub>
+                <ContextMenuSubTrigger inset={false}>More Tools</ContextMenuSubTrigger>
+                <ContextMenuSubContent className="w-48">
+                  <ContextMenuItem>Save Page As… <ContextMenuShortcut>⌘S</ContextMenuShortcut></ContextMenuItem>
+                  <ContextMenuItem>Create Shortcut…</ContextMenuItem>
+                  <ContextMenuItem>Name Window…</ContextMenuItem>
+                </ContextMenuSubContent>
+              </ContextMenuSub>
+              <ContextMenuSeparator />
+              <ContextMenuCheckboxItem checked={bookmarksChecked} onCheckedChange={setBookmarksChecked}>
+                Show Bookmarks Bar
+                <ContextMenuShortcut>⌘⇧B</ContextMenuShortcut>
+              </ContextMenuCheckboxItem>
+              <ContextMenuCheckboxItem checked={urlsChecked} onCheckedChange={setUrlsChecked}>
+                Show Full URLs
+              </ContextMenuCheckboxItem>
+              <ContextMenuSeparator />
+              <ContextMenuLabel inset={false}>People</ContextMenuLabel>
+              <ContextMenuRadioGroup value={person} onValueChange={setPerson}>
+                <ContextMenuRadioItem value="pedro">Pedro Duarte</ContextMenuRadioItem>
+                <ContextMenuRadioItem value="colm">Colm Tuite</ContextMenuRadioItem>
+              </ContextMenuRadioGroup>
+            </ContextMenuContent>
+          </ContextMenu>
+        </div>
+      </PreviewContainer>
+    );
+  },
+
   "project-deck": function ProjectDeckPreview() {
     const ProjectDeck = React.useMemo(() => dynamic(() => import('@/components/ui/project-deck'), { ssr: false }), []);
     

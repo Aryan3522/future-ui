@@ -16,6 +16,7 @@ import { SlideUpReveal, type SlideUpRevealVariant, type SlideUpRevealShape } fro
 import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
+import { Send, Shield, Eye, ExternalLink, ArrowRight, Star } from "lucide-react";
 
 export const KanbanPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
@@ -120,6 +121,8 @@ export const RichTextEditorPreview: React.FC = () => {
 export const AIChatPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   const [messages, setMessages] = useState<any[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -380,14 +383,34 @@ export const AIChatPreview: React.FC = () => {
       onVariantChange={setLayout}
       contentClassName="p-0 overflow-hidden"
       extraControls={
-        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
-          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Input Variant</span>
-          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
-            {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
-              <button key={v} onClick={() => setInputVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", inputVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
-            ))}
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Input Variant</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["standard", "floating", "command", "multiline", "workspace"] as const).map((v) => (
+                <button key={v} onClick={() => setInputVariant(v)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", inputVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
+              ))}
+            </div>
           </div>
-        </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
       } colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
     >
       <div className="flex w-full h-full min-h-125">
@@ -401,6 +424,9 @@ export const AIChatPreview: React.FC = () => {
             onStop={() => setIsLoading(false)}
             layout={layout}
             inputVariant={inputVariant}
+            color={previewColor}
+            shape={previewShape}
+            spacing={previewSpacing}
           >
             <ChatMessages />
             <ChatPromptSuggestions suggestions={SUGGESTIONS} />
@@ -415,7 +441,9 @@ export const AIChatPreview: React.FC = () => {
 export const AutomotiveCarouselPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [variant, setVariant] = useState<"bike" | "car" | "chair" | "m4">("m4");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+  const [variant, setVariant] = React.useState<"bike" | "car" | "chair" | "m4">("m4");
   const slides = [
     {
       id: 1,
@@ -451,9 +479,41 @@ export const AutomotiveCarouselPreview: React.FC = () => {
     }
   ];
   return (
-    <PreviewContainer title="Automotive Carousel" isVirtualScreen={true} className="overflow-hidden pb-4" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer 
+      title="Automotive Carousel" 
+      isVirtualScreen={true} 
+      className="overflow-hidden pb-4" 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
       <div className="relative w-full h-full overflow-hidden rounded-xl border border-border/50">
-        <AutomotiveCarousel slides={slides} />
+        <AutomotiveCarousel slides={slides} color={previewColor} variant={previewVariant} shape={previewShape} spacing={previewSpacing} />
       </div>
     </PreviewContainer>
   );
@@ -474,13 +534,11 @@ export const ScifiHelmetPreview: React.FC = () => {
 };
 
 export const BmwM4Preview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
     <PreviewContainer
       title="BMW M4"
       description="A premium 3D M4 Car component with interactive orbit controls."
-      canvasClassName="bg-[#050505] p-0 overflow-hidden" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      canvasClassName="bg-[#050505] p-0 overflow-hidden"
     >
       <BmwM4 className="w-full h-full" />
     </PreviewContainer>
@@ -490,14 +548,48 @@ export const BmwM4Preview: React.FC = () => {
 export const BrowserWindowPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewSize, setPreviewSize] = React.useState<any>("md");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   return (
     <PreviewContainer
       title="Browser Window"
       description="A clean, responsive mock browser window for displaying UI components or screenshots."
       isVirtualScreen={false} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["sm", "md", "lg"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSize(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s === "sm" ? "Small" : s === "md" ? "Medium" : "Large"}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
       <div className="flex flex-col items-center justify-center w-full h-full p-0 relative z-10 overflow-hidden">
-        <BrowserWindow className="w-full h-full">
+        <BrowserWindow className="w-full h-full" color={previewColor} variant={previewVariant} size={previewSize} shape={previewShape} spacing={previewSpacing}>
           <div className="flex flex-col items-center justify-center w-full h-full bg-muted/10 text-muted-foreground p-8 text-center space-y-4">
             <h3 className="text-xl font-medium text-foreground">Welcome to Future UI</h3>
             <p className="max-w-md text-sm">The modern component library for ambitious engineering teams.</p>
@@ -552,18 +644,73 @@ export const TerminalPreview: React.FC = () => {
 };
 
 export const CursorGlowButtonPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("primary");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+  const [previewLayout, setPreviewLayout] = React.useState<any>("none");
+  const [isDisabled, setIsDisabled] = React.useState<boolean>(false);
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Layout & State</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["none", "with-icon", "with-tail-icon", "icon", "cut-2", "cut-all"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewLayout(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewLayout === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s.replace(/-/g, " ")}</button>
+          ))}
+          <div className="w-px h-4 bg-border mx-2" />
+          <button onClick={() => setIsDisabled(!isDisabled)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg transition-all duration-300 whitespace-nowrap", isDisabled ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>Disabled</button>
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <PreviewContainer title="Cursor Glow Button" description="Buttons with a reactive glowing effect following the cursor." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-75">
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 w-full max-w-3xl justify-items-center">
-          <CursorGlowButton variant="solid" color={previewColor}>Primary</CursorGlowButton>
-          <CursorGlowButton variant="solid" color={previewColor}>Secondary</CursorGlowButton>
-          <CursorGlowButton variant="outline" color={previewColor}>Outline</CursorGlowButton>
-          <CursorGlowButton variant="solid" glowColor="rgba(239, 68, 68, 0.8)" color={previewColor}>Destructive</CursorGlowButton>
-          <CursorGlowButton variant="ghost" color={previewColor}>Ghost</CursorGlowButton>
-          <CursorGlowButton variant="link" color={previewColor}>Link</CursorGlowButton>
+    <PreviewContainer
+      title="Cursor Glow Button"
+      description="Buttons with a reactive glowing effect following the cursor, featuring seamless color mapping and multiple 3D layouts."
+      variants={["primary", "ghost", "outline", "soft", "elevated", "gradient", "glass"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
+      isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      extraControls={extraControls}
+    >
+      <div className="w-full h-full flex flex-col items-center justify-center p-6 md:p-12 min-h-[400px]">
+        <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px] p-6 md:p-12">
+          <CursorGlowButton 
+            variant={previewVariant as any} 
+            color={previewColor} 
+            shape={previewShape} 
+            spacing={previewSpacing} 
+            layout={previewLayout}
+            icon={Star}
+            tailIcon={ArrowRight}
+            disabled={isDisabled}
+          >
+            Hover Me Now
+          </CursorGlowButton>
+          <p className="mt-8 text-xs font-medium text-muted-foreground uppercase tracking-widest">
+            {isDisabled ? "Currently Disabled" : "Move your cursor"}
+          </p>
         </div>
       </div>
     </PreviewContainer>
