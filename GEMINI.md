@@ -29,6 +29,18 @@ The main feature of this project is the download of the components. **It must al
 
 ## 4. Component Design & Theming
 
+### UI Consistency Across All Components
+
+Every component in this library must feel like it belongs to the same design system. Follow these rules to maintain visual harmony:
+
+* **Same API shape:** All interactive components must expose `variant`, `color`, `theme`, `shape`, `spacing`, and `shadow` props when applicable. The default values must match (`color="default"`, `shape="default"`, `spacing="default"`, etc.).
+* **Same visual language:** Two components placed side by side with the same `variant`/`color`/`theme` must look cohesive — same border radius logic, same shadow weights, same color mapping.
+* **Same color map:** All components must share the same 10-color palette (`default`, `blue`, `emerald`, `rose`, `amber`, `violet`, `indigo`, `sky`, `slate`, `orange`) with identical light/dark mode tailwind classes.
+* **Consistent theme behavior:** The 6 themes (`default`, `modern`, `clean`, `futuristic`, `brutal`, `halftone`) must apply the same way across components — same backdrop blur for `modern`, same 4px border for `brutal`, same dot pattern for `halftone`, etc.
+* **Preview page structure:** Every component preview page must follow the same layout pattern — the main `variants` prop on `PreviewContainer` controls the primary layout/behavior variant, while styling controls (`style variant`, `theme`, `shape`, `spacing`, `shadow`) go in `extraControls`.
+* **No isolated styles:** Never add component-specific CSS classes that break the shared design language. If a visual change is needed, update the shared theme map so all components benefit uniformly.
+* **Dark/light mode parity:** Every component must render correctly in both modes — no washed-out text, no invisible borders, no broken shadows.
+
 * **Universal Variant API & Consistency:** When creating new components, you must keep consistency in mind. If a user uses one variant of all components in their project, they must all be fully consistent and look unified on their website.
   * **Style Variants (`variant`):** `solid` (Solid background), `outline` (Transparent with Border), `ghost` (Transparent, hover effect), `link` (Underlined text).
   * **Color Variants (`color`):** Every component MUST support these 10 distinct color palettes for its styles, mapped correctly for both light and dark modes:

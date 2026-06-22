@@ -23,7 +23,7 @@ export type ClayMorphButtonVariant =
   | "glass";
 
 export type ClayMorphButtonColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
-export type ClayMorphButtonShape = "default" | "square" | "rounded" | "sharp";
+export type ClayMorphButtonShape = "default" | "square" | "rounded" | "sharp" | "cut-two" | "cut-all";
 export type ClayMorphButtonSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface ClayMorphButtonProps
@@ -36,34 +36,22 @@ export interface ClayMorphButtonProps
   fullWidth?: boolean;
   icon?: React.ReactNode;
   iconPosition?: "left" | "right";
+  iconOnly?: boolean;
   elevation?: "flat" | "medium" | "elevated" | "floating";
   glow?: boolean;
 }
 
-const colorMap: Record<ClayMorphButtonColor, string> = {
-  default: "bg-foreground text-background",
-  blue: "bg-blue-600 text-white",
-  emerald: "bg-emerald-500 text-white",
-  rose: "bg-rose-500 text-white",
-  amber: "bg-amber-500 text-zinc-950",
-  violet: "bg-violet-600 text-white",
-  indigo: "bg-indigo-600 text-white",
-  sky: "bg-sky-500 text-zinc-950",
-  slate: "bg-slate-600 text-white",
-  orange: "bg-orange-500 text-white",
-};
-
-const gradientColorMap: Record<ClayMorphButtonColor, string> = {
-  default: "bg-gradient-to-br from-foreground/80 to-foreground text-background dark:from-background dark:to-background/80 dark:text-foreground",
-  blue: "bg-gradient-to-br from-blue-400 to-blue-600 text-white",
-  emerald: "bg-gradient-to-br from-emerald-400 to-emerald-600 text-white",
-  rose: "bg-gradient-to-br from-rose-400 to-rose-600 text-white",
-  amber: "bg-gradient-to-br from-amber-400 to-amber-600 text-zinc-950",
-  violet: "bg-gradient-to-br from-violet-400 to-violet-600 text-white",
-  indigo: "bg-gradient-to-br from-indigo-400 to-indigo-600 text-white",
-  sky: "bg-gradient-to-br from-sky-400 to-sky-600 text-zinc-950",
-  slate: "bg-gradient-to-br from-slate-400 to-slate-600 text-white",
-  orange: "bg-gradient-to-br from-orange-400 to-orange-600 text-white",
+const colorThemeMap: Record<ClayMorphButtonColor, { radial: string; bg: string; text: string; bgSoft: string; border: string; shadow: string; brutalShadow: string; brutalBg: string; hoverBg: string; textHover: string; glow: string; }> = {
+  default: { radial: "rgba(128,128,128,0.5)", bg: "bg-primary", text: "text-primary", bgSoft: "bg-primary/10", border: "border-primary/20", shadow: "shadow-primary/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] dark:shadow-[8px_8px_0px_0px_rgba(255,255,255,1)]", brutalBg: "bg-white dark:bg-zinc-900 border-foreground text-foreground", hoverBg: "hover:bg-primary", textHover: "hover:text-primary-foreground", glow: "shadow-[0_0_40px_-10px_rgba(128,128,128,0.5)]" },
+  blue: { radial: "#2563eb", bg: "bg-blue-600 dark:bg-blue-500", text: "text-blue-600 dark:text-blue-500", bgSoft: "bg-blue-600/10 dark:bg-blue-500/10", border: "border-blue-600/20 dark:border-blue-500/20", shadow: "shadow-blue-600/10 dark:shadow-blue-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(37,99,235,1)]", brutalBg: "bg-blue-400 dark:bg-blue-600 border-blue-600 dark:border-blue-400 text-white", hoverBg: "hover:bg-blue-600 dark:hover:bg-blue-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(37,99,235,0.5)]" },
+  emerald: { radial: "#16a34a", bg: "bg-emerald-600 dark:bg-emerald-500", text: "text-emerald-600 dark:text-emerald-500", bgSoft: "bg-emerald-600/10 dark:bg-emerald-500/10", border: "border-emerald-600/20 dark:border-emerald-500/20", shadow: "shadow-emerald-600/10 dark:shadow-emerald-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(22,163,74,1)]", brutalBg: "bg-emerald-400 dark:bg-emerald-600 border-emerald-600 dark:border-emerald-400 text-white", hoverBg: "hover:bg-emerald-600 dark:hover:bg-emerald-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(22,163,74,0.5)]" },
+  rose: { radial: "#e11d48", bg: "bg-rose-600 dark:bg-rose-500", text: "text-rose-600 dark:text-rose-500", bgSoft: "bg-rose-600/10 dark:bg-rose-500/10", border: "border-rose-600/20 dark:border-rose-500/20", shadow: "shadow-rose-600/10 dark:shadow-rose-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(225,29,72,1)]", brutalBg: "bg-rose-400 dark:bg-rose-600 border-rose-600 dark:border-rose-400 text-white", hoverBg: "hover:bg-rose-600 dark:hover:bg-rose-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(225,29,72,0.5)]" },
+  amber: { radial: "#d97706", bg: "bg-amber-600 dark:bg-amber-500", text: "text-amber-600 dark:text-amber-500", bgSoft: "bg-amber-600/10 dark:bg-amber-500/10", border: "border-amber-600/20 dark:border-amber-500/20", shadow: "shadow-amber-600/10 dark:shadow-amber-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(217,119,6,1)]", brutalBg: "bg-amber-400 dark:bg-amber-600 border-amber-600 dark:border-amber-400 text-white", hoverBg: "hover:bg-amber-600 dark:hover:bg-amber-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(217,119,6,0.5)]" },
+  violet: { radial: "#7c3aed", bg: "bg-violet-600 dark:bg-violet-500", text: "text-violet-600 dark:text-violet-500", bgSoft: "bg-violet-600/10 dark:bg-violet-500/10", border: "border-violet-600/20 dark:border-violet-500/20", shadow: "shadow-violet-600/10 dark:shadow-violet-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(124,58,237,1)]", brutalBg: "bg-violet-400 dark:bg-violet-600 border-violet-600 dark:border-violet-400 text-white", hoverBg: "hover:bg-violet-600 dark:hover:bg-violet-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(124,58,237,0.5)]" },
+  indigo: { radial: "#4f46e5", bg: "bg-indigo-600 dark:bg-indigo-500", text: "text-indigo-600 dark:text-indigo-500", bgSoft: "bg-indigo-600/10 dark:bg-indigo-500/10", border: "border-indigo-600/20 dark:border-indigo-500/20", shadow: "shadow-indigo-600/10 dark:shadow-indigo-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(79,70,229,1)]", brutalBg: "bg-indigo-400 dark:bg-indigo-600 border-indigo-600 dark:border-indigo-400 text-white", hoverBg: "hover:bg-indigo-600 dark:hover:bg-indigo-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(79,70,229,0.5)]" },
+  sky: { radial: "#0284c7", bg: "bg-sky-600 dark:bg-sky-500", text: "text-sky-600 dark:text-sky-500", bgSoft: "bg-sky-600/10 dark:bg-sky-500/10", border: "border-sky-600/20 dark:border-sky-500/20", shadow: "shadow-sky-600/10 dark:shadow-sky-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(2,132,199,1)]", brutalBg: "bg-sky-400 dark:bg-sky-600 border-sky-600 dark:border-sky-400 text-white", hoverBg: "hover:bg-sky-600 dark:hover:bg-sky-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(2,132,199,0.5)]" },
+  slate: { radial: "#475569", bg: "bg-slate-600 dark:bg-slate-400", text: "text-slate-600 dark:text-slate-400", bgSoft: "bg-slate-600/10 dark:bg-slate-500/10", border: "border-slate-600/20 dark:border-slate-500/20", shadow: "shadow-slate-600/10 dark:shadow-slate-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(71,85,105,1)]", brutalBg: "bg-slate-400 dark:bg-slate-600 border-slate-600 dark:border-slate-400 text-white", hoverBg: "hover:bg-slate-600 dark:hover:bg-slate-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(71,85,105,0.5)]" },
+  orange: { radial: "#ea580c", bg: "bg-orange-600 dark:bg-orange-500", text: "text-orange-600 dark:text-orange-500", bgSoft: "bg-orange-600/10 dark:bg-orange-500/10", border: "border-orange-600/20 dark:border-orange-500/20", shadow: "shadow-orange-600/10 dark:shadow-orange-500/10", brutalShadow: "shadow-[8px_8px_0px_0px_rgba(234,88,12,1)]", brutalBg: "bg-orange-400 dark:bg-orange-600 border-orange-600 dark:border-orange-400 text-white", hoverBg: "hover:bg-orange-600 dark:hover:bg-orange-500", textHover: "hover:text-white", glow: "shadow-[0_0_40px_-10px_rgba(234,88,12,0.5)]" },
 };
 
 const getShapeClass = (shape: ClayMorphButtonShape) => {
@@ -71,11 +59,22 @@ const getShapeClass = (shape: ClayMorphButtonShape) => {
     case "square": return "rounded-none";
     case "sharp": return "rounded-[2px]";
     case "rounded": return "rounded-xl";
+    case "cut-two": return "rounded-none [clip-path:polygon(10px_0,100%_0,100%_calc(100%-10px),calc(100%-10px)_100%,0_100%,0_10px)]";
+    case "cut-all": return "rounded-none [clip-path:polygon(10px_0,calc(100%-10px)_0,100%_10px,100%_calc(100%-10px),calc(100%-10px)_100%,10px_100%,0_calc(100%-10px),0_10px)]";
     case "default": return "rounded-3xl"; // A bit more rounded for claymorphism by default
   }
 };
 
-const getSpacingStyles = (spacing: ClayMorphButtonSpacing) => {
+const getSpacingStyles = (spacing: ClayMorphButtonSpacing, iconOnly: boolean) => {
+  if (iconOnly) {
+    switch (spacing) {
+      case "2x": return "w-7 h-7 p-0 flex items-center justify-center text-xs";
+      case "4x": return "w-9 h-9 p-0 flex items-center justify-center text-sm";
+      case "6x": return "w-12 h-12 p-0 flex items-center justify-center text-base";
+      case "8x": return "w-16 h-16 p-0 flex items-center justify-center text-lg";
+      default: return "w-10 h-10 p-0 flex items-center justify-center text-sm";
+    }
+  }
   switch (spacing) {
     case "2x": return "px-3 py-1.5 text-xs";
     case "4x": return "px-4 py-2 text-sm";
@@ -124,6 +123,7 @@ export const ClayMorphButton = React.forwardRef<
       fullWidth = false,
       icon,
       iconPosition = "left",
+      iconOnly = false,
       elevation = "medium",
       glow = false,
       className,
@@ -140,32 +140,45 @@ export const ClayMorphButton = React.forwardRef<
       "font-semibold tracking-wide",
       fullWidth && "w-full",
       getShapeClass(shape),
-      getSpacingStyles(spacing),
+      getSpacingStyles(spacing, iconOnly),
       disabled && "opacity-50 cursor-not-allowed grayscale",
       className
     );
 
+    const activeTheme = colorThemeMap[color];
+    const isDefault = color === "default";
+    
     const variantStyles = {
-      primary: cn(colorMap[color], getElevationStyles(elevation)),
+      primary: cn(
+        isDefault ? "bg-foreground text-background" : cn(activeTheme.bg, "text-white"), 
+        getElevationStyles(elevation)
+      ),
       ghost: cn(
-        "bg-transparent text-muted-foreground hover:bg-accent",
+        "bg-transparent hover:bg-accent",
+        activeTheme.text,
         "shadow-none active:shadow-[inset_2px_4px_8px_rgba(0,0,0,0.05)] dark:active:shadow-[inset_2px_4px_8px_rgba(0,0,0,0.3)]"
       ),
       outline: cn(
-        "bg-transparent border-2 border-border text-muted-foreground",
-        "hover:bg-accent",
+        "bg-transparent border-2 hover:bg-accent",
+        activeTheme.border, activeTheme.text,
         "shadow-[4px_4px_10px_rgba(0,0,0,0.02),-4px_-4px_10px_rgba(255,255,255,0.5)] dark:shadow-[4px_4px_10px_rgba(0,0,0,0.3),-4px_-4px_10px_rgba(255,255,255,0.02)]"
       ),
       soft: cn(
-        colorMap[color],
-        "bg-opacity-20 dark:bg-opacity-20 text-current",
+        isDefault ? "bg-foreground/10 text-foreground" : cn(activeTheme.bgSoft, activeTheme.text),
         "shadow-[4px_4px_10px_rgba(0,0,0,0.05),-4px_-4px_10px_rgba(255,255,255,0.6),inset_2px_4px_8px_rgba(255,255,255,0.8),inset_-2px_-4px_8px_rgba(0,0,0,0.02)]",
         "dark:shadow-[4px_4px_10px_rgba(0,0,0,0.4),-4px_-4px_10px_rgba(255,255,255,0.02),inset_2px_4px_8px_rgba(255,255,255,0.05),inset_-2px_-4px_8px_rgba(0,0,0,0.2)]"
       ),
-      elevated: cn(colorMap[color], getElevationStyles("elevated")),
-      gradient: cn(gradientColorMap[color], getElevationStyles(elevation)),
+      elevated: cn(
+        isDefault ? "bg-foreground text-background" : cn(activeTheme.bg, "text-white"), 
+        getElevationStyles("elevated")
+      ),
+      gradient: cn(
+        isDefault ? "bg-gradient-to-br from-foreground/80 to-foreground text-background dark:from-background dark:to-background/80 dark:text-foreground" : cn(activeTheme.bg, "text-white bg-gradient-to-br from-white/10 to-transparent mix-blend-multiply dark:mix-blend-screen"),
+        getElevationStyles(elevation)
+      ),
       glass: cn(
-        "bg-white/20 dark:bg-black/20 backdrop-blur-lg border border-white/40 dark:border-white/10 text-zinc-900 dark:text-white",
+        "backdrop-blur-lg border",
+        isDefault ? "bg-foreground/5 dark:bg-background/10 border-foreground/10 text-foreground" : cn(activeTheme.bgSoft, activeTheme.border, activeTheme.text),
         getElevationStyles(elevation)
       ),
     };
@@ -209,7 +222,7 @@ export const ClayMorphButton = React.forwardRef<
             </span>
           )}
 
-          {children && <span className="truncate">{children}</span>}
+          {!iconOnly && children && <span className="truncate">{children}</span>}
 
           {!loading && icon && iconPosition === "right" && (
             <span

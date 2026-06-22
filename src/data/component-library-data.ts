@@ -194,14 +194,24 @@ export default function Example() {
 "Automatically handles aspect ratio and responsive scaling.",
 "Built-in mock window header with macOS style traffic lights.",
 "Provides an isolated canvas with customized scrollbars.",
+"Supports 'ghost', 'solid', 'outline', and 'link' layout variants.",
+"Offers 'sm', 'md', and 'lg' sizes for headers and controls.",
+"Adjustable gap and padding spacing with 'default', '2x', '4x', '6x', and '8x'.",
+"Shape styling including 'square', 'rounded', 'sharp', and 'default'.",
+"Full 10-color palette support via the color prop.",
  ],
  codes: {
- next:'import { BrowserWindow } from"@/components/ui/browser-window";\n\nexport default function Example() {\n return (\n <BrowserWindow className="max-w-2xl aspect-video">\n <div className="flex items-center justify-center h-full">\n Your Content Here\n </div>\n </BrowserWindow>\n );\n}',
+ next:'import { BrowserWindow } from"@/components/ui/browser-window";\n\nexport default function Example() {\n return (\n <BrowserWindow className="max-w-2xl aspect-video" variant="solid" color="slate" size="md" shape="default" spacing="default">\n <div className="flex items-center justify-center h-full">\n Your Content Here\n </div>\n </BrowserWindow>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add browser-window'.",
 "Wrap any content in <BrowserWindow> to mock a browser view.",
 "Use'contentClassName'to style the internal canvas.",
+"Variants: Pass'variant=\"ghost\"' (default),'solid','outline', or'link'.",
+"Size: Use the'size'prop ('sm','md','lg') to scale the window elements.",
+"Spacing: Use the'spacing'prop to adjust padding around the content.",
+"Shape: Use the'shape'prop ('square','rounded','sharp') to style the window borders.",
+"Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
  ],
  },
  {
@@ -325,22 +335,23 @@ export default function Example() {
  category:"ui",
  description:
 "A clean loading screen with stacked boxes that rise and fall in sequence, giving a clear sense of ongoing activity while content or data is being loaded.",
- details: [
+  details: [
 "Uses multiple boxes moving up and down to show loading progress.",
-"Helps users understand that a process is currently running.",
-"Suitable for page loads, API requests, and async actions.",
+"Supports 'gradient', 'solid', and 'outline' layout variants.",
+"Offers 'sm', 'md', and 'lg' size modifiers.",
+"Full 10-color palette support via the color prop.",
 "Smooth animation keeps the interface feeling responsive.",
 "Lightweight and easy to integrate into any layout.",
-"Colors and size can be customized through CSS variables.",
  ],
  codes: {
- next:'import { BoxyBounceLoader } from"@/components/ui/boxy-bounce-loader";\n\nexport default function Example() {\n return <BoxyBounceLoader />;\n}',
+ next:'import { BoxyBounceLoader } from"@/components/ui/boxy-bounce-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BoxyBounceLoader variant="gradient" color="default" size="md"/>\n <BoxyBounceLoader variant="solid" color="emerald" size="lg"/>\n <BoxyBounceLoader variant="outline" color="amber" size="sm"/>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add boxy-bounce'.",
 "Import:'import { BoxyBounceLoader } from \"@/components/ui/boxy-bounce-loader\";'",
-"Utilization: Ideal for partial content loading where multiple elements are being fetched simultaneously.",
-"Styling: Inherits current text colors by default, but can be customized in the component source.",
+"Variants: Pass'variant=\"gradient\"' (default),'solid', or'outline'.",
+"Size: Use the'size'prop ('sm','md','lg') to scale the component.",
+"Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
  ],
  },
  {
@@ -351,22 +362,24 @@ export default function Example() {
  category:"ui",
  description:
 "A dynamic box-style loading screen where blocks stretch and shift positions, creating a smooth visual cue that content is being prepared in the background.",
- details: [
+  details: [
 "Shows boxes stretching and changing positions to indicate loading.",
-"Gives clear feedback that work is happening in the background.",
-"Well suited for page loads, data processing, and transitions.",
+"Supports 'gradient', 'solid', and 'outline' layout variants.",
+"Offers 'sm', 'md', and 'lg' size modifiers.",
+"Supports shape styling including 'square', 'rounded', 'sharp', and 'default'.",
+"Full 10-color palette support via the color prop.",
 "Smooth animation keeps users engaged during wait times.",
-"Lightweight design that doesn’t impact performance.",
-"Easy to customize size and colors using CSS.",
  ],
  codes: {
- next:'import { BoxyShiftLoader } from"@/components/ui/boxy-shift-loader";\n\nexport default function Example() {\n return <BoxyShiftLoader />;\n}',
+ next:'import { BoxyShiftLoader } from"@/components/ui/boxy-shift-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BoxyShiftLoader variant="gradient" color="default" size="md" shape="rounded"/>\n <BoxyShiftLoader variant="solid" color="emerald" size="lg" shape="square"/>\n <BoxyShiftLoader variant="outline" color="amber" size="sm" shape="sharp"/>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add boxy-shift'.",
 "Import:'import { BoxyShiftLoader } from \"@/components/ui/boxy-shift-loader\";'",
-"Best For: Content blocks, modals, or entire dashboards during initial load.",
-"Configuration: The component uses standard CSS transitions; modify the'transition-duration'in the source for faster/slower pulses.",
+"Variants: Pass'variant=\"gradient\"' (default),'solid', or'outline'.",
+"Size: Use the'size'prop ('sm','md','lg') to scale the component.",
+"Shape: Use the'shape'prop ('square','rounded','sharp') to style the inner boxes.",
+"Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
  ],
  },
  {
@@ -519,15 +532,17 @@ export default function Example() {
 "Three distinct variants: Modern (Rings), Clean (Dots), and Minimal (Circle).",
 "Full 10-color palette support via the color prop.",
 "Optional animated loading text with a pulse effect.",
-"Customizable shape and spacing dimensions.",
+"Customizable sizes (sm, md, lg) and shape variants specifically for the Clean loader.",
   ],
   codes: {
-  next:'import { BasicLoader } from"@/components/ui/basic-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BasicLoader variant="modern"color="default"text="Modern Rings..."/>\n <BasicLoader variant="clean"color="emerald"text="Clean Dots..."/>\n <BasicLoader variant="minimal"color="amber"text="Minimalist..."/>\n </div>\n );\n}',
+  next:'import { BasicLoader } from"@/components/ui/basic-loader";\n\nexport default function Example() {\n return (\n <div className="flex flex-col gap-8">\n <BasicLoader variant="modern" color="blue" size="lg" text="Modern Rings..."/>\n <BasicLoader variant="clean" color="emerald" size="md" shape="square" text="Clean Dots..."/>\n <BasicLoader variant="minimal" color="amber" size="sm" text="Minimalist..."/>\n </div>\n );\n}',
   },
   usage: [
 "Install: Run'npx futureuikit add basic-loader'.",
 "Import:'import { BasicLoader } from \"@/components/ui/basic-loader\";'",
 "Variants: Use'modern'for high-end cinematic rings,'clean'for minimal dots, or'minimal'for a simple pulse.",
+"Size: Use the'size'prop (sm, md, lg) to scale the component.",
+"Shape: Use the'shape'prop (square, rounded, sharp) to modify the dot shape when using the'clean'variant.",
 "Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
 "Text: Provide a'text'prop to show a pulsing status message below the animation.",
   ],
@@ -535,9 +550,9 @@ export default function Example() {
   {
   id: 20,
   title:"Toast Notification",
- type:"Feedback",
- slug:"toast",
- category:"ui",
+  type:"Feedback",
+  slug:"toast",
+  category:"ui",
  description:
 "A succinct message that is displayed temporarily in a corner of the screen. Built with Radix UI primitives and Framer Motion for high-quality interactions, it supports default and destructive variants, titles, and descriptions.",
  details: [
@@ -619,13 +634,15 @@ export default function Example() {
  slug:"button",
  category:"form",
  description:
-"The foundational button component with multiple variants, sizes, and full Radix UI Slot support for polymorphic usage. Designed to be the workhorse of your UI with consistent styling and accessible interactions.",
+"The foundational button component with multiple variants, sizes, and full Radix UI Slot support for polymorphic usage. Designed to be the workhorse of your UI with consistent styling and accessible interaction.",
  details: [
-"Supports standard variants: Default, Destructive, Outline, Secondary, Ghost, and Link.",
-"Four size options: Default, Small (sm), Large (lg), and Icon.",
+"Supports layout variants: solid, outline, ghost, and link.",
+"Four size options: sm, md (default), lg, and icon.",
+"Shape options: default, square, rounded, and sharp.",
+"Full 10-color palette support mapped to interactive states.",
+"Spacing variants included to adjust gap distances seamlessly.",
 "Full asChild support via Radix UI Slot for flexible component composition.",
 "Highly accessible with built-in focus states and disabled handling.",
-"Consistent, professional aesthetic that fits any design system.",
  ],
  codes: {
  next:'import { Button } from"@/components/ui/button";\nimport { Mail } from"lucide-react";\n\nexport default function Example() {\n return (\n <div className="flex flex-wrap gap-4 items-center">\n <Button variant="default">Button</Button>\n <Button variant="secondary">Secondary</Button>\n <Button variant="outline"size="sm">Small Outline</Button>\n <Button variant="ghost"size="icon"><Mail /></Button>\n <Button asChild>\n <a href="/login">Login with Link</a>\n </Button>\n </div>\n );\n}',
@@ -965,17 +982,23 @@ export default function AdvancedSearch() {
 "Interactive hover and tap effects for a responsive user experience.",
 "Dependency-free (uses native Date object) and fully responsive.",
  ],
- codes: {
- next:'import { Calendar } from"@/components/ui/calendar";\nimport { useState } from"react";\n\nexport default function Example() {\n const [date, setDate] = useState(new Date());\n \n // Example: Highlight some dates\n const highlighted = [\n new Date(2025, 4, 15), // May 15\n new Date(2025, 4, 20), // May 20\n ];\n\n // Example: Disable weekends\n const filterDate = (d) => d.getDay() !== 0 && d.getDay() !== 6;\n\n return (\n <Calendar \n value={date} \n onChange={setDate} \n highlightedDates={highlighted}\n filterDate={filterDate}\n variant="modern"\n />\n );\n}',
- },
- usage: [
+  codes: {
+  next:'import { Calendar } from"@/components/ui/calendar";\nimport { CalendarSyncProvider } from"@/components/ui/calendar-context";\nimport { useState } from"react";\n\nexport default function Example() {\n const [date, setDate] = useState(new Date());\n \n const highlighted = [\n new Date(2025, 4, 15),\n new Date(2025, 4, 20),\n ];\n\n const filterDate = (d) => d.getDay() !== 0 && d.getDay() !== 6;\n\n return (\n <CalendarSyncProvider>\n <Calendar \n value={date}\n onChange={setDate}\n highlightedDates={highlighted}\n filterDate={filterDate}\n variant="modern"\n shadow="lg"\n syncGroup="booking"\n allowFutureDates={false}\n yearRange={{ start: 1950 }}\n />\n </CalendarSyncProvider>\n );\n}',
+  },
+  usage: [
 "Install: Run'npx futureuikit add calendar'to get the component and motion configurations.",
 "Import:'import { Calendar } from \"@/components/ui/calendar\";'",
 "State Management: Pass'value'(Date) and'onChange'(function) to track selection.",
 "Superpower: Use'highlightedDates'(Date[]) and'onHighlightToggle'to allow interactive date tagging/favoriting.",
 "Variants: Choose'modern'for premium glassmorphism,'clean'for structured solids, or'minimal'for zero-background integration.",
 "Restrictions: Use'filterDate'(fn: Date => boolean) to programmatically disable dates (like weekends or past dates).",
- ],
+"Shadow: Use the'shadow'prop —'none','xxs','xs','sm','md','lg','xl', or'xxl'. Defaults to theme shadows.",
+"Modes: Set'mode'to'picker'(default),'display'(read-only with highlighted dates), or'filter'(multi-select toggle).",
+"Cross-page sync: Wrap your app in'<CalendarSyncProvider>'and give calendars the same'syncGroup'to share dates across pages.",
+"API highlights: Pass dates via'apiHighlightedDates'(Date[]) to show external/API data as highlighted on the calendar.",
+"Future dates: By default future dates are disabled. Set'allowFutureDates={true}'to enable selection of future dates.",
+"Year range: Use'yearRange={{ start: 1950, end: 2030 }}'to customize the year selection range. Defaults to 1950 – current year.",
+  ],
  },
  {
  id: 35,
@@ -984,23 +1007,25 @@ export default function AdvancedSearch() {
  slug:"calculator",
  category:"utility",
  description:
-"A cinematic, fully functional calculator with a modern glass-morphic interface. Supports all standard arithmetic operations, percentage calculations, and sign toggling with smooth Framer Motion transitions.",
- details: [
+"A cinematic, fully functional calculator with a modern interface. Supports all standard arithmetic operations, percentage calculations, and sign toggling with smooth Framer Motion transitions.",
+  details: [
 "Fully functional arithmetic operations (+, -, *, /).",
 "Support for decimal points, percentages, and sign toggling (+/-).",
-"Cinematic glassmorphism UI with premium blur and subtle shadows.",
+"Extensive thematic support: Default, Modern, Clean, Futuristic, Brutal, and Halftone.",
+"Full 10-color palette mapping to interactive states, glowing borders, and shadows.",
+"Universal variant layouts (solid, outline, ghost) and standard spacing and shapes.",
 "Interactive button feedback using physics-based spring animations.",
 "Dynamic display with smooth entry/exit transitions for numbers.",
-"Multiple visual variants: Modern (Glass), Clean (Solid), and Minimal.",
 "Responsive layout optimized for both desktop and mobile interaction.",
  ],
  codes: {
- next:'import { Calculator } from"@/components/ui/calculator";\n\nexport default function Example() {\n return (\n <div className="flex items-center justify-center p-8 bg-black">\n <Calculator variant="modern"/>\n </div>\n );\n}',
+ next:'import { Calculator } from"@/components/ui/calculator";\n\nexport default function Example() {\n return (\n <div className="flex items-center justify-center p-8 bg-black">\n <Calculator theme="futuristic" variant="solid" color="emerald"/>\n </div>\n );\n}',
  },
  usage: [
 "Install: Run'npx futureuikit add calculator'to download the component and its dependencies.",
 "Import:'import { Calculator } from \"@/components/ui/calculator\";'",
-"Variants: Toggle between \'modern\', \'clean\', and \'minimal\'using the \'variant\'prop.",
+"Themes: Use the'theme'prop for distinct aesthetics ('modern', 'futuristic', 'brutal', etc.).",
+"Variants: Use the'variant'prop for layout structures ('solid', 'outline', 'ghost').",
 "Styling: Customize the look by passing a \'className\'or \'primaryColor\'.",
 "Integration: Use it as a standalone utility component in any part of your application.",
  ],
@@ -1262,21 +1287,26 @@ export default function AdvancedSearch() {
  type:"Navigation",
  slug:"command-palette",
  category:"ui",
- description:"A highly performant, accessible Command Palette component inspired by Linear and Raycast. Features fuzzy search, keyboard navigation, nested commands, and premium design variants.",
- details: [
+  description:"A premium command palette with subtle color themes, framer-motion animations, and clean spacing.",
+  details: [
 "Compound architecture: CommandPalette, Input, List, Group, Item, Empty, Separator, and Shortcut.",
 "Powered by cmdk for flawless, native-feeling keyboard interactions and fuzzy search.",
 "Five premium visual variants: Default, Compact, Floating, Glass, and Spotlight.",
+"10 subtle color themes that gently shift the border glow and accent without overwhelming the UI.",
+"4 shape variants (rounded-2xl, square, rounded-3xl, rounded-lg) and 5 spacing levels.",
+"Framer Motion spring enter/exit animations with fade-in list.",
 "Out-of-the-box support for Cmd+K / Ctrl+K keyboard shortcuts.",
 "Fully accessible with automatic focus trapping and ARIA roles."
- ],
+  ],
  codes: {
  next:'import { \n CommandPalette, \n CommandInput, \n CommandList, \n CommandEmpty, \n CommandGroup, \n CommandItem, \n CommandSeparator, \n CommandShortcut \n} from"@/components/ui/command-palette";\nimport { Calculator, Calendar, CreditCard, Settings, Smile, User } from"lucide-react";\nimport React from"react";\n\nexport default function Example() {\n const [open, setOpen] = React.useState(false);\n\n React.useEffect(() => {\n const down = (e: KeyboardEvent) => {\n if (e.key ==="k"&& (e.metaKey || e.ctrlKey)) {\n e.preventDefault();\n setOpen((open) => !open);\n }\n };\n document.addEventListener("keydown", down);\n return () => document.removeEventListener("keydown", down);\n }, []);\n\n return (\n <CommandPalette open={open} onOpenChange={setOpen} variant="spotlight">\n <CommandInput placeholder="Type a command or search..."/>\n <CommandList>\n <CommandEmpty>No results found.</CommandEmpty>\n <CommandGroup heading="Suggestions">\n <CommandItem>\n <Calendar className="mr-2 h-4 w-4"/>\n <span>Calendar</span>\n </CommandItem>\n <CommandItem>\n <Smile className="mr-2 h-4 w-4"/>\n <span>Search Emoji</span>\n </CommandItem>\n <CommandItem>\n <Calculator className="mr-2 h-4 w-4"/>\n <span>Calculator</span>\n </CommandItem>\n </CommandGroup>\n <CommandSeparator />\n <CommandGroup heading="Settings">\n <CommandItem>\n <User className="mr-2 h-4 w-4"/>\n <span>Profile</span>\n <CommandShortcut>⌘P</CommandShortcut>\n </CommandItem>\n <CommandItem>\n <CreditCard className="mr-2 h-4 w-4"/>\n <span>Billing</span>\n <CommandShortcut>⌘B</CommandShortcut>\n </CommandItem>\n <CommandItem>\n <Settings className="mr-2 h-4 w-4"/>\n <span>Settings</span>\n <CommandShortcut>⌘S</CommandShortcut>\n </CommandItem>\n </CommandGroup>\n </CommandList>\n </CommandPalette>\n );\n}'
  },
- usage: [
+  usage: [
 "Install: Run'npx futureuikit add command-palette'.",
-"Overview: The Command Palette is built on top of'cmdk'(the industry standard headless command menu library). It provides extremely fast, fuzzy search navigation.",
- ],
+"Overview: Built on top of cmdk — the industry standard headless command menu library.",
+"Props: variant (default/compact/floating/glass/spotlight), color (10 themes), shape, spacing.",
+"Customize: Pass color, shape, and spacing to CommandPalette or standalone Command component.",
+  ],
  },
  {
  id: 46,
@@ -1571,9 +1601,25 @@ export default function AdvancedSearch() {
  category:"ui",
  isNew: true,
  description:"A global breadcrumb navigation component.",
- details: ["Pathname based breadcrumbs"],
- codes: { next:""},
- usage: ["npx futureuikit add global-breadcrumb"]
+  details: [
+"Pathname based breadcrumbs.",
+"Supports 'ghost', 'solid', 'outline', and 'link' layout variants.",
+"Offers 'sm', 'md', and 'lg' text sizes.",
+"Adjustable gap spacing with 'default', '2x', '4x', '6x', and '8x'.",
+"Shape styling including 'square', 'rounded', 'sharp', and 'default'.",
+"Full 10-color palette support via the color prop.",
+ ],
+ codes: {
+ next:'import { GlobalBreadcrumb } from"@/components/ui/global-breadcrumb";\n\nexport default function Example() {\n return <GlobalBreadcrumb variant="solid" color="emerald" size="md" shape="rounded" spacing="4x"/>;\n}',
+ },
+ usage: [
+"Install: Run'npx futureuikit add global-breadcrumb'.",
+"Variants: Pass'variant=\"ghost\"' (default),'solid','outline', or'link'.",
+"Size: Use the'size'prop ('sm','md','lg') to scale the text.",
+"Spacing: Use the'spacing'prop to adjust the gap between items.",
+"Shape: Use the'shape'prop ('square','rounded','sharp') to style the container or links.",
+"Color: Choose from 10 theme colors (default, blue, emerald, rose, amber, violet, indigo, sky, slate, orange).",
+ ]
  },
  {
  id: 59,
@@ -1824,19 +1870,26 @@ export default function Example() {
     type: "UI",
     slug: "collapsible",
     category: "ui",
-    description: "An interactive component that toggles the visibility of content with a trigger element.",
+    description: "A premium collapsible with 5 layout variants, 10 color themes, cinematic animations, and data-driven content rendering.",
     details: [
-      "Simple open/close toggle for sections of content.",
-      "Accessible keyboard and screen-reader support.",
-      "Controlled or uncontrolled usage via open prop."
+      "5 layout variants: default, minimal, contained, card, sidebar — each with distinct visual styling.",
+      "10 color themes matching the design system palette.",
+      "Cinematic framer-motion expand/collapse animations (spring-based, per-layout tuning).",
+      "Shape variants: default (rounded-lg), square, rounded (xl), sharp.",
+      "Spacing variants: default, 2x, 4x, 6x, 8x — control padding, font size, and gaps.",
+      "Data-driven content via items prop (label + description) or custom children.",
+      "Fully accessible via Radix UI Collapsible primitives.",
+      "Smooth layout transitions when switching variants while open."
     ],
     codes: {
-      next: 'import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";\n\nexport default function Example() {\n  return (\n    <Collapsible>\n      <CollapsibleTrigger>Toggle</CollapsibleTrigger>\n      <CollapsibleContent>\n        <p>This content can be shown or hidden.</p>\n      </CollapsibleContent>\n    </Collapsible>\n  );\n}'
+      next: 'import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";\n\nconst items = [\n  { label: "radix-ui/primitives", description: "React UI primitives" },\n  { label: "radix-ui/colors", description: "Color system utilities" },\n];\n\nexport default function Example() {\n  return (\n    <Collapsible layout="default" color="blue" shape="default" spacing="default">\n      <CollapsibleTrigger>Starred repositories</CollapsibleTrigger>\n      <CollapsibleContent items={items} />\n    </Collapsible>\n  );\n}'
     },
     usage: [
       "Install: Run 'npx futureuikit add collapsible'.",
-      "Import: 'import { Collapsible, CollapsibleContent, CollapsibleTrigger } from \"@/components/ui/collapsible\";'",
-      "Usage: Wrap collapsible content and provide a trigger to toggle visibility."
+      "Import: 'import { Collapsible, CollapsibleTrigger, CollapsibleContent } from \"@/components/ui/collapsible\";'",
+      "Props: layout (default/minimal/contained/card/sidebar), color (10 options), shape, spacing.",
+      "Content: Pass an items array (label + description) or custom children to CollapsibleContent.",
+      "Trigger: Customize the trigger text/children inside CollapsibleTrigger."
     ]
   },
   {

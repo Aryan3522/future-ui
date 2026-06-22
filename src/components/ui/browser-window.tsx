@@ -18,6 +18,8 @@ import { HTMLMotionProps } from "framer-motion";
 export type BrowserWindowColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type BrowserWindowShape = "default" | "square" | "rounded" | "sharp";
 export type BrowserWindowSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type BrowserWindowSize = "sm" | "md" | "lg";
+export type BrowserWindowVariant = "solid" | "outline" | "ghost" | "link";
 
 export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title" | "color"> {
   children: React.ReactNode;
@@ -28,6 +30,8 @@ export interface BrowserWindowProps extends Omit<HTMLMotionProps<"div">, "title"
   color?: BrowserWindowColor;
   shape?: BrowserWindowShape;
   spacing?: BrowserWindowSpacing;
+  size?: BrowserWindowSize;
+  variant?: BrowserWindowVariant;
 }
 
 type WindowState = "default" | "maximized" | "minimized";
@@ -72,7 +76,7 @@ const getSpacingClass = (spacing: BrowserWindowSpacing) => {
  * PERFORMANCE: State-preserving (never remounts).
  */
 export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, BrowserWindowProps>(
-  ({ className, contentClassName, children, scrollRef, title, headerAction, color = "default", shape = "default", spacing = "default", ...props }, ref) => {
+  ({ className, contentClassName, children, scrollRef, title, headerAction, color = "default", shape = "default", spacing = "default", size = "md", variant = "solid", ...props }, ref) => {
     const [windowState, setWindowState] = React.useState<WindowState>("default");
     const [mounted, setMounted] = React.useState(false);
     const [rect, setRect] = React.useState<{ top: number; left: number; width: number; height: number } | null>(null);
@@ -92,6 +96,17 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
     const activeRect = customRect || rect;
     const activeTheme = colorThemeMap[color];
     const borderRadius = getBorderRadius(shape);
+
+    const isOutline = variant === "outline";
+    const isGhost = variant === "ghost";
+    const isLink = variant === "link";
+    const isSolid = variant === "solid";
+
+    // Size Variables
+    const headerHeight = size === "sm" ? "h-8" : size === "lg" ? "h-12" : "h-10";
+    const dotSize = size === "sm" ? "w-2.5 h-2.5" : size === "lg" ? "w-4 h-4" : "w-3.5 h-3.5";
+    const titleTextSize = size === "sm" ? "text-[8px]" : size === "lg" ? "text-xs" : "text-[10px]";
+
 
     React.useEffect(() => {
       setMounted(true);
@@ -312,11 +327,13 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
         }}
         transition={isInteracting ? { type: "tween", duration: 0 } : transition}
         className={cn(
-          "flex flex-col bg-background overflow-hidden transform-gpu transition-shadow duration-300",
-          "border", activeTheme.border,
+          "flex flex-col overflow-hidden transform-gpu transition-shadow duration-300",
+          !isGhost && !isLink ? "border" : "border border-transparent",
+          !isGhost && !isLink ? activeTheme.border : "",
+          isSolid ? "bg-background" : "bg-transparent",
           customRect 
             ? cn("shadow-2xl shadow-black/20 dark:shadow-black/60 ring-1", activeTheme.ring)
-            : "shadow-xl shadow-black/5 dark:shadow-black/40"
+            : !isGhost && !isLink ? "shadow-xl shadow-black/5 dark:shadow-black/40" : ""
         )}
         style={{
           position: "absolute",
@@ -340,7 +357,13 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
 
         {/* Header */}
         <div 
-          className={cn("w-full h-10 shrink-0 backdrop-blur-md border-b flex items-center px-4 justify-between z-50 select-none", activeTheme.header, activeTheme.border)}
+          className={cn(
+            "w-full shrink-0 flex items-center px-4 justify-between z-50 select-none transition-colors duration-300",
+            headerHeight,
+            !isGhost && !isLink ? "border-b backdrop-blur-md" : "border-b border-transparent",
+            !isGhost && !isLink ? activeTheme.border : "",
+            isSolid ? activeTheme.header : "bg-transparent"
+          )}
           onPointerDown={(e) => {
             if ((e.target as HTMLElement).closest("button")) return;
             startInteraction(e, "drag");
@@ -354,19 +377,19 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           <div className="flex items-center gap-1.5 w-24">
             <button 
               onClick={handleClose}
-              className="w-3.5 h-3.5 rounded-full bg-[#ff5f57] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center"
+              className={cn("rounded-full bg-[#ff5f57] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center", dotSize)}
             >
               <span className="opacity-0 group-hover:opacity-100 text-[10px] text-black/50 font-bold">×</span>
             </button>
             <button 
               onClick={handleMinimize}
-              className="w-3.5 h-3.5 rounded-full bg-[#febc2e] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center"
+              className={cn("rounded-full bg-[#febc2e] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center", dotSize)}
             >
               <span className="opacity-0 group-hover:opacity-100 text-[12px] text-black/50 font-bold leading-none mb-1">−</span>
             </button>
             <button 
               onClick={handleMaximize}
-              className="w-3.5 h-3.5 rounded-full bg-[#28c840] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center"
+              className={cn("rounded-full bg-[#28c840] border border-black/5 hover:brightness-110 transition-all cursor-pointer group flex items-center justify-center", dotSize)}
             >
               <span className="opacity-0 group-hover:opacity-100 text-[8px] text-black/50 font-bold">
                 {isMaximized ? "⧉" : "＋"}
@@ -376,7 +399,11 @@ export const BrowserWindow = React.memo(React.forwardRef<HTMLDivElement, Browser
           
           {title ? (
             <div className="flex-1 text-center">
-              <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-[0.3em] pointer-events-none">{title}</span>
+              <span className={cn(
+                "font-bold text-muted-foreground/30 uppercase tracking-[0.3em] pointer-events-none transition-all duration-300",
+                titleTextSize,
+                isLink && "underline underline-offset-4 decoration-muted-foreground/30"
+              )}>{title}</span>
             </div>
           ) : (
             <div className="flex-1" />

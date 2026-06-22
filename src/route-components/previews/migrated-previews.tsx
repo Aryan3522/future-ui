@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import { cn } from "@/lib/utils";
 import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 import {
   AlertDialog,
@@ -86,11 +88,94 @@ import { toast } from "sonner";
 import { GutterLines } from "@/components/ui/GutterLines";
 
 export const MigratedPreviews = {
-  "alert-dialog": function AlertDialogPreview() {
+  "badge": function BadgePreview() {
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
     return (
-      <PreviewContainer title="Alert Dialog" description="A modal dialog that interrupts the user with important content and expects a response.">
+      <PreviewContainer 
+        title="Badge" 
+        description="A small status descriptor for UI elements."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        variants={["solid", "secondary", "outline", "ghost"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
         <div className="flex items-center justify-center min-h-[300px]">
-          <AlertDialog>
+          <Badge variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
+            Badge
+          </Badge>
+        </div>
+      </PreviewContainer>
+    );
+  },
+  "alert-dialog": function AlertDialogPreview() {
+    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    return (
+      <PreviewContainer 
+        title="Alert Dialog" 
+        description="A modal dialog that interrupts the user with important content and expects a response."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        variants={["solid", "outline", "ghost", "link"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <div className="flex items-center justify-center min-h-[300px]">
+          <AlertDialog variant={previewVariant} color={previewColor} shape={previewShape} spacing={previewSpacing}>
             <AlertDialogTrigger asChild>
               <Button variant="outline">Show Dialog</Button>
             </AlertDialogTrigger>
@@ -113,15 +198,28 @@ export const MigratedPreviews = {
   },
 
   "aspect-ratio": function AspectRatioPreview() {
+    const [previewRatio, setPreviewRatio] = React.useState<any>("16:9");
+    const ratios = ["16:9", "4:3", "1:1", "21:9", "3:2", "9:16"];
+    
     return (
-      <PreviewContainer title="Aspect Ratio" description="Displays content within a desired ratio.">
+      <PreviewContainer 
+        title="Aspect Ratio" 
+        description="Displays content within a desired ratio."
+        extraControls={
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Aspect Ratio</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {ratios.map(r => (
+                <button key={r} onClick={() => setPreviewRatio(r)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewRatio === r ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{r}</button>
+              ))}
+            </div>
+          </div>
+        }
+      >
         <div className="w-full max-w-sm mx-auto my-10">
-          <AspectRatio ratio={16 / 9} className="bg-muted rounded-md overflow-hidden flex items-center justify-center">
-            <span className="text-muted-foreground">16:9 Aspect Ratio</span>
-          </AspectRatio>
-          <div className="mt-8"></div>
-          <AspectRatio ratio={1 / 1} className="bg-muted rounded-md overflow-hidden flex items-center justify-center">
-            <span className="text-muted-foreground">1:1 Aspect Ratio</span>
+          <AspectRatio variant={previewRatio} className="bg-muted rounded-md overflow-hidden flex items-center justify-center border border-border shadow-sm transition-all duration-300">
+            <span className="text-muted-foreground font-semibold">{previewRatio}</span>
           </AspectRatio>
         </div>
       </PreviewContainer>
@@ -129,23 +227,56 @@ export const MigratedPreviews = {
   },
 
   "collapsible": function CollapsiblePreview() {
-    const [isOpen, setIsOpen] = React.useState(false);
+    const [previewLayout, setPreviewLayout] = React.useState<any>("default");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+    const items = [
+      { label: "radix-ui/primitives", description: "React UI primitives" },
+      { label: "radix-ui/colors", description: "Color system utilities" },
+      { label: "radix-ui/themes", description: "Theme infrastructure" },
+    ];
+
     return (
-      <PreviewContainer title="Collapsible" description="An interactive component which expands/collapses a panel.">
-        <div className="flex items-center justify-center min-h-[300px]">
-          <Collapsible open={isOpen} onOpenChange={setIsOpen} className="w-[350px] space-y-2">
-            <div className="flex items-center justify-between space-x-4 px-4 py-2 border rounded-md">
-              <h4 className="text-sm font-semibold">@peduarte starred 3 repositories</h4>
-              <CollapsibleTrigger asChild>
-                <Button variant="ghost" className="w-9 p-0">
-                  {isOpen ? "-" : "+"}
-                </Button>
-              </CollapsibleTrigger>
+      <PreviewContainer
+        title="Collapsible"
+        description="An interactive component which expands/collapses a panel with premium layouts and animations."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        variants={["default", "minimal", "contained", "card", "sidebar"]}
+        activeVariant={previewLayout}
+        onVariantChange={setPreviewLayout}
+        extraControls={
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewShape(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
             </div>
-            <CollapsibleContent className="space-y-2">
-              <div className="rounded-md border px-4 py-3 font-mono text-sm">radix-ui/primitives</div>
-              <div className="rounded-md border px-4 py-3 font-mono text-sm">radix-ui/colors</div>
-            </CollapsibleContent>
+            <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+              <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+              <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+                {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                  <button key={s} onClick={() => setPreviewSpacing(s)}
+                    className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+                ))}
+              </div>
+            </div>
+          </>
+        }
+      >
+        <div className="flex items-center justify-center min-h-[300px]">
+          <Collapsible layout={previewLayout} color={previewColor} shape={previewShape} spacing={previewSpacing} className="w-[380px]">
+            <CollapsibleTrigger>
+              @peduarte starred {items.length} repositories
+            </CollapsibleTrigger>
+            <CollapsibleContent items={items} />
           </Collapsible>
         </div>
       </PreviewContainer>
@@ -377,11 +508,11 @@ export const MigratedPreviews = {
         <div className="flex items-center justify-center min-h-[400px]">
           <ScrollArea className="h-[200px] w-[350px] rounded-md border p-4">
             Jokester began sneaking into the castle in the middle of the night and leaving
-            jokes all over the place: under the king's pillow, in his soup, even in the
-            royal toilet. The king was furious, but he couldn't seem to stop Jokester. And
+            jokes all over the place: under the king&apos;s pillow, in his soup, even in the
+            royal toilet. The king was furious, but he couldn&apos;t seem to stop Jokester. And
             then, one day, the people of the kingdom discovered that the jokes left by
-            Jokester were so funny that they couldn't help but laugh. And once they
-            started laughing, they couldn't stop.
+            Jokester were so funny that they couldn&apos;t help but laugh. And once they
+            started laughing, they couldn&apos;t stop.
           </ScrollArea>
         </div>
       </PreviewContainer>

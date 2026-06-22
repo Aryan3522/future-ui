@@ -347,7 +347,7 @@ const bubbleVariants = cva("relative flex flex-col min-w-0", {
 });
 
 export const ChatMessage = React.memo(function ChatMessage({ message }: { message: Message }) {
-  const { layout, onReload, onEdit, color, shape } = useAIChat();
+  const { layout, onReload, onEdit, color, shape, spacing } = useAIChat();
   const [isHovered, setIsHovered] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editContent, setEditContent] = useState(message.content);
@@ -374,7 +374,20 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
   const getDynamicUserClasses = () => {
     if (!isUser) return "";
     if (layout === "compact" || layout === "enterprise") return activeTheme.bg + " ml-auto shadow-sm";
+    if (layout === "chatgpt" && color !== "default") return activeTheme.bg;
     return "";
+  };
+
+  const getBubbleSpacing = () => {
+    const hasBackground = layout === "chatgpt" || layout === "compact" || layout === "enterprise" || isUser;
+    if (!hasBackground) return "";
+    switch (spacing) {
+      case "2x": return "px-3 py-1.5 text-xs";
+      case "4x": return "px-4 py-2.5 text-sm";
+      case "6x": return "px-5 py-3 text-base";
+      case "8x": return "px-6 py-4 text-lg";
+      default: return "";
+    }
   };
 
   return (
@@ -405,6 +418,7 @@ export const ChatMessage = React.memo(function ChatMessage({ message }: { messag
       <div className={cn(
         bubbleVariants({ layout, role: message.role }), 
         getDynamicUserClasses(),
+        getBubbleSpacing(),
         // Apply shape to bubble backgrounds
         (layout === "chatgpt" || layout === "compact" || layout === "enterprise" || 
          (isUser && (layout === "claude" || layout === "perplexity" || layout === "minimal"))) && shapeClass
@@ -556,7 +570,7 @@ export interface ChatInputProps {
 }
 
 export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUpload }: ChatInputProps = {}) {
-  const { input, setInput, onSubmit, isLoading, onStop, inputVariant, messages, color, shape } = useAIChat();
+  const { input, setInput, onSubmit, isLoading, onStop, inputVariant, messages, color, shape, spacing } = useAIChat();
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const imageInputRef = useRef<HTMLInputElement>(null);
@@ -568,6 +582,29 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
   const activeTheme = colorThemeMap[color];
   const shapeClass = getShapeClass(shape);
   const btnShapeClass = getButtonShapeClass(shape);
+  const isRounded = inputVariant === "command" || inputVariant === "floating";
+
+  const getInputShape = () => {
+    if (isRounded) {
+      switch (shape) {
+        case "square": return "rounded-none";
+        case "rounded": return "rounded-full";
+        case "sharp": return "rounded-[4px]";
+        default: return "rounded-full";
+      }
+    }
+    return shapeClass;
+  };
+
+  const getInputSpacing = () => {
+    switch (spacing) {
+      case "2x": return "px-3 py-1.5";
+      case "4x": return "px-4 py-2 text-base";
+      case "6x": return "px-5 py-3 text-lg";
+      case "8x": return "px-6 py-4 text-xl";
+      default: return "px-4 py-2";
+    }
+  };
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -639,7 +676,6 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
   };
 
   const hasMessages = messages.length > 0;
-  const isRounded = inputVariant === "command" || inputVariant === "floating";
 
   return (
     <motion.div
@@ -690,9 +726,9 @@ export const ChatInput = React.memo(function ChatInput({ onFileUpload, onImageUp
         className={cn(
           "flex items-end gap-2 bg-background border transition-shadow",
           activeTheme.ring,
-          isRounded
-            ? cn(btnShapeClass === "rounded-md" ? "rounded-xl" : btnShapeClass === "rounded-none" ? "rounded-none" : "rounded-full", "px-4 py-2 focus-within:ring-2 shadow-sm")
-            : cn(shapeClass, "px-4 py-2 focus-within:ring-1 shadow-sm")
+          getInputShape(),
+          getInputSpacing(),
+          isRounded ? "focus-within:ring-2 shadow-sm" : "focus-within:ring-1 shadow-sm"
         )}
       >
         {/* Attachment dropdown */}

@@ -17,6 +17,7 @@ import * as THREE from "three";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { BasicLoader } from "@/components/ui/basic-loader";
+import { buttonVariants } from "@/components/ui/button";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // PRELOAD MODELS
@@ -314,15 +315,37 @@ export interface CarouselSlide {
   annotations?: Annotation[];
 }
 
+export type AutomotiveCarouselColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
+export type AutomotiveCarouselShape = "default" | "square" | "rounded" | "sharp";
+export type AutomotiveCarouselSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type AutomotiveCarouselVariant = "solid" | "outline" | "ghost" | "link";
+
 export interface AutomotiveCarouselProps {
   slides: CarouselSlide[];
   className?: string;
+  color?: AutomotiveCarouselColor;
+  shape?: AutomotiveCarouselShape;
+  spacing?: AutomotiveCarouselSpacing;
+  variant?: AutomotiveCarouselVariant;
 }
+
+const colorThemeMap: Record<AutomotiveCarouselColor, { activeBg: string }> = {
+  default: { activeBg: "bg-foreground" },
+  blue: { activeBg: "bg-blue-600" },
+  emerald: { activeBg: "bg-emerald-500" },
+  rose: { activeBg: "bg-rose-500" },
+  amber: { activeBg: "bg-amber-500" },
+  violet: { activeBg: "bg-violet-600" },
+  indigo: { activeBg: "bg-indigo-600" },
+  sky: { activeBg: "bg-sky-500" },
+  slate: { activeBg: "bg-slate-600" },
+  orange: { activeBg: "bg-orange-500" },
+};
 
 // ─────────────────────────────────────────────────────────────────────────────
 // AutomotiveCarousel
 // ─────────────────────────────────────────────────────────────────────────────
-export const AutomotiveCarousel = ({ slides, className }: AutomotiveCarouselProps) => {
+export const AutomotiveCarousel = ({ slides, className, color = "default", shape = "default", spacing = "default", variant = "outline" }: AutomotiveCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
@@ -380,6 +403,7 @@ export const AutomotiveCarousel = ({ slides, className }: AutomotiveCarouselProp
     { camPos: [-3.0, 0.8, -4.5], camTarget: [0, 0.5, -2], align: "right" },
   ];
   const currentTarget = targets[layout];
+  const activeTheme = colorThemeMap[color];
 
   // ── Text alignment helper ───────────
   const getTextAlign = (align: "left" | "right" | "center") => {
@@ -469,13 +493,21 @@ export const AutomotiveCarousel = ({ slides, className }: AutomotiveCarouselProp
         className="absolute inset-0 z-40 pointer-events-none"
       >
         {/* Minimal pill indicator */}
-        <div className="absolute bottom-8 sm:bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2.5 pointer-events-none">
+        <div className={cn(
+          "absolute left-1/2 -translate-x-1/2 flex items-center pointer-events-none",
+          spacing === "2x" ? "gap-1.5 bottom-6 sm:bottom-8" :
+          spacing === "4x" ? "gap-2.5 bottom-8 sm:bottom-10" :
+          spacing === "6x" ? "gap-4 bottom-10 sm:bottom-12" :
+          spacing === "8x" ? "gap-6 bottom-12 sm:bottom-16" :
+          "gap-2.5 bottom-8 sm:bottom-10"
+        )}>
           {slides.map((_, idx) => (
             <div
               key={idx}
               className={cn(
-                "h-1 rounded-full transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]",
-                idx === currentIndex ? "w-8 sm:w-10 bg-foreground" : "w-2 sm:w-2.5 bg-foreground/20"
+                "h-1 transition-all duration-700 ease-[cubic-bezier(0.25,1,0.5,1)]",
+                shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : "rounded-full",
+                idx === currentIndex ? cn("w-8 sm:w-10", activeTheme.activeBg) : "w-2 sm:w-2.5 bg-foreground/20"
               )}
             />
           ))}
@@ -483,17 +515,24 @@ export const AutomotiveCarousel = ({ slides, className }: AutomotiveCarouselProp
       </div>
 
       {/* ── Navigation Buttons (z-50) ────────────────────────────────────── */}
-      <div className="absolute bottom-6 sm:bottom-8 right-6 sm:right-8 z-50 flex items-center gap-3 sm:gap-4">
+      <div className={cn(
+        "absolute z-50 flex items-center",
+        spacing === "2x" ? "gap-2 bottom-4 right-4 sm:bottom-6 sm:right-6" :
+        spacing === "4x" ? "gap-3 sm:gap-4 bottom-6 right-6 sm:bottom-8 sm:right-8" :
+        spacing === "6x" ? "gap-5 bottom-8 right-8 sm:bottom-10 sm:right-10" :
+        spacing === "8x" ? "gap-6 bottom-10 right-10 sm:bottom-12 sm:right-12" :
+        "gap-3 sm:gap-4 bottom-6 right-6 sm:bottom-8 sm:right-8"
+      )}>
         <button
           onClick={() => go(-1)}
-          className="p-3 sm:p-4 rounded-full bg-background/10 border border-border/20 hover:bg-background/20 backdrop-blur-md text-foreground transition-all active:scale-95"
+          className={cn(buttonVariants({ variant, color, shape, spacing }), "p-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center backdrop-blur-md active:scale-95")}
           aria-label="Previous slide"
         >
           <ChevronLeft size={isMobile ? 20 : 24} />
         </button>
         <button
           onClick={() => go(1)}
-          className="p-3 sm:p-4 rounded-full bg-background/10 border border-border/20 hover:bg-background/20 backdrop-blur-md text-foreground transition-all active:scale-95"
+          className={cn(buttonVariants({ variant, color, shape, spacing }), "p-0 w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center backdrop-blur-md active:scale-95")}
           aria-label="Next slide"
         >
           <ChevronRight size={isMobile ? 20 : 24} />

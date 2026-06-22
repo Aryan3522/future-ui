@@ -8,7 +8,18 @@ import {
   CardTitle, 
   CardDescription, 
   CardContent, 
-  CardFooter 
+  CardFooter,
+  CardAvatar,
+  CardBadge,
+  CardMedia,
+  CardStat,
+  CardAction,
+  CardSeparator,
+  type CardVariant,
+  type CardTheme,
+  type CardShape,
+  type CardSpacing,
+  type CardLayout
 } from "@/components/ui/card";
 import { GlassPanel } from "@/components/ui/glass-panel";
 import { HoverGlareCard } from "@/components/ui/hover-glare-card";
@@ -22,7 +33,8 @@ import { Sparkles } from "lucide-react";
 
 export const BasicCardPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   const [variant, setVariant] = React.useState<
     "default" | "elevated" | "interactive" | "feature" | "stats" | "content" | "compact" | "media"
   >("default");
@@ -33,42 +45,235 @@ export const BasicCardPreview: React.FC = () => {
       description="A premium composable card system. Each variant is purpose-built for a specific UI context."
       variants={["default", "elevated", "interactive", "feature", "stats", "content", "compact", "media"]}
       activeVariant={variant}
-      onVariantChange={setVariant} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      onVariantChange={setVariant} 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
       <div className="w-full flex items-center justify-center p-8">
-        <BasicCard variant={variant} color={previewColor} />
+        <BasicCard variant={variant} color={previewColor} shape={previewShape} spacing={previewSpacing} />
       </div>
     </PreviewContainer>
   );
 };
 
 export const StandardCardPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [variant, setVariant] = React.useState<"solid" | "outline" | "ghost" | "glass">("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [stylingVariant, setStylingVariant] = React.useState<CardVariant>("solid");
+  const [layout, setLayout] = React.useState<CardLayout>("default");
+  const [theme, setTheme] = React.useState<CardTheme>("default");
+  const [shape, setShape] = React.useState<CardShape>("default");
+  const [spacing, setSpacing] = React.useState<CardSpacing>("default");
+  const [shadow, setShadow] = React.useState<"default" | "none" | "xxs" | "xs" | "sm" | "md" | "lg" | "xl" | "xxl">("default");
+
+  const renderCardContent = () => {
+    const cardProps = { variant: stylingVariant, color: previewColor, theme, shape, spacing, shadow, layout };
+    switch (layout) {
+      case "media":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardMedia src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop" aspectRatio="video" />
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle>Media Card</CardTitle>
+                <CardBadge tone="success">New</CardBadge>
+              </div>
+              <CardDescription>Card with image header</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>A beautiful card with a media header image.</CardDescription>
+            </CardContent>
+            <CardFooter>
+              <CardAction tone="primary" className="w-full">Action</CardAction>
+            </CardFooter>
+          </Card>
+        );
+      case "content":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardHeader>
+              <CardBadge tone="info" className="w-fit">Article</CardBadge>
+              <CardTitle>Content Card</CardTitle>
+              <CardDescription>By Author • 5 min read</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Content description for the article style card layout.</CardDescription>
+            </CardContent>
+            <CardFooter>
+              <CardAction tone="link">Read more →</CardAction>
+            </CardFooter>
+          </Card>
+        );
+      case "stats":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardHeader className="flex-row items-center justify-between">
+              <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+              <CardBadge tone="success">+12%</CardBadge>
+            </CardHeader>
+            <CardContent>
+              <CardStat value="$24,592" label="Active users this month" trend="up" trendValue="14%" />
+            </CardContent>
+          </Card>
+        );
+      case "compact":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardAvatar initials="AH" size="sm" />
+            <div className="flex flex-col flex-1">
+              <CardTitle className="text-sm">Aryan Hooda</CardTitle>
+              <CardDescription className="text-xs">Full Stack Developer</CardDescription>
+            </div>
+            <CardAction tone="ghost">View</CardAction>
+          </Card>
+        );
+      case "feature":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <div className={cn("w-12 h-12 flex items-center justify-center rounded-full", previewColor === "default" ? "bg-primary/10 text-primary" : "text-blue-600 bg-blue-600/10")}>
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+            </div>
+            <CardHeader>
+              <CardTitle className="text-xl">Feature Card</CardTitle>
+              <CardDescription>Centered layout with icon for feature highlights.</CardDescription>
+            </CardHeader>
+            <CardContent className="w-full">
+              <CardAction tone="secondary" className="w-full">Learn more</CardAction>
+            </CardContent>
+          </Card>
+        );
+      case "interactive":
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardHeader>
+              <CardTitle>Interactive Card</CardTitle>
+              <CardDescription>Clickable card with hover and scale effects.</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>Click or tap to interact with this card.</CardDescription>
+            </CardContent>
+            <CardFooter>
+              <CardAction tone="primary" className="w-full">Action</CardAction>
+            </CardFooter>
+          </Card>
+        );
+      default:
+        return (
+          <Card className="w-full max-w-md mx-auto" {...cardProps}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <CardAvatar initials="AH" size="md" />
+                  <div className="flex flex-col">
+                    <CardTitle>Aryan Hooda</CardTitle>
+                    <CardDescription className="text-xs">Full Stack Developer</CardDescription>
+                  </div>
+                </div>
+                <CardBadge tone="success">Available</CardBadge>
+              </div>
+            </CardHeader>
+            <CardSeparator />
+            <CardContent>
+              <CardDescription>Building scalable web apps with React, Node.js & MongoDB.</CardDescription>
+              <div className="flex flex-wrap items-center gap-4 sm:gap-6 mt-2">
+                <CardStat value="24" label="Projects" />
+                <CardStat value="3+" label="Years" />
+                <CardStat value="12" label="Clients" />
+              </div>
+            </CardContent>
+            <CardFooter className="flex-col sm:flex-row gap-3">
+              <CardAction tone="primary" className="w-full flex-1">Connect</CardAction>
+              <CardAction tone="secondary" className="w-full flex-1">View Profile</CardAction>
+            </CardFooter>
+          </Card>
+        );
+    }
+  };
 
   return (
     <PreviewContainer
       title="Standard Card"
-      description="A base structural card component."
-      variants={["solid", "outline", "ghost", "glass"]}
-      activeVariant={variant}
-      onVariantChange={setVariant as any} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      description="A base structural card component with layout variants."
+      variants={["default", "elevated", "interactive", "feature", "stats", "content", "compact", "media"] as CardLayout[]}
+      activeVariant={layout}
+      onVariantChange={setLayout as any}
+      colors={DEFAULT_COLORS}
+      activeColor={previewColor}
+      onColorChange={setPreviewColor}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Style</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["solid", "outline", "ghost", "link"] as CardVariant[]).map(v => (
+                <button key={v} onClick={() => setStylingVariant(v)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", stylingVariant === v ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{v}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as CardTheme[]).map(t => (
+                <button key={t} onClick={() => setTheme(t)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", theme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{t}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as CardShape[]).map(s => (
+                <button key={s} onClick={() => setShape(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", shape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as CardSpacing[]).map(s => (
+                <button key={s} onClick={() => setSpacing(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", spacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shadow</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "none", "xxs", "xs", "sm", "md", "lg", "xl", "xxl"] as const).map(s => (
+                <button key={s} onClick={() => setShadow(s)}
+                  className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", shadow === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
-      <Card className="w-full max-w-md mx-auto" variant={variant}>
-        <CardHeader>
-          <CardTitle>Card Title</CardTitle>
-          <CardDescription>Card Description goes here.</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground text-left">
-            Card Content inside the default card.
-          </p>
-        </CardContent>
-        <CardFooter>
-          <Button className="w-full" color={previewColor} variant={previewVariant}>Action</Button>
-        </CardFooter>
-      </Card>
+      {renderCardContent()}
     </PreviewContainer>
   );
 };

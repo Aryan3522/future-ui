@@ -12,6 +12,7 @@ import { MinimalButton } from "@/components/ui/minimal-button";
 import { SkeuomorphicButton } from "@/components/ui/SkeuomorphicButton";
 import { PreviewContainer, DEFAULT_COLORS } from "../preview-engine/PreviewContainer";
 import { Play, Rocket, Settings, Check, Download, Send, Bell, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export const FooterPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
@@ -53,8 +54,53 @@ export const PremiumUploadButtonPreview: React.FC = () => {
 export const InfiniteSliderPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewTheme, setPreviewTheme] = React.useState<any>("modern");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+    const [previewAnimation, setPreviewAnimation] = React.useState<any>("slide");
+
+    const extraControls = (
+      <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(t => (
+              <button key={t} onClick={() => setPreviewTheme(t)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewTheme === t ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{t}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Animation</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["translation", "jumping", "superposition", "fading", "carousel", "flip", "vertical", "slide", "scale"] as const).map(a => (
+              <button key={a} onClick={() => setPreviewAnimation(a)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewAnimation === a ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{a}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "square", "rounded", "sharp"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+          <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+          <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+            {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+              <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+
   return (
-    <PreviewContainer title="Carousel Slider" description="An expansive interactive image slider." contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer title="Carousel Slider" description="An expansive interactive image slider." contentClassName="p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant} extraControls={extraControls}>
       <CarouselSlider
         slides={[
           {
@@ -64,7 +110,6 @@ export const InfiniteSliderPreview: React.FC = () => {
             location: "Bali, Indonesia",
             image:
               "https://images.unsplash.com/photo-1556206079-747a7a424d3d?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-indigo-600",
           },
           {
             id: 2,
@@ -73,7 +118,6 @@ export const InfiniteSliderPreview: React.FC = () => {
             location: "Tokyo, Japan",
             image:
               "https://images.unsplash.com/photo-1571900670723-a317a66e3fb7?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-emerald-600",
           },
           {
             id: 3,
@@ -82,9 +126,14 @@ export const InfiniteSliderPreview: React.FC = () => {
             location: "Swiss Alps",
             image:
               "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&q=80",
-            tagBg: "bg-amber-600",
           },
-        ]} color={previewColor} variant={previewVariant}
+        ]} 
+        color={previewColor} 
+        variant={previewVariant}
+        theme={previewTheme}
+        shape={previewShape}
+        spacing={previewSpacing}
+        animation={previewAnimation}
       />
     </PreviewContainer>
   );
@@ -138,8 +187,7 @@ export const GlowyButtonPreview: React.FC = () => {
 };
 
 export const SkeuomorphicButtonPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
   const [activeVariant, setActiveVariant] = React.useState<string>("primary");
 
   return (
@@ -186,60 +234,63 @@ export const SkeuomorphicButtonPreview: React.FC = () => {
   );
 };
 
-
 export const ClayMorphButtonPreview: React.FC = () => {
-    const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [activeVariant, setActiveVariant] = React.useState<string>("primary");
+  const [previewColor, setPreviewColor] = React.useState<any>("default");
+  const [previewVariant, setPreviewVariant] = React.useState<any>("primary");
+  const [previewShape, setPreviewShape] = React.useState<any>("default");
+  const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
+  const extraControls = (
+    <div className="flex flex-col gap-4 w-full mt-4 border-t border-border/50 pt-6">
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "square", "rounded", "sharp", "cut-two", "cut-all"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewShape(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap", previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+        <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing / Size</span>
+        <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+          {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+            <button key={s} onClick={() => setPreviewSpacing(s)} className={cn("px-4 py-1.5 text-xs font-semibold rounded-lg uppercase transition-all duration-300 whitespace-nowrap", previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40")}>{s}</button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <PreviewContainer
       title="Clay Morphism Button"
       description="A premium, modern Claymorphism button with soft 3D extrusion, layered highlights, and bubbly tactile interactions."
-      variants={["primary", "secondary", "success", "danger", "warning", "info", "neutral", "ghost", "outline", "soft", "elevated", "gradient", "glass"]}
-      activeVariant={activeVariant}
-      onVariantChange={setActiveVariant}
+      variants={["primary", "ghost", "outline", "soft", "elevated", "gradient", "glass"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
       isVirtualScreen={true} colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor}
+      extraControls={extraControls}
     >
-      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[400px]">
-        <div className="flex flex-col items-center gap-10 w-full max-w-4xl border border-zinc-200 dark:border-zinc-800 rounded-3xl p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm">
-          <div className="flex flex-wrap items-end justify-center gap-6 w-full">
-            <ClayMorphButton variant={activeVariant as any} color="blue">Extra Small</ClayMorphButton>
-            <ClayMorphButton variant={activeVariant as any} color="blue">Small Size</ClayMorphButton>
-            <ClayMorphButton variant={activeVariant as any} color="blue">Medium Default</ClayMorphButton>
+      <div className="w-full h-full flex items-center justify-center min-h-[400px]">
+        <div className="flex flex-col items-center justify-center gap-10 w-full h-full border-0 border-y border-zinc-200 dark:border-zinc-800 rounded-none p-6 md:p-12 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-sm shadow-xl">
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing}>Clay Morphism</ClayMorphButton>
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} icon={<Star />}>Left Icon</ClayMorphButton>
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} icon={<Star />} iconPosition="right">Tail Icon</ClayMorphButton>
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} icon={<Star />} iconOnly />
           </div>
-          
-          <div className="flex flex-wrap items-end justify-center gap-8 w-full mt-2">
-            <ClayMorphButton variant={activeVariant as any} color="blue">Large Size</ClayMorphButton>
-            <ClayMorphButton variant={activeVariant as any} color="blue">Extra Large</ClayMorphButton>
-          </div>
-
-          <div className="w-full max-w-2xl h-px bg-zinc-200 dark:bg-zinc-800 my-2" />
-
-          <div className="flex flex-wrap items-center justify-center gap-6 w-full">
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue">Rounded</ClayMorphButton>
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue">Soft Rounded</ClayMorphButton>
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue">Pill Shape</ClayMorphButton>
-          </div>
-          
-          <div className="flex flex-wrap items-center justify-center gap-8 w-full mt-2">
-             <ClayMorphButton variant={activeVariant as any} shape="square" color="blue">Square</ClayMorphButton>
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue" icon={<Star />} aria-label="Star XS" />
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue" icon={<Star />} aria-label="Star SM" />
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue" icon={<Star />} aria-label="Star MD" />
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue" icon={<Star />} aria-label="Star LG" />
-             <ClayMorphButton variant={activeVariant as any} shape="rounded" color="blue" icon={<Star />} aria-label="Star XL" />
+          <div className="flex flex-wrap items-center justify-center gap-8 w-full">
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} loading>Processing</ClayMorphButton>
+            <ClayMorphButton variant={previewVariant as any} color={previewColor} shape={previewShape} spacing={previewSpacing} disabled>Disabled</ClayMorphButton>
           </div>
         </div>
       </div>
     </PreviewContainer>
   );
-};
-
-
+}
 export const MinimalButtonPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [activeVariant, setActiveVariant] = React.useState<string>("primary");
 
   return (

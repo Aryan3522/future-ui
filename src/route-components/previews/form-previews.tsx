@@ -149,18 +149,74 @@ export const PremiumOtpInputPreview: React.FC = () => {
 export const CalendarPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+    const [previewTheme, setPreviewTheme] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+    const [previewShadow, setPreviewShadow] = React.useState<any>("default");
+    const [previewAllowFuture, setPreviewAllowFuture] = React.useState(false);
+    const [date, setDate] = useState<Date | undefined>(new Date());
 
   return (
     <PreviewContainer
       title="Calendar"
-      description="A clean, responsive calendar component for date selection." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      description="A modern, fully responsive calendar component for date selection supporting multiple themes and layouts." 
+      colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewTheme(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewTheme === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shadow</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "none", "xxs", "xs", "sm", "md", "lg", "xl", "xxl"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShadow(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShadow === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Future Dates</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              <button onClick={() => setPreviewAllowFuture(!previewAllowFuture)}
+                className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewAllowFuture ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>
+                {previewAllowFuture ? "Allowed" : "Blocked"}
+              </button>
+            </div>
+          </div>
+        </>
+      }
     >
-      <div className="bg-card border rounded-2xl p-6 shadow-sm">
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[500px]">
         <Calendar
           value={date}
           onChange={setDate}
-          className="rounded-md" color={previewColor} variant={previewVariant}
+          color={previewColor} variant={previewVariant} theme={previewTheme} shape={previewShape} spacing={previewSpacing} shadow={previewShadow} allowFutureDates={previewAllowFuture}
         />
       </div>
     </PreviewContainer>
@@ -170,19 +226,57 @@ export const CalendarPreview: React.FC = () => {
 export const CalculatorPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewTheme, setPreviewTheme] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
+
   return (
     <PreviewContainer
       title="Calculator"
-      description="A functional, glassmorphic calculator with advanced math operations." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      description="A functional calculator with advanced math operations and extensive theme support." 
+      colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Theme</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "modern", "clean", "futuristic", "brutal", "halftone"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewTheme(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewTheme === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
     >
-      <Calculator color={previewColor} variant={previewVariant} />
+      <div className="w-full flex items-center justify-center p-4 md:p-12 min-h-[500px]">
+        <Calculator color={previewColor} variant={previewVariant} theme={previewTheme} shape={previewShape} spacing={previewSpacing} />
+      </div>
     </PreviewContainer>
   );
 };
 
 export const DynamicFormPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   const [submittedData, setSubmittedData] = useState<any>(null);
   const [activeDemo, setActiveDemo] = useState("contact");
 

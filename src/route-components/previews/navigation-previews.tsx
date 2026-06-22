@@ -142,7 +142,9 @@ export const DockPreview: React.FC = () => {
 
 export const CommandPalettePreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("default");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -157,7 +159,38 @@ export const CommandPalettePreview: React.FC = () => {
   }, []);
 
   return (
-    <PreviewContainer title="Command Palette" description="A powerful command palette for rapid navigation." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer
+      title="Command Palette"
+      description="A powerful command palette for rapid navigation with premium animations and theming."
+      colors={DEFAULT_COLORS}
+      activeColor={previewColor}
+      onColorChange={setPreviewColor}
+      variants={["default", "compact", "floating", "glass", "spotlight"]}
+      activeVariant={previewVariant}
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
       <div className="flex flex-col items-center justify-center w-full h-full min-h-75">
         <div
           onClick={() => setOpen(true)}
@@ -169,7 +202,7 @@ export const CommandPalettePreview: React.FC = () => {
           </div>
         </div>
 
-        <CommandPalette open={open} onOpenChange={setOpen} color={previewColor} variant={previewVariant}>
+        <CommandPalette open={open} onOpenChange={setOpen} color={previewColor} variant={previewVariant} shape={previewShape} spacing={previewSpacing}>
           <CommandInput placeholder="Type a command or search..." />
           <CommandList>
             <CommandEmpty>No results found.</CommandEmpty>
@@ -214,11 +247,54 @@ export const CommandPalettePreview: React.FC = () => {
 
 export const GlobalBreadcrumbPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("ghost");
+    const [previewSize, setPreviewSize] = React.useState<any>("md");
+    const [previewShape, setPreviewShape] = React.useState<any>("default");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   return (
-    <PreviewContainer title="Breadcrumb" description="A global breadcrumb navigation component." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer 
+      title="Breadcrumb" 
+      description="A global breadcrumb navigation component." 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "link"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["sm", "md", "lg"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSize(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s === "sm" ? "Small" : s === "md" ? "Medium" : "Large"}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Shape</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "square", "rounded", "sharp"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewShape(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewShape === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
       <div className="w-full flex items-center justify-start p-4 md:p-12 min-h-75">
-         <GlobalBreadcrumb />
+         <GlobalBreadcrumb color={previewColor} variant={previewVariant} size={previewSize} shape={previewShape} spacing={previewSpacing} />
       </div>
     </PreviewContainer>
   );

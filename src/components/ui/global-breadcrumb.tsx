@@ -23,17 +23,23 @@ import { getCategoryUrl, cn } from "@/lib/utils";
 export type BreadcrumbColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type BreadcrumbShape = "default" | "square" | "rounded" | "sharp";
 export type BreadcrumbSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type BreadcrumbSize = "sm" | "md" | "lg";
+export type BreadcrumbVariant = "ghost" | "solid" | "outline" | "link";
 
 interface BreadcrumbContextValue {
   color: BreadcrumbColor;
   shape: BreadcrumbShape;
   spacing: BreadcrumbSpacing;
+  size: BreadcrumbSize;
+  variant: BreadcrumbVariant;
 }
 
 const BreadcrumbContext = React.createContext<BreadcrumbContextValue>({
   color: "default",
   shape: "default",
   spacing: "default",
+  size: "md",
+  variant: "ghost",
 });
 
 export interface BreadcrumbProps extends React.ComponentPropsWithoutRef<"nav"> {
@@ -41,11 +47,13 @@ export interface BreadcrumbProps extends React.ComponentPropsWithoutRef<"nav"> {
   color?: BreadcrumbColor;
   shape?: BreadcrumbShape;
   spacing?: BreadcrumbSpacing;
+  size?: BreadcrumbSize;
+  variant?: BreadcrumbVariant;
 }
 
 const Breadcrumb = React.forwardRef<HTMLElement, BreadcrumbProps>(
-  ({ color = "default", shape = "default", spacing = "default", separator, ...props }, ref) => (
-    <BreadcrumbContext.Provider value={{ color, shape, spacing }}>
+  ({ color = "default", shape = "default", spacing = "default", size = "md", variant = "ghost", separator, ...props }, ref) => (
+    <BreadcrumbContext.Provider value={{ color, shape, spacing, size, variant }}>
       <nav ref={ref} aria-label="breadcrumb" {...props} />
     </BreadcrumbContext.Provider>
   )
@@ -56,13 +64,43 @@ const BreadcrumbList = React.forwardRef<
   HTMLOListElement,
   React.ComponentPropsWithoutRef<"ol">
 >(({ className, ...props }, ref) => {
-  const { spacing } = React.useContext(BreadcrumbContext);
+  const { spacing, size, variant, color, shape } = React.useContext(BreadcrumbContext);
+
+  const getVariantClasses = () => {
+    if (variant === "ghost" || variant === "link") return "";
+    
+    const isSolid = variant === "solid";
+    const isOutline = variant === "outline";
+    const base = "px-4 py-2 transition-colors duration-300 " + (shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : "rounded-xl");
+    
+    if (color === "default") {
+      return cn(base, isSolid ? "bg-muted" : "border bg-transparent");
+    }
+    
+    const colorMap: Record<BreadcrumbColor, string> = {
+      default: "",
+      blue: isSolid ? "bg-blue-500/10 border-blue-500/20" : "border-blue-500/30",
+      emerald: isSolid ? "bg-emerald-500/10 border-emerald-500/20" : "border-emerald-500/30",
+      rose: isSolid ? "bg-rose-500/10 border-rose-500/20" : "border-rose-500/30",
+      amber: isSolid ? "bg-amber-500/10 border-amber-500/20" : "border-amber-500/30",
+      violet: isSolid ? "bg-violet-500/10 border-violet-500/20" : "border-violet-500/30",
+      indigo: isSolid ? "bg-indigo-500/10 border-indigo-500/20" : "border-indigo-500/30",
+      sky: isSolid ? "bg-sky-500/10 border-sky-500/20" : "border-sky-500/30",
+      slate: isSolid ? "bg-slate-500/10 border-slate-500/20" : "border-slate-500/30",
+      orange: isSolid ? "bg-orange-500/10 border-orange-500/20" : "border-orange-500/30",
+    };
+    
+    return cn(base, isOutline ? "border" : "border border-transparent", colorMap[color]);
+  };
+
   return (
     <ol
       ref={ref}
       className={cn(
         "flex flex-wrap items-center break-words text-muted-foreground",
-        spacing === "2x" ? "gap-1 text-xs" : spacing === "6x" || spacing === "8x" ? "gap-3 text-base" : "gap-1.5 sm:gap-2.5 text-sm",
+        spacing === "2x" ? "gap-1" : spacing === "4x" ? "gap-2" : spacing === "6x" ? "gap-3" : spacing === "8x" ? "gap-4" : "gap-1.5 sm:gap-2.5",
+        size === "sm" ? "text-xs" : size === "lg" ? "text-base" : "text-sm",
+        getVariantClasses(),
         className
       )}
       {...props}
@@ -81,7 +119,7 @@ const BreadcrumbItem = React.forwardRef<
       ref={ref}
       className={cn(
         "inline-flex items-center",
-        spacing === "2x" ? "gap-0.5" : spacing === "6x" || spacing === "8x" ? "gap-2" : "gap-1.5",
+        spacing === "2x" ? "gap-0.5" : spacing === "4x" ? "gap-1" : spacing === "6x" ? "gap-2" : spacing === "8x" ? "gap-3" : "gap-1.5",
         className
       )}
       {...props}
@@ -96,7 +134,7 @@ const BreadcrumbLink = React.forwardRef<
     asChild?: boolean
   }
 >(({ asChild, className, ...props }, ref) => {
-  const { color, shape } = React.useContext(BreadcrumbContext);
+  const { color, shape, variant } = React.useContext(BreadcrumbContext);
   const Comp = asChild ? Slot : "a"
 
   const getColorClasses = () => {
@@ -121,6 +159,7 @@ const BreadcrumbLink = React.forwardRef<
         "transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ring-offset-background",
         shape === "square" ? "rounded-none" : shape === "sharp" ? "rounded-[2px]" : "rounded-sm",
         getColorClasses(),
+        variant === "link" && "hover:underline underline-offset-4",
         className
       )}
       {...props}
@@ -213,9 +252,11 @@ export interface GlobalBreadcrumbProps {
   color?: BreadcrumbColor;
   shape?: BreadcrumbShape;
   spacing?: BreadcrumbSpacing;
+  size?: BreadcrumbSize;
+  variant?: BreadcrumbVariant;
 }
 
-function BreadcrumbInner({ color, shape, spacing }: GlobalBreadcrumbProps) {
+function BreadcrumbInner({ color, shape, spacing, size, variant }: GlobalBreadcrumbProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
@@ -291,7 +332,7 @@ function BreadcrumbInner({ color, shape, spacing }: GlobalBreadcrumbProps) {
   }
 
   return (
-    <Breadcrumb className="mb-8 overflow-x-auto scrollbar-hide" color={color} shape={shape} spacing={spacing}>
+    <Breadcrumb className="mb-8 overflow-x-auto scrollbar-hide" color={color} shape={shape} spacing={spacing} size={size} variant={variant}>
       <BreadcrumbList className="flex-nowrap whitespace-nowrap">
         {crumbs}
       </BreadcrumbList>

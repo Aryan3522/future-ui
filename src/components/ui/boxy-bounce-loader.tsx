@@ -11,12 +11,14 @@ import { cn } from "@/lib/utils";
 
 export type BoxyLoaderColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type BoxyLoaderShape = "default" | "square" | "rounded" | "sharp";
-export type BoxyLoaderSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type BoxyLoaderSize = "sm" | "md" | "lg";
+export type BoxyLoaderVariant = "gradient" | "solid" | "outline";
 
 export interface BoxyBounceLoaderProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: BoxyLoaderVariant;
   color?: BoxyLoaderColor;
   shape?: BoxyLoaderShape;
-  spacing?: BoxyLoaderSpacing;
+  size?: BoxyLoaderSize;
 }
 
 const colorThemeMap: Record<BoxyLoaderColor, { main: string; secondary: string }> = {
@@ -34,9 +36,10 @@ const colorThemeMap: Record<BoxyLoaderColor, { main: string; secondary: string }
 
 export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = React.memo(({ 
   className,
+  variant = "gradient",
   color = "default",
   shape = "default",
-  spacing = "default",
+  size = "md",
   ...props 
 }) => {
   const activeColor = colorThemeMap[color];
@@ -48,10 +51,17 @@ export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = React.memo(({
   if (shape === "default") rx = "8";
 
   let scale = "scale-[1]";
-  if (spacing === "2x") scale = "scale-[0.5]";
-  if (spacing === "4x") scale = "scale-[0.75]";
-  if (spacing === "6x") scale = "scale-[1.25]";
-  if (spacing === "8x") scale = "scale-[1.5]";
+  if (size === "sm") scale = "scale-[0.5]";
+  if (size === "md") scale = "scale-[1]";
+  if (size === "lg") scale = "scale-[1.5]";
+
+  const rects = (
+    <>
+      <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
+      <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
+      <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
+    </>
+  );
 
   return (
     <div className={cn("flex flex-col items-center justify-center w-full h-full min-h-[inherit]", scale, className)} {...props}>
@@ -96,15 +106,23 @@ export const BoxyBounceLoader: React.FC<BoxyBounceLoaderProps> = React.memo(({
               <rect x="0" y="0" width="128" height="128" fill="url(#pl-grad)" />
             </mask>
           </defs>
-          <g fill={activeColor.main} className={color === "default" ? "text-foreground" : ""}>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
+
+          <g 
+            fill={variant === "outline" ? "transparent" : activeColor.main} 
+            stroke={variant === "outline" ? activeColor.main : "none"} 
+            strokeWidth={variant === "outline" ? "4" : "0"} 
+            className={color === "default" ? "text-foreground" : ""}
+          >
+            {rects}
           </g>
-          <g fill={activeColor.secondary} mask="url(#pl-mask)" className={color === "default" ? "text-muted-foreground" : "opacity-80"}>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="0" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="44" y="128" width="40" height="24" transform="rotate(180)" /></g>
-            <g className="pl2__rect-g"><rect className="pl2__rect" rx={rx} ry={rx} x="88" y="128" width="40" height="24" transform="rotate(180)" /></g>
+
+          <g 
+            style={{ display: variant === "gradient" ? "block" : "none" }}
+            fill={activeColor.secondary} 
+            mask="url(#pl-mask)" 
+            className={color === "default" ? "text-muted-foreground" : "opacity-80"}
+          >
+            {rects}
           </g>
         </svg>
       </div>
