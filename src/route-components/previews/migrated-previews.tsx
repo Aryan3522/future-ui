@@ -662,12 +662,24 @@ export const MigratedPreviews = {
   },
 
   "highlighter": function HighlighterPreview() {
+    const [previewVariant, setPreviewVariant] = React.useState<any>("highlight");
+    const [previewColor, setPreviewColor] = React.useState<any>("default");
+
     return (
-      <PreviewContainer title="Highlighter" description="A component to highlight specific text content.">
+      <PreviewContainer 
+        title="Highlighter" 
+        description="A component to highlight specific text content."
+        colors={DEFAULT_COLORS}
+        activeColor={previewColor}
+        onColorChange={setPreviewColor}
+        variants={["highlight", "underline", "box", "circle", "strike-through", "crossed-off", "bracket"]}
+        activeVariant={previewVariant}
+        onVariantChange={setPreviewVariant}
+      >
         <div className="flex items-center justify-center min-h-[300px]">
-          <div className="w-full max-w-md bg-neutral-900 p-8 rounded-xl text-white">
+          <div className="w-full max-w-md bg-background border p-8 rounded-xl text-foreground text-center font-medium text-lg leading-relaxed shadow-sm">
             <p>
-              This is a beautiful <Highlighter color="amber">highlighted</Highlighter> text effect.
+              This is a beautiful <Highlighter action={previewVariant} color={previewColor}>highlighted</Highlighter> text effect.
             </p>
           </div>
         </div>
