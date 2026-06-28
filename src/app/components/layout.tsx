@@ -1,5 +1,4 @@
 import React, { Suspense } from"react";
-import { Header } from"@/components/ui/header";
 import { DocsSidebar } from"@/components/layout/DocsSidebar";
 import { GlobalBreadcrumb } from"@/components/ui/global-breadcrumb";
 
@@ -10,9 +9,6 @@ export default function ComponentsLayout({
 }) {
  return (
  <div className="flex-1 bg-background text-foreground flex flex-col font-body-md overflow-clip relative">
- {/* Persistent Top Header */}
- <Header />
-
  {/* Main Layout Area */}
  <div className="flex-1 max-w-[1400px] w-full mx-auto flex items-start px-4 md:px-8">
  {/* Persistent Left Sidebar */}

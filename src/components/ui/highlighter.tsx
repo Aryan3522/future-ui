@@ -13,7 +13,6 @@ import { annotate } from "rough-notation"
 import { cn } from "@/lib/utils";
 
 export type HighlighterColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
-export type HighlighterShape = "default" | "square" | "rounded" | "sharp";
 export type HighlighterSpacing = "default" | "2x" | "4x" | "6x" | "8x";
 
 export interface HighlighterProps {
@@ -27,13 +26,12 @@ export interface HighlighterProps {
   padding?: number; // Override for spacing
   multiline?: boolean;
   isView?: boolean;
-  shape?: HighlighterShape;
   spacing?: HighlighterSpacing;
   className?: string;
 }
 
 const colorThemeMap: Record<HighlighterColor, { hex: string }> = {
-  default: { hex: "var(--foreground)" }, // Default black/white
+  default: { hex: "hsl(var(--foreground))" }, // Default black/white
   blue: { hex: "#2563eb" }, // Blue-600
   emerald: { hex: "#16a34a" }, // Emerald-600
   rose: { hex: "#e11d48" }, // Rose-600
@@ -45,14 +43,7 @@ const colorThemeMap: Record<HighlighterColor, { hex: string }> = {
   orange: { hex: "#ea580c" }, // Orange-600
 };
 
-const getShapeClass = (shape: HighlighterShape) => {
-  switch (shape) {
-    case "square": return "rounded-none";
-    case "sharp": return "rounded-sm";
-    case "rounded": return "rounded-lg";
-    case "default": return "rounded-none";
-  }
-};
+
 
 const getSpacingValue = (spacing: HighlighterSpacing) => {
   switch (spacing) {
@@ -69,7 +60,6 @@ export function Highlighter({
   action = "highlight",
   color = "default",
   customColor,
-  shape = "default",
   spacing = "default",
   strokeWidth = 1.5,
   animationDuration = 600,
@@ -92,7 +82,7 @@ export function Highlighter({
   const activeTheme = colorThemeMap[color] ?? colorThemeMap.default;
   const annotationColor = customColor || activeTheme.hex;
   const annotationPadding = padding !== undefined ? padding : getSpacingValue(spacing);
-  const shapeClass = getShapeClass(shape);
+  const isSolidDefault = action === "highlight" && color === "default";
 
   useLayoutEffect(() => {
     const element = elementRef.current
@@ -100,7 +90,7 @@ export function Highlighter({
     let resizeObserver: any = null
 
     if (shouldShow && element) {
-      const annotationConfig = {
+      const annotationConfig: any = {
         type: action,
         color: annotationColor,
         strokeWidth,
@@ -108,6 +98,10 @@ export function Highlighter({
         iterations,
         padding: annotationPadding,
         multiline,
+      }
+
+      if (action === "bracket") {
+        annotationConfig.brackets = ["left", "right"];
       }
 
       const currentAnnotation = annotate(element, annotationConfig as any)
@@ -141,7 +135,7 @@ export function Highlighter({
   ])
 
   return (
-    <span ref={elementRef} className={cn("relative inline-block bg-transparent", shapeClass, className)}>
+    <span ref={elementRef} className={cn("relative inline-block bg-transparent transition-colors duration-300", isSolidDefault ? "text-background" : "", className)}>
       {children}
     </span>
   );
