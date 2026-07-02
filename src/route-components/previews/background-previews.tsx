@@ -60,11 +60,17 @@ export const DotBackgroundPreview: React.FC = () => {
 
 export const ParticlesPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
   return (
-    <PreviewContainer title="Particles" description="A dynamic particle system for beautiful backgrounds." contentClassName="bg-slate-950 dark:bg-background p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+    <PreviewContainer 
+      title="Particles" 
+      description="A dynamic particle system for beautiful backgrounds." 
+      contentClassName="bg-slate-950 dark:bg-background p-0 border-none" 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+    >
       <div className="w-full h-full relative overflow-hidden min-h-100">
-        <Particles quantity={150} color="#3b82f6" />
+        <Particles quantity={150} color={previewColor} />
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
           <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
             Dynamic Particle System
@@ -78,12 +84,46 @@ export const ParticlesPreview: React.FC = () => {
 export const PerspectiveGridPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
     const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewSize, setPreviewSize] = React.useState<any>("sm");
+    const [previewSpacing, setPreviewSpacing] = React.useState<any>("default");
   return (
-    <PreviewContainer title="Perspective Grid" description="A 3D perspective grid horizon background." contentClassName="bg-slate-950 dark:bg-background p-0 border-none" colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <div className="w-full h-full relative overflow-hidden min-h-100">
-        <PerspectiveGrid gridLineGap={50} />
+    <PreviewContainer 
+      title="Perspective Grid" 
+      description="A 3D perspective grid horizon background with premium themes." 
+      contentClassName="bg-slate-950 dark:bg-background p-0 border-none" 
+      colors={DEFAULT_COLORS} 
+      activeColor={previewColor} 
+      onColorChange={setPreviewColor} 
+      variants={["solid", "outline", "ghost", "neon", "retro"]} 
+      activeVariant={previewVariant} 
+      onVariantChange={setPreviewVariant}
+      extraControls={
+        <>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Size</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["sm", "md", "lg"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSize(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSize === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-[120px_1fr] md:grid-cols-[150px_1fr] items-start sm:items-center gap-4 w-full">
+            <span className="text-[10px] md:text-xs uppercase font-bold tracking-widest text-muted-foreground">Spacing</span>
+            <div className="flex items-center flex-wrap gap-2 p-1.5 bg-muted/30 rounded-xl w-full">
+              {(["default", "2x", "4x", "6x", "8x"] as const).map(s => (
+                <button key={s} onClick={() => setPreviewSpacing(s)}
+                  className={`px-4 py-1.5 text-xs font-semibold rounded-lg capitalize transition-all duration-300 whitespace-nowrap ${previewSpacing === s ? "bg-background shadow-md shadow-black/5 text-foreground ring-1 ring-black/5 dark:ring-white/10" : "text-muted-foreground hover:text-foreground hover:bg-muted/40"}`}>{s}</button>
+              ))}
+            </div>
+          </div>
+        </>
+      }
+    >
+      <div className="w-full h-full relative overflow-hidden min-h-100 rounded-xl">
+        <PerspectiveGrid color={previewColor} variant={previewVariant} size={previewSize} spacing={previewSpacing} />
         <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-          <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase">
+          <h3 className="text-2xl font-bold text-white dark:text-foreground italic tracking-tighter uppercase mix-blend-overlay opacity-80">
             Perspective Horizon
           </h3>
         </div>
@@ -94,10 +134,10 @@ export const PerspectiveGridPreview: React.FC = () => {
 
 export const PointCursorPreview: React.FC = () => {
     const [previewColor, setPreviewColor] = React.useState<any>("default");
-    const [previewVariant, setPreviewVariant] = React.useState<any>("solid");
+    const [previewVariant, setPreviewVariant] = React.useState<any>("default");
   return (
-    <PreviewContainer title="Point Cursor" description="A custom interactive cursor." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["solid", "outline", "ghost", "link"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
-      <PointCursor className="rounded-xl overflow-hidden border border-border bg-muted/10 w-full h-full">
+    <PreviewContainer title="Point Cursor" description="A custom interactive cursor." colors={DEFAULT_COLORS} activeColor={previewColor} onColorChange={setPreviewColor} variants={["default", "stretch", "snappy", "fluid"]} activeVariant={previewVariant} onVariantChange={setPreviewVariant}>
+      <PointCursor color={previewColor} variant={previewVariant} className="rounded-xl overflow-hidden border border-border bg-muted/10 w-full h-full">
         <div className="flex flex-col items-center justify-center w-full h-full min-h-75 sm:min-h-100 p-8 text-center space-y-8 relative overflow-hidden">
           {/* Decorative background to make it feel like a "playground" */}
           <div className="absolute inset-0 opacity-5 pointer-events-none">
