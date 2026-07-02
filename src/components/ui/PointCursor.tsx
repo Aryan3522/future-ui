@@ -27,13 +27,14 @@
 
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
-import { motion, useMotionValue, useSpring } from "framer-motion";
+import { motion, useMotionValue, useSpring, useVelocity, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/contexts/ThemeContext";
 
 export type PointCursorColor = "default" | "blue" | "emerald" | "rose" | "amber" | "violet" | "indigo" | "sky" | "slate" | "orange";
 export type PointCursorShape = "default" | "square" | "rounded" | "sharp";
 export type PointCursorSpacing = "default" | "2x" | "4x" | "6x" | "8x";
+export type PointCursorVariant = "default" | "stretch" | "snappy" | "fluid";
 
 export interface PointCursorProps {
   children: React.ReactNode;
@@ -45,6 +46,7 @@ export interface PointCursorProps {
   color?: PointCursorColor;
   shape?: PointCursorShape;
   spacing?: PointCursorSpacing;
+  variant?: PointCursorVariant;
 }
 
 const colorThemeMap: Record<PointCursorColor, { hex: string; hexRing: string }> = {
@@ -80,6 +82,16 @@ const getSpacingValue = (spacing: PointCursorSpacing, defaultRing: number) => {
   }
 };
 
+const getSpringConfig = (variant: PointCursorVariant) => {
+  switch (variant) {
+    case "snappy": return { stiffness: 600, damping: 40, mass: 0.2 };
+    case "fluid": return { stiffness: 80, damping: 15, mass: 1.5 };
+    case "stretch": return { stiffness: 200, damping: 20, mass: 0.8 };
+    case "default":
+    default: return { stiffness: 250, damping: 25, mass: 0.5 };
+  }
+};
+
 export const PointCursor: React.FC<PointCursorProps> = React.memo(({
           children,
           className,
@@ -89,7 +101,8 @@ export const PointCursor: React.FC<PointCursorProps> = React.memo(({
           ringSize = 30,
           color = "default",
           shape = "default",
-          spacing = "default"
+          spacing = "default",
+          variant = "default"
         }) => {
           const { theme } = useTheme();
           const [mounted, setMounted] = useState(false);
@@ -132,9 +145,17 @@ export const PointCursor: React.FC<PointCursorProps> = React.memo(({
           const mouseY = useMotionValue(-100);
 
           // 2. Physics - Ring only (trailing effect)
-          const ringSpringConfig = { stiffness: 250, damping: 25, mass: 0.5 };
+          const ringSpringConfig = getSpringConfig(variant);
           const ringX = useSpring(mouseX, ringSpringConfig);
           const ringY = useSpring(mouseY, ringSpringConfig);
+
+          // 3. Stretch effect for variant "stretch"
+          const velocityX = useVelocity(mouseX);
+          const velocityY = useVelocity(mouseY);
+          
+          const isStretch = variant === "stretch";
+          const scaleX = useTransform(velocityX, [-2000, 0, 2000], [1.5, 1, 1.5], { clamp: true });
+          const scaleY = useTransform(velocityY, [-2000, 0, 2000], [1.5, 1, 1.5], { clamp: true });
 
           const handleMouseMove = useCallback((e: MouseEvent) => {
             mouseX.set(e.clientX);
@@ -206,6 +227,8 @@ export const PointCursor: React.FC<PointCursorProps> = React.memo(({
                     top: ringY,
                     translateX: "-50%",
                     translateY: "-50%",
+                    scaleX: isStretch ? scaleX : 1,
+                    scaleY: isStretch ? scaleY : 1,
                     borderColor: activeRingColor,
                   }}
                 />
